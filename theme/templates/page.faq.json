@@ -1,0 +1,145 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "faq_intro": {
+      "type": "main-page",
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 0
+      }
+    },
+    "faq_payment": {
+      "type": "collapsible-content",
+      "settings": {
+        "caption": "",
+        "heading": "Payment & Order",
+        "heading_size": "h2",
+        "heading_alignment": "left",
+        "layout": "none",
+        "container_color_scheme": "scheme-2",
+        "color_scheme": "scheme-1",
+        "open_first_collapsible_row": false,
+        "image_ratio": "adapt",
+        "desktop_layout": "image_second",
+        "padding_top": 24,
+        "padding_bottom": 24
+      },
+      "blocks": {
+        "p1": {
+          "type": "collapsible_row",
+          "settings": { "heading": "Which payment methods do you accept?", "row_content": "<p>Credit and debit card, PayPal, Apple Pay and Google Pay.</p>" }
+        },
+        "p2": {
+          "type": "collapsible_row",
+          "settings": { "heading": "Can I change or cancel my order?", "row_content": "<p>Contact us as soon as possible after placing your order. Once it has shipped, it can no longer be changed.</p>" }
+        },
+        "p3": {
+          "type": "collapsible_row",
+          "settings": { "heading": "Do you have an account system?", "row_content": "<p>Yes — create an account to check out faster and see your order history.</p>" }
+        }
+      },
+      "block_order": ["p1", "p2", "p3"]
+    },
+    "faq_shipping": {
+      "type": "collapsible-content",
+      "settings": {
+        "caption": "",
+        "heading": "Shipping",
+        "heading_size": "h2",
+        "heading_alignment": "left",
+        "layout": "none",
+        "container_color_scheme": "scheme-2",
+        "color_scheme": "scheme-1",
+        "open_first_collapsible_row": false,
+        "image_ratio": "adapt",
+        "desktop_layout": "image_second",
+        "padding_top": 24,
+        "padding_bottom": 24
+      },
+      "blocks": {
+        "s1": {
+          "type": "collapsible_row",
+          "settings": { "heading": "Where do you ship?", "row_content": "<p>Italy, the EU, and international — every order is shipped with tracking.</p>" }
+        },
+        "s2": {
+          "type": "collapsible_row",
+          "settings": { "heading": "How long does delivery take?", "row_content": "<p>2–4 business days in Italy, 3–7 in the EU, 5–14 for international orders.</p>" }
+        },
+        "s3": {
+          "type": "collapsible_row",
+          "settings": { "heading": "How do I track my order?", "row_content": "<p>You'll receive a tracking link by email as soon as your order ships.</p>" }
+        }
+      },
+      "block_order": ["s1", "s2", "s3"]
+    },
+    "faq_returns": {
+      "type": "collapsible-content",
+      "settings": {
+        "caption": "",
+        "heading": "Returns & Exchange",
+        "heading_size": "h2",
+        "heading_alignment": "left",
+        "layout": "none",
+        "container_color_scheme": "scheme-2",
+        "color_scheme": "scheme-1",
+        "open_first_collapsible_row": false,
+        "image_ratio": "adapt",
+        "desktop_layout": "image_second",
+        "padding_top": 24,
+        "padding_bottom": 24
+      },
+      "blocks": {
+        "r1": {
+          "type": "collapsible_row",
+          "settings": { "heading": "What's your return policy?", "row_content": "<p>Returns are accepted within 14 days of delivery, unworn and with tags attached. 1/1 figures are final sale.</p>" }
+        },
+        "r2": {
+          "type": "collapsible_row",
+          "settings": { "heading": "How do I request a return?", "row_content": "<p>Email us with your order number and we'll send you a prepaid return label.</p>" }
+        },
+        "r3": {
+          "type": "collapsible_row",
+          "settings": { "heading": "When will I get my refund?", "row_content": "<p>Within 5 business days of us receiving your return.</p>" }
+        }
+      },
+      "block_order": ["r1", "r2", "r3"]
+    },
+    "faq_account": {
+      "type": "collapsible-content",
+      "settings": {
+        "caption": "",
+        "heading": "Account",
+        "heading_size": "h2",
+        "heading_alignment": "left",
+        "layout": "none",
+        "container_color_scheme": "scheme-2",
+        "color_scheme": "scheme-1",
+        "open_first_collapsible_row": false,
+        "image_ratio": "adapt",
+        "desktop_layout": "image_second",
+        "padding_top": 24,
+        "padding_bottom": 56
+      },
+      "blocks": {
+        "a1": {
+          "type": "collapsible_row",
+          "settings": { "heading": "Do I need an account to order?", "row_content": "<p>No, guest checkout is available — but an account lets you track orders and sightings.</p>" }
+        },
+        "a2": {
+          "type": "collapsible_row",
+          "settings": { "heading": "How do I reset my password?", "row_content": "<p>Use \"Forgot password\" on the login page — you'll get a reset link by email.</p>" }
+        }
+      },
+      "block_order": ["a1", "a2"]
+    }
+  },
+  "order": ["faq_intro", "faq_payment", "faq_shipping", "faq_returns", "faq_account"]
+}

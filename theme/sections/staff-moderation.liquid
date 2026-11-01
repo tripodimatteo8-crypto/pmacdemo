@@ -1,0 +1,49 @@
+{{ 'component-staff-moderation.css' | asset_url | stylesheet_tag }}
+
+<div class="pmac-staff color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width pmac-staff__inner">
+    <p class="pmac-system-label pmac-system-label--static">STAFF // MODERAZIONE AVVISTAMENTI</p>
+    <h1 class="pmac-staff__heading">PMAC — Pannello avvistamenti</h1>
+
+    <div class="pmac-staff__login" data-staff-login>
+      <p class="pmac-staff__hint">Accesso riservato allo staff. Inserisci la tua email per ricevere il link di accesso.</p>
+      <form class="pmac-staff__login-form" data-staff-login-form>
+        <input type="email" name="email" placeholder="email@pmac.com" required>
+        <button type="submit" class="button">Invia link di accesso</button>
+      </form>
+      <p class="pmac-staff__status pmac-mono" data-staff-login-status></p>
+    </div>
+
+    <div class="pmac-staff__panel" data-staff-panel hidden>
+      <div class="pmac-staff__panel-header">
+        <span class="pmac-mono" data-staff-user></span>
+        <button type="button" class="pmac-link" data-staff-logout>Esci</button>
+      </div>
+      <p class="pmac-staff__status pmac-mono" data-staff-list-status></p>
+      <div class="pmac-staff__list" data-staff-list></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer="defer"></script>
+<script src="{{ 'pmac-supabase-client.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'pmac-staff-moderation.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "PMAC — Staff moderazione",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    { "name": "PMAC — Staff moderazione" }
+  ]
+}
+{% endschema %}

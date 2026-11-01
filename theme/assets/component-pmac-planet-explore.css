@@ -1,0 +1,87 @@
+.pmac-planet {
+  padding: 10rem 0 6rem;
+}
+
+.pmac-planet__intro {
+  text-align: center;
+  max-width: 62rem;
+  margin: 0 auto 4rem;
+}
+
+.pmac-planet__heading {
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
+  text-transform: uppercase;
+  font-size: clamp(3.2rem, 6vw, 5.6rem);
+  margin: 1.2rem 0;
+}
+
+.pmac-planet__text {
+  color: rgba(var(--color-foreground), 0.75);
+}
+
+.pmac-planet__stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: var(--pmac-black);
+  border: 1px solid rgba(var(--color-foreground), 0.12);
+  overflow: hidden;
+  touch-action: none;
+}
+
+@media screen and (min-width: 750px) {
+  .pmac-planet__stage {
+    aspect-ratio: 21 / 9;
+  }
+}
+
+.pmac-planet__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.pmac-planet__hint {
+  position: absolute;
+  top: 1.6rem;
+  left: 1.6rem;
+  z-index: 3;
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.pmac-planet__pad {
+  position: absolute;
+  z-index: 3;
+  bottom: 1.6rem;
+  right: 1.6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  user-select: none;
+}
+
+.pmac-planet__pad-row {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.pmac-planet__pad-btn {
+  width: 4.4rem;
+  height: 4.4rem;
+  border: 1px solid rgba(var(--color-foreground), 0.3);
+  background: rgba(var(--color-background), 0.7);
+  backdrop-filter: blur(10px);
+  color: rgb(var(--color-foreground));
+  font-size: 1.4rem;
+  cursor: pointer;
+  touch-action: none;
+}
+
+.pmac-planet__pad-btn:active {
+  background: rgba(var(--color-foreground), 0.25);
+}

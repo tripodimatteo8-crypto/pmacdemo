@@ -1,0 +1,92 @@
+{{ 'component-trending-search.css' | asset_url | stylesheet_tag }}
+
+<div class="pmac-trending color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width pmac-trending__inner">
+    <form action="{{ routes.search_url }}" method="get" role="search" class="pmac-trending__form">
+      <input type="hidden" name="type" value="product">
+      <label for="PmacTrendingSearch" class="pmac-system-label pmac-system-label--static pmac-trending__label">
+        {{ section.settings.label | default: 'Trending' }}
+      </label>
+      <input
+        id="PmacTrendingSearch"
+        type="search"
+        name="q"
+        class="pmac-trending__input"
+        placeholder="{{ section.settings.placeholder | default: 'Cerca nel segnale…' }}"
+        autocomplete="off"
+      >
+      <button type="submit" class="pmac-trending__submit" aria-label="{{ 'general.search.search' | t }}">
+        {{ 'icon-search.svg' | inline_asset_content }}
+      </button>
+    </form>
+
+    {%- if section.blocks.size > 0 -%}
+      <ul class="pmac-trending__tags" role="list">
+        {%- for block in section.blocks -%}
+          <li {{ block.shopify_attributes }}>
+            <a href="{{ block.settings.url | default: routes.search_url }}" class="pmac-link">
+              {{ block.settings.label }}
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "PMAC — Trending search",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Etichetta",
+      "default": "Trending"
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Placeholder campo ricerca",
+      "default": "Cerca nel segnale…"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tag",
+      "name": "Tag",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Testo",
+          "default": "Intercettazioni"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "PMAC — Trending search",
+      "blocks": [
+        { "type": "tag" },
+        { "type": "tag" },
+        { "type": "tag" }
+      ]
+    }
+  ]
+}
+{% endschema %}

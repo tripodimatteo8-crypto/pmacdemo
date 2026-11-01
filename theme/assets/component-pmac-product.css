@@ -1,0 +1,32 @@
+/* Allinea il bottone "Buy it now" al resto della UI PMAC (nero/outline, non pillola chiara) */
+button.shopify-payment-button__button--unbranded {
+  background-color: var(--pmac-black) !important;
+  color: var(--pmac-white) !important;
+  border: 1px solid var(--pmac-white) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  font-family: var(--font-mono-family);
+  letter-spacing: 0.04em;
+}
+
+button.shopify-payment-button__button--unbranded:before,
+button.shopify-payment-button__button--unbranded:after {
+  display: none !important;
+}
+
+button.shopify-payment-button__button--unbranded:hover {
+  background-color: var(--pmac-white) !important;
+  color: var(--pmac-black) !important;
+}
+
+/* Trasforma il vendor ("PMAC") in un system-label stile brand invece della didascalia generica */
+.product__info-wrapper .product__text.caption-with-letter-spacing {
+  font-family: var(--font-mono-family);
+  font-size: 1.1rem;
+  letter-spacing: 0.12em;
+  color: var(--pmac-signal);
+}
+
+.product__info-wrapper .product__text.caption-with-letter-spacing::before {
+  content: 'SIGNAL DETECTED // ';
+}

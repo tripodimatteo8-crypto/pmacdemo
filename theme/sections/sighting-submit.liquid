@@ -1,0 +1,95 @@
+{{ 'component-sighting-submit.css' | asset_url | stylesheet_tag }}
+
+<div class="pmac-sighting-submit color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width pmac-sighting-submit__inner pmac-reveal-group">
+    <p class="pmac-system-label" data-pmac-scramble="{{ section.settings.label | escape }}">
+      {{ section.settings.label }}
+    </p>
+    <h1 class="pmac-sighting-submit__heading">{{ section.settings.heading }}</h1>
+    {%- if section.settings.text != blank -%}
+      <div class="pmac-sighting-submit__text rte">{{ section.settings.text }}</div>
+    {%- endif -%}
+
+    <form class="pmac-sighting-submit__form" data-sighting-form novalidate>
+      <fieldset class="pmac-sighting-submit__kind">
+        <label class="pmac-sighting-submit__radio">
+          <input type="radio" name="kind" value="user_photo" checked>
+          <span>I spotted a signal</span>
+        </label>
+        <label class="pmac-sighting-submit__radio">
+          <input type="radio" name="kind" value="community_outfit">
+          <span>I'm wearing PMAC</span>
+        </label>
+      </fieldset>
+
+      <label class="pmac-sighting-submit__field">
+        <span>Photo</span>
+        <input type="file" name="photo" accept="image/*" required data-sighting-photo>
+      </label>
+
+      <label class="pmac-sighting-submit__field">
+        <span>City</span>
+        <input type="text" name="city" required placeholder="e.g. Milan">
+      </label>
+
+      <label class="pmac-sighting-submit__field">
+        <span>Note (optional)</span>
+        <textarea name="note" rows="3"></textarea>
+      </label>
+
+      <div class="pmac-sighting-submit__geo">
+        <button type="button" class="pmac-link" data-sighting-geo>Use my location on the map</button>
+        <span class="pmac-sighting-submit__geo-status pmac-mono" data-sighting-geo-status></span>
+        <input type="hidden" name="lat" data-sighting-lat>
+        <input type="hidden" name="lng" data-sighting-lng>
+      </div>
+
+      <button type="submit" class="button pmac-sighting-submit__submit" data-sighting-submit>
+        Send Sighting
+      </button>
+
+      <p class="pmac-sighting-submit__status pmac-mono" data-sighting-status role="status"></p>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer="defer"></script>
+<script src="{{ 'pmac-supabase-client.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'pmac-sighting-submit.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "PMAC — Invio avvistamento",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Testo di sistema",
+      "default": "TRANSMIT A SIGNAL"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Titolo",
+      "default": "Report a Sighting"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Testo",
+      "default": "<p>Spotted a signal, or wearing PMAC? Send it in — once approved, it appears on the Tracker.</p>"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    { "name": "PMAC — Invio avvistamento" }
+  ]
+}
+{% endschema %}

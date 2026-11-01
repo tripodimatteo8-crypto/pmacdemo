@@ -1,0 +1,62 @@
+{{ 'component-pmac-product-info.css' | asset_url | stylesheet_tag }}
+
+<div class="pmac-product-info color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'disclosure' -%}
+        <details class="pmac-product-info__item" {{ block.shopify_attributes }}>
+          <summary class="pmac-product-info__summary">
+            <span class="pmac-mono">{{ block.settings.heading }}</span>
+            <span class="pmac-product-info__icon" aria-hidden="true">+</span>
+          </summary>
+          <div class="pmac-product-info__content rte">{{ block.settings.content }}</div>
+        </details>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "PMAC — Info prodotto",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "disclosure",
+      "name": "Voce accordion",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Titolo"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Contenuto"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "PMAC — Info prodotto",
+      "blocks": [
+        { "type": "disclosure" },
+        { "type": "disclosure" },
+        { "type": "disclosure" },
+        { "type": "disclosure" }
+      ]
+    }
+  ]
+}
+{% endschema %}

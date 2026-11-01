@@ -1,0 +1,335 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "pmac_hero": {
+      "type": "pmac-hero",
+      "blocks": {
+        "slide-1": {
+          "type": "slide",
+          "settings": {
+            "system_label": "SIGNAL DETECTED // PHASE 01",
+            "heading": "Arrival",
+            "subheading": "Planet 121 to Earth. Monitoring begins.",
+            "link_1_label": "Enter",
+            "link_1_url": "shopify://collections/intercettazioni",
+            "link_2_label": "Tracker",
+            "link_2_url": "/pages/pmac-tracker",
+            "color_scheme": "scheme-1"
+          }
+        },
+        "slide-2": {
+          "type": "slide",
+          "settings": {
+            "system_label": "PHASE 02 // INTERCEPTED",
+            "heading": "Intercepted",
+            "subheading": "The first transmission reached us.",
+            "link_1_label": "View Collection",
+            "link_1_url": "shopify://collections/intercettazioni",
+            "link_2_label": "Planet 121",
+            "link_2_url": "/pages/planet-121",
+            "color_scheme": "scheme-1"
+          }
+        },
+        "slide-3": {
+          "type": "slide",
+          "settings": {
+            "system_label": "PHASE 03 // SIGHTED",
+            "heading": "Ten Signals",
+            "subheading": "One planet. Ten pieces. Each one real.",
+            "link_1_label": "Sightings",
+            "link_1_url": "/pages/pmac-tracker",
+            "link_2_label": "",
+            "link_2_url": "",
+            "color_scheme": "scheme-1"
+          }
+        }
+      },
+      "block_order": [
+        "slide-1",
+        "slide-2",
+        "slide-3"
+      ],
+      "settings": {
+        "full_screen": true,
+        "slide_duration": 6
+      }
+    },
+    "trending_search": {
+      "type": "trending-search",
+      "blocks": {
+        "tag-1": {
+          "type": "tag",
+          "settings": {
+            "label": "Intercepted",
+            "url": "shopify://collections/intercettazioni"
+          }
+        },
+        "tag-2": {
+          "type": "tag",
+          "settings": {
+            "label": "New Arrivals",
+            "url": "shopify://collections/all"
+          }
+        },
+        "tag-3": {
+          "type": "tag",
+          "settings": {
+            "label": "Figures",
+            "url": "/pages/pmac-tracker"
+          }
+        }
+      },
+      "block_order": [
+        "tag-1",
+        "tag-2",
+        "tag-3"
+      ],
+      "settings": {
+        "label": "Trending",
+        "placeholder": "Search the signal…",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "featured_collection": {
+      "type": "featured-collection",
+      "settings": {
+        "collection": "intercettazioni",
+        "products_to_show": 10,
+        "title": "Intercettazioni",
+        "heading_size": "h1",
+        "description": "",
+        "show_description": false,
+        "description_style": "body",
+        "pmac_editorial_grid": true,
+        "columns_desktop": 6,
+        "enable_desktop_slider": false,
+        "full_width": false,
+        "show_view_all": true,
+        "view_all_style": "link",
+        "color_scheme": "scheme-1",
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "quick_add": "standard",
+        "columns_mobile": "2",
+        "swipe_on_mobile": true,
+        "padding_top": 56,
+        "padding_bottom": 56
+      }
+    },
+    "pmac_showroom": {
+      "type": "pmac-showroom",
+      "blocks": {
+        "tile-1": {
+          "type": "tile",
+          "settings": {
+            "caption": ""
+          }
+        },
+        "tile-2": {
+          "type": "tile",
+          "settings": {
+            "caption": ""
+          }
+        },
+        "tile-3": {
+          "type": "tile",
+          "settings": {
+            "caption": ""
+          }
+        },
+        "tile-4": {
+          "type": "tile",
+          "settings": {
+            "caption": ""
+          }
+        }
+      },
+      "block_order": [
+        "tile-1",
+        "tile-2",
+        "tile-3",
+        "tile-4"
+      ],
+      "settings": {
+        "label": "ARCHIVE // MATERIAL STUDY",
+        "heading": "Showroom",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "pmac_specimen_3d": {
+      "type": "pmac-specimen-3d",
+      "settings": {
+        "label": "SPECIMEN 01 // RECOVERED",
+        "heading": "The Rabbit",
+        "text": "<p>Scanned and reconstructed from the recovered specimen. One of ten signals, now in three dimensions.</p>",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "tracker_teaser": {
+      "type": "tracker-teaser",
+      "settings": {
+        "label": "PHASE 03 // SIGHTED",
+        "heading": "PMAC Tracker",
+        "text": "<p>Ten signals, one each, placed across Earth. The next one transmits soon.</p>",
+        "link_label": "",
+        "link_url": "",
+        "countdown_label": "NEXT DROP",
+        "countdown_target": "2026-11-06T18:00:00",
+        "color_scheme": "scheme-2"
+      }
+    },
+    "tracker_map": {
+      "type": "tracker-map",
+      "blocks": {
+        "s1": {
+          "type": "statuetta",
+          "settings": {
+            "number": "01",
+            "city": "Rome",
+            "coordinates": "41.9028° N, 12.4964° E",
+            "clue": "Intercepted near an abandoned radio signal.",
+            "status": "located",
+            "product": "statuetta-pmac-n-01-rome"
+          }
+        },
+        "s2": {
+          "type": "statuetta",
+          "settings": {
+            "number": "02",
+            "city": "Paris",
+            "coordinates": "48.8566° N, 2.3522° E",
+            "clue": "Stable transmission from a rooftop in Le Marais.",
+            "status": "active",
+            "product": "statuetta-pmac-n-02-paris"
+          }
+        },
+        "s3": {
+          "type": "statuetta",
+          "settings": {
+            "number": "03",
+            "city": "London",
+            "coordinates": "51.5072° N, 0.1276° W",
+            "clue": "Weak signal on the Thames, position unconfirmed.",
+            "status": "signal_detected",
+            "product": "statuetta-pmac-n-03-london"
+          }
+        },
+        "s4": {
+          "type": "statuetta",
+          "settings": {
+            "number": "04",
+            "city": "Berlin",
+            "coordinates": "52.5200° N, 13.4050° E",
+            "clue": "Last contact recorded near the Spree.",
+            "status": "signal_lost",
+            "product": "statuetta-pmac-n-04-berlin"
+          }
+        },
+        "s5": {
+          "type": "statuetta",
+          "settings": {
+            "number": "05",
+            "city": "Madrid",
+            "coordinates": "40.4168° N, 3.7038° W",
+            "clue": "Found in a vintage market downtown.",
+            "status": "located",
+            "product": "statuetta-pmac-n-05-madrid"
+          }
+        },
+        "s6": {
+          "type": "statuetta",
+          "settings": {
+            "number": "06",
+            "city": "Lisbon",
+            "coordinates": "38.7223° N, 9.1393° W",
+            "clue": "Possible sighting on the waterfront, unconfirmed.",
+            "status": "signal_detected",
+            "product": "statuetta-pmac-n-06-lisbon"
+          }
+        },
+        "s7": {
+          "type": "statuetta",
+          "settings": {
+            "number": "07",
+            "city": "Amsterdam",
+            "coordinates": "52.3676° N, 4.9041° E",
+            "clue": "Steady signal along a downtown canal.",
+            "status": "active",
+            "product": "statuetta-pmac-n-07-amsterdam"
+          }
+        },
+        "s8": {
+          "type": "statuetta",
+          "settings": {
+            "number": "08",
+            "city": "Vienna",
+            "coordinates": "48.2082° N, 16.3738° E",
+            "clue": "New signal, origin unverified.",
+            "status": "signal_detected",
+            "product": "statuetta-pmac-n-08-vienna"
+          }
+        },
+        "s9": {
+          "type": "statuetta",
+          "settings": {
+            "number": "09",
+            "city": "Athens",
+            "coordinates": "37.9838° N, 23.7275° E",
+            "clue": "Contact lost among the ruins.",
+            "status": "signal_lost",
+            "product": "statuetta-pmac-n-09-athens"
+          }
+        },
+        "s10": {
+          "type": "statuetta",
+          "settings": {
+            "number": "10",
+            "city": "Warsaw",
+            "coordinates": "52.2297° N, 21.0122° E",
+            "clue": "Found in the industrial district, north side.",
+            "status": "located",
+            "product": "statuetta-pmac-n-10-warsaw"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "s10"
+      ],
+      "settings": {
+        "label": "PHASE 03 // SIGHTED",
+        "heading": "PMAC Tracker",
+        "intro": "<p>Ten signals, one each, intercepted on Earth. Touch one on the map to open the file.</p>",
+        "color_scheme": "scheme-1"
+      }
+    }
+  },
+  "order": [
+    "pmac_hero",
+    "trending_search",
+    "featured_collection",
+    "pmac_showroom",
+    "pmac_specimen_3d",
+    "tracker_teaser",
+    "tracker_map"
+  ]
+}

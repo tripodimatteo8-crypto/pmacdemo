@@ -1,0 +1,75 @@
+{{ 'component-pmac-planet-explore.css' | asset_url | stylesheet_tag }}
+
+<div class="pmac-planet color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width pmac-planet__intro pmac-reveal-group">
+    <p class="pmac-system-label" data-pmac-scramble="{{ section.settings.label | escape }}">
+      {{ section.settings.label }}
+    </p>
+    <h1 class="pmac-planet__heading">{{ section.settings.heading }}</h1>
+    {%- if section.settings.intro != blank -%}
+      <div class="pmac-planet__text rte">{{ section.settings.intro }}</div>
+    {%- endif -%}
+  </div>
+
+  <div class="pmac-planet__stage" id="pmac-planet-stage" data-bg="{{ 'pmac-planet121-bg.webp' | asset_url }}" data-model="{{ 'pmac-rabbit-3d.glb' | asset_url }}">
+    <canvas class="pmac-planet__canvas" id="pmac-planet-canvas"></canvas>
+
+    <p class="pmac-planet__hint pmac-mono">DESKTOP: WASD / ARROWS — MOBILE: TOUCH PAD</p>
+
+    <div class="pmac-planet__pad" aria-hidden="true">
+      <button type="button" class="pmac-planet__pad-btn pmac-planet__pad-btn--up" data-dir="up" aria-label="Move up">▲</button>
+      <div class="pmac-planet__pad-row">
+        <button type="button" class="pmac-planet__pad-btn pmac-planet__pad-btn--left" data-dir="left" aria-label="Move left">◀</button>
+        <button type="button" class="pmac-planet__pad-btn pmac-planet__pad-btn--down" data-dir="down" aria-label="Move down">▼</button>
+        <button type="button" class="pmac-planet__pad-btn pmac-planet__pad-btn--right" data-dir="right" aria-label="Move right">▶</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module" src="{{ 'pmac-planet-explore.js' | asset_url }}"></script>
+
+{% schema %}
+{
+  "name": "PMAC — Planet 121",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Testo di sistema",
+      "default": "TRANSMISSION FROM PLANET 121"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Titolo",
+      "default": "Planet 121"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Testo introduttivo",
+      "default": "<p>Home world of the signal. Move the rabbit across the surface.</p>"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    { "name": "PMAC — Planet 121" }
+  ]
+}
+{% endschema %}

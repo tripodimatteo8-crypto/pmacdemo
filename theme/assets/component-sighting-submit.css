@@ -1,0 +1,93 @@
+.pmac-sighting-submit {
+  padding: 12rem 0 8rem;
+}
+
+.pmac-sighting-submit__inner {
+  max-width: 54rem;
+  margin: 0 auto;
+}
+
+.pmac-sighting-submit__heading {
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
+  font-weight: var(--font-heading-weight);
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  font-size: clamp(3rem, 5vw, 4.4rem);
+  margin: 1.2rem 0;
+}
+
+.pmac-sighting-submit__text {
+  color: rgba(var(--color-foreground), 0.75);
+  margin-bottom: 3.2rem;
+}
+
+.pmac-sighting-submit__form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.pmac-sighting-submit__kind {
+  display: flex;
+  gap: 2.4rem;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.pmac-sighting-submit__radio {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-mono-family);
+  font-size: 1.2rem;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+}
+
+.pmac-sighting-submit__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.pmac-sighting-submit__field span {
+  font-family: var(--font-mono-family);
+  font-size: 1.1rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(var(--color-foreground), 0.6);
+}
+
+.pmac-sighting-submit__field input[type='text'],
+.pmac-sighting-submit__field input[type='file'],
+.pmac-sighting-submit__field textarea {
+  background: transparent;
+  border: 1px solid rgba(var(--color-foreground), 0.3);
+  color: rgb(var(--color-foreground));
+  padding: 1.2rem 1.4rem;
+  font-size: 1.5rem;
+  font-family: var(--font-body-family);
+}
+
+.pmac-sighting-submit__geo {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.pmac-sighting-submit__geo-status {
+  font-size: 1.1rem;
+  color: rgba(var(--color-foreground), 0.55);
+}
+
+.pmac-sighting-submit__submit {
+  align-self: flex-start;
+}
+
+.pmac-sighting-submit__status {
+  min-height: 1.8rem;
+  font-size: 1.2rem;
+  color: rgba(var(--color-foreground), 0.75);
+}
