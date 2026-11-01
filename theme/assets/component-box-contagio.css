@@ -176,3 +176,86 @@
     display: none;
   }
 }
+
+
+/* ---------- Stato narrativo + barra a segmenti ---------- */
+.pmac-box-contagio__status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 1.2rem;
+}
+
+.pmac-box-contagio__state {
+  font-size: 1rem;
+  letter-spacing: 0.16em;
+  color: rgb(var(--color-foreground));
+}
+
+.pmac-box-contagio__state.is-new {
+  animation: pmac-box-state 900ms steps(6);
+}
+
+.pmac-box-contagio__bar {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 3px;
+  width: min(22rem, 100%);
+}
+
+.pmac-box-contagio__seg {
+  display: block;
+  height: 4px;
+  background: rgba(var(--color-foreground), 0.15);
+  transition: background-color 400ms var(--ease-pmac);
+}
+
+.pmac-box-contagio__seg.is-on {
+  background: rgb(var(--color-foreground));
+}
+
+.pmac-box-contagio.is-full .pmac-box-contagio__seg.is-on {
+  background: var(--pmac-hazard, #f2c230);
+}
+
+/* ---------- Sigillo giallo-nero al lancio ---------- */
+.pmac-box-contagio__seal {
+  opacity: 0;
+}
+
+.pmac-box-contagio.is-launching .pmac-box-contagio__seal {
+  opacity: 1;
+  animation: pmac-box-seal 520ms var(--ease-pmac) both;
+}
+
+@keyframes pmac-box-seal {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes pmac-box-state {
+  0% {
+    opacity: 0.2;
+  }
+  20% {
+    opacity: 1;
+  }
+  40% {
+    opacity: 0.3;
+  }
+  60% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pmac-box-contagio__state.is-new,
+  .pmac-box-contagio.is-launching .pmac-box-contagio__seal {
+    animation: none;
+  }
+}

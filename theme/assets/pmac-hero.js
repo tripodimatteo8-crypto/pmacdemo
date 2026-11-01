@@ -23,6 +23,8 @@
         dot.addEventListener('click', () => this.goTo(i));
       });
 
+      this.syncVideos();
+
       if (this.slides.length > 1 && !this.reducedMotion) {
         this.addEventListener('mouseenter', () => this.pause());
         this.addEventListener('mouseleave', () => this.play());
@@ -34,6 +36,20 @@
       this.pause();
     }
 
+    // Video di sfondo: gira solo la slide attiva (niente decodifica inutile in background)
+    syncVideos() {
+      this.slides.forEach((slide, i) => {
+        const video = slide.querySelector('video');
+        if (!video) return;
+        if (i === this.index && !this.reducedMotion) {
+          const p = video.play();
+          if (p && p.catch) p.catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
+    }
+
     goTo(nextIndex) {
       if (nextIndex === this.index) return;
       this.slides[this.index].classList.remove('is-active');
@@ -41,6 +57,7 @@
       this.index = nextIndex;
       this.slides[this.index].classList.add('is-active');
       this.dots[this.index]?.classList.add('is-active');
+      this.syncVideos();
       this.restartFill();
       if (!this.reducedMotion && this.slides.length > 1) this.play();
     }

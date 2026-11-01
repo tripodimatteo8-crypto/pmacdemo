@@ -17,7 +17,36 @@
         {{ block.shopify_attributes }}
       >
         <div class="pmac-hero__media">
-          {%- if block.settings.image != blank -%}
+          {%- liquid
+            assign hero_video_src = blank
+            if block.settings.video != blank
+              assign hero_mp4s = block.settings.video.sources | where: 'mime_type', 'video/mp4'
+              assign hero_video_src = hero_mp4s.first.url
+            elsif block.settings.video_url != blank
+              if block.settings.video_url contains '/'
+                assign hero_video_src = block.settings.video_url
+              else
+                assign hero_video_src = block.settings.video_url | asset_url
+              endif
+            endif
+            if block.settings.image != blank
+              assign hero_poster = block.settings.image | image_url: width: 1600
+            else
+              assign hero_poster = 'pmac-hero-' | append: forloop.index | append: '.webp' | asset_url
+            endif
+          -%}
+          {%- if hero_video_src != blank -%}
+            <video
+              class="pmac-hero__video"
+              src="{{ hero_video_src }}"
+              poster="{{ hero_poster }}"
+              muted
+              loop
+              playsinline
+              preload="{% if forloop.first %}auto{% else %}metadata{% endif %}"
+              aria-hidden="true"
+            ></video>
+          {%- elsif block.settings.image != blank -%}
             {{
               block.settings.image
               | image_url: width: 2400
@@ -142,6 +171,18 @@
           "type": "image_picker",
           "id": "image",
           "label": "Immagine / frame video (placeholder a tutto schermo se vuoto)"
+        },
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Video di sfondo (opzionale)",
+          "info": "MP4 corto senza audio, gira in loop al posto dell'immagine. L'immagine resta come anteprima."
+        },
+        {
+          "type": "text",
+          "id": "video_url",
+          "label": "Oppure URL video / file del tema",
+          "info": "Es. pmac-hero-2-loop.mp4 (file negli asset del tema) o un link https a un MP4."
         },
         {
           "type": "text",

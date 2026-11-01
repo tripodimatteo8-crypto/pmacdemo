@@ -1,0 +1,17 @@
+{
+  "sections": {
+    "launch": {
+      "type": "pmac-launch",
+      "settings": {
+        "final_label": "MISSION STARTED",
+        "heading": "Your contagion is on its way",
+        "link_1_label": "Track the signal",
+        "link_2_label": "Back to the portal",
+        "color_scheme": "scheme-1"
+      }
+    }
+  },
+  "order": [
+    "launch"
+  ]
+}

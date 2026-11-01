@@ -9,8 +9,44 @@
  */
 {
   "sections": {
+    "archive": {
+      "type": "pmac-archive",
+      "blocks": {
+        "m1": {
+          "type": "mission",
+          "settings": {
+            "title": "Contagion",
+            "subtitle": "",
+            "route": "PLANET 121 → MILAN",
+            "year": "2027",
+            "status": "classified"
+          }
+        },
+        "m2": {
+          "type": "mission",
+          "settings": {
+            "title": "Second Transmission",
+            "subtitle": "",
+            "route": "PLANET 121 → TOKYO",
+            "year": "2027",
+            "status": "classified"
+          }
+        }
+      },
+      "block_order": [
+        "m1",
+        "m2"
+      ],
+      "settings": {
+        "label": "ARCHIVE // MISSION LOG",
+        "heading": "Archive",
+        "default_route": "PLANET 121 → EARTH",
+        "color_scheme": "scheme-1"
+      }
+    },
     "main": {
       "type": "main-list-collections",
+      "disabled": true,
       "settings": {
         "title": "Collections",
         "sort": "alphabetical",
@@ -21,6 +57,7 @@
     }
   },
   "order": [
+    "archive",
     "main"
   ]
 }

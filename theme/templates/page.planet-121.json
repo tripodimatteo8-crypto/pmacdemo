@@ -17,7 +17,70 @@
         "intro": "<p>Home world of the signal. Move the rabbit across the surface.</p>",
         "color_scheme": "scheme-1"
       }
+    },
+    "habitat": {
+      "type": "pmac-habitat",
+      "blocks": {
+        "d0": {
+          "type": "datum",
+          "settings": {
+            "key": "COORDINATES",
+            "value": "12.0121° S, 121.0000° E"
+          }
+        },
+        "d1": {
+          "type": "datum",
+          "settings": {
+            "key": "SURFACE",
+            "value": "BASALT / IRON DUST"
+          }
+        },
+        "d2": {
+          "type": "datum",
+          "settings": {
+            "key": "TEMPERATURE",
+            "value": "−118 °C"
+          }
+        },
+        "d3": {
+          "type": "datum",
+          "settings": {
+            "key": "ATMOSPHERE",
+            "value": "TRACE // NON-BREATHABLE"
+          }
+        },
+        "d4": {
+          "type": "datum",
+          "settings": {
+            "key": "DISTANCE FROM EARTH",
+            "value": "121 LIGHT-YEARS"
+          }
+        },
+        "d5": {
+          "type": "datum",
+          "settings": {
+            "key": "OCCUPANTS",
+            "value": "1 — PMAC"
+          }
+        }
+      },
+      "block_order": [
+        "d0",
+        "d1",
+        "d2",
+        "d3",
+        "d4",
+        "d5"
+      ],
+      "settings": {
+        "label": "HABITAT // SECTOR 07",
+        "heading": "The Dwelling",
+        "color_scheme": "scheme-1"
+      }
     }
   },
-  "order": ["planet_explore"]
+  "order": [
+    "planet_explore",
+    "habitat"
+  ]
 }

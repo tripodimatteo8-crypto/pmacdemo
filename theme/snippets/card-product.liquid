@@ -41,8 +41,9 @@
     endif
   -%}
 
+  {%- capture pmac_drop_at -%}{% render 'pmac-drop-at', product: card_product %}{%- endcapture -%}
   <product-component view-event-payload="{{ card_product | standard_event_data: 'view', context: product_view_context | escape }}">
-    <div class="card-wrapper product-card-wrapper underline-links-hover">
+    <div class="card-wrapper product-card-wrapper underline-links-hover{% if pmac_drop_at != blank %} pmac-drop-locked{% endif %}"{% if pmac_drop_at != blank %} data-pmac-drop="{{ pmac_drop_at }}"{% endif %}>
       <div
         class="
           card card--{{ settings.card_style }}
@@ -59,6 +60,12 @@
           class="card__inner {% if settings.card_style == 'standard' %}color-{{ settings.card_color_scheme }} gradient{% endif %}{% if card_product.featured_media or settings.card_style == 'standard' %} ratio{% endif %}"
           style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"
         >
+          {%- if pmac_drop_at != blank -%}
+            <div class="pmac-drop-veil" aria-hidden="true">
+              <span class="pmac-drop-veil__label pmac-mono">{{ settings.pmac_drop_label | default: 'CLASSIFIED' }}</span>
+              <span class="pmac-drop-veil__count pmac-mono" data-pmac-drop-countdown="{{ pmac_drop_at }}">--D --:--:--</span>
+            </div>
+          {%- endif -%}
           {%- if card_product.featured_media -%}
             <div class="card__media{% if image_shape and image_shape != 'default' %} shape--{{ image_shape }} color-{{ settings.card_color_scheme }} gradient{% endif %}">
               <div class="media media--transparent media--hover-effect">
@@ -206,6 +213,9 @@
                 </p>
               {%- endif -%}
 
+              {%- if pmac_drop_at != blank -%}
+                <span class="pmac-drop-price pmac-mono">TRANSMISSION PENDING</span>
+              {%- endif -%}
               {% render 'price', product: card_product, price_class: '', show_compare_at_price: true %}
               {%- if card_product.quantity_price_breaks_configured? -%}
                 {% if card_product.variants_count == 1 and quick_add == 'bulk' %}

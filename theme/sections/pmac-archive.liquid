@@ -1,0 +1,142 @@
+{{ 'component-pmac-archive.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  ARCHIVE (brief E — Storytelling): registro delle missioni/collezioni.
+  1) le collezioni reali del negozio con almeno un prodotto (esclusi gli handle
+     elencati nelle impostazioni), mostrate come missioni ACTIVE / ARCHIVED;
+  2) le missioni aggiunte come blocchi dall'editor (passate o future/CLASSIFIED).
+{%- endcomment -%}
+{%- liquid
+  assign excluded = section.settings.excluded_handles | newline_to_br | strip_newlines | replace: '<br />', ',' | split: ','
+  assign mission_n = 0
+-%}
+
+<div class="pmac-archive color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    <header class="pmac-archive__head pmac-reveal-group">
+      <p class="pmac-system-label" data-pmac-scramble="{{ section.settings.label | escape }}">{{ section.settings.label }}</p>
+      <h1 class="pmac-archive__heading">{{ section.settings.heading }}</h1>
+      {%- if section.settings.text != blank -%}
+        <div class="pmac-archive__text rte">{{ section.settings.text }}</div>
+      {%- endif -%}
+    </header>
+
+    <div class="pmac-archive__legend pmac-mono" aria-hidden="true">
+      <span>N°</span><span>MISSION</span><span class="pmac-archive__legend-meta">ROUTE</span><span class="pmac-archive__legend-meta">YEAR</span><span>STATUS</span>
+    </div>
+
+    <ol class="pmac-archive__list" role="list">
+      {%- for c in collections -%}
+        {%- liquid
+          assign skip = false
+          if c.products_count == 0
+            assign skip = true
+          endif
+          for h in excluded
+            assign hs = h | strip
+            if hs != blank and hs == c.handle
+              assign skip = true
+            endif
+          endfor
+        -%}
+        {%- unless skip -%}
+          {%- liquid
+            assign mission_n = mission_n | plus: 1
+            assign cover = c.featured_image
+            assign year = c.published_at | date: '%Y'
+          -%}
+          <li class="pmac-archive__item" style="--i: {{ mission_n }};">
+            <a class="pmac-archive__row" href="{{ c.url }}">
+              <span class="pmac-archive__num pmac-mono">{{ mission_n | prepend: '0' | slice: -2, 2 }}</span>
+              <span class="pmac-archive__title">
+                <span class="pmac-archive__name">{{ c.title }}</span>
+                <span class="pmac-archive__sub pmac-mono">{{ c.products_count }} PIECES INTERCEPTED</span>
+              </span>
+              <span class="pmac-archive__meta pmac-mono">{{ section.settings.default_route }}</span>
+              <span class="pmac-archive__meta pmac-mono">{{ year }}</span>
+              <span class="pmac-archive__status pmac-mono" data-status="active">ACTIVE</span>
+              <span class="pmac-archive__peek" aria-hidden="true">
+                {%- if cover -%}
+                  {{ cover | image_url: width: 600 | image_tag: alt: '', widths: '300, 600' }}
+                {%- else -%}
+                  {%- comment -%} Copertina della collezione non impostata: foto showroom del tema {%- endcomment -%}
+                  <img src="{{ 'pmac-showroom-3.webp' | asset_url }}" alt="" width="600" height="600">
+                {%- endif -%}
+              </span>
+            </a>
+          </li>
+        {%- endunless -%}
+      {%- endfor -%}
+
+      {%- for block in section.blocks -%}
+        {%- assign mission_n = mission_n | plus: 1 -%}
+        {%- assign classified = false -%}
+        {%- if block.settings.status == 'classified' -%}{%- assign classified = true -%}{%- endif -%}
+        <li class="pmac-archive__item{% if classified %} is-classified{% endif %}" style="--i: {{ mission_n }};" {{ block.shopify_attributes }}>
+          {%- if classified or block.settings.link == blank -%}<div class="pmac-archive__row">{%- else -%}<a class="pmac-archive__row" href="{{ block.settings.link }}">{%- endif -%}
+            <span class="pmac-archive__num pmac-mono">{{ mission_n | prepend: '0' | slice: -2, 2 }}</span>
+            <span class="pmac-archive__title">
+              {%- if classified -%}
+                <span class="pmac-archive__name"><span class="pmac-archive__redacted" style="--w: {{ block.settings.title | size | times: 0.62 | at_least: 5 }}ch;">{{ block.settings.title }}</span></span>
+                <span class="pmac-archive__sub pmac-mono">DATA WITHHELD BY THE MONITORING CENTER</span>
+              {%- else -%}
+                <span class="pmac-archive__name">{{ block.settings.title }}</span>
+                <span class="pmac-archive__sub pmac-mono">{{ block.settings.subtitle }}</span>
+              {%- endif -%}
+            </span>
+            <span class="pmac-archive__meta pmac-mono">{% if classified %}████ → ████{% else %}{{ block.settings.route }}{% endif %}</span>
+            <span class="pmac-archive__meta pmac-mono">{{ block.settings.year }}</span>
+            <span class="pmac-archive__status pmac-mono" data-status="{{ block.settings.status }}">
+              {%- case block.settings.status -%}
+                {%- when 'classified' -%}CLASSIFIED
+                {%- when 'archived' -%}ARCHIVED
+                {%- else -%}ACTIVE
+              {%- endcase -%}
+            </span>
+            {%- if block.settings.image != blank and classified == false -%}
+              <span class="pmac-archive__peek" aria-hidden="true">
+                {{ block.settings.image | image_url: width: 600 | image_tag: alt: '', widths: '300, 600' }}
+              </span>
+            {%- endif -%}
+          {%- if classified or block.settings.link == blank -%}</div>{%- else -%}</a>{%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ol>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "PMAC — Archive",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Testo di sistema", "default": "ARCHIVE // MISSION LOG" },
+    { "type": "text", "id": "heading", "label": "Titolo", "default": "Archive" },
+    { "type": "richtext", "id": "text", "label": "Testo", "default": "<p>Every transmission from Planet 121, filed in order. Each mission is a collection: the route, the year, the pieces intercepted.</p>" },
+    { "type": "text", "id": "default_route", "label": "Rotta mostrata per le collezioni del negozio", "default": "PLANET 121 → EARTH" },
+    { "type": "textarea", "id": "excluded_handles", "label": "Collezioni da non mostrare (handle, uno per riga)", "default": "frontpage\nhydrogen\nautomated-collection\nall" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:sections.all.colors.label", "default": "scheme-1" }
+  ],
+  "blocks": [
+    {
+      "type": "mission",
+      "name": "Missione",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Nome missione", "default": "Mission name" },
+        { "type": "text", "id": "subtitle", "label": "Sottotitolo" },
+        { "type": "text", "id": "route", "label": "Rotta / città", "default": "PLANET 121 → EARTH" },
+        { "type": "text", "id": "year", "label": "Anno", "default": "2027" },
+        { "type": "select", "id": "status", "label": "Status", "default": "classified", "options": [
+          { "value": "classified", "label": "Classified (futura, testo oscurato)" },
+          { "value": "active", "label": "Active" },
+          { "value": "archived", "label": "Archived" }
+        ] },
+        { "type": "image_picker", "id": "image", "label": "Immagine" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [ { "name": "PMAC — Archive" } ]
+}
+{% endschema %}

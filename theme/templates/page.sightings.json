@@ -9,10 +9,121 @@
  */
 {
   "sections": {
+    "sightings_log": {
+      "type": "pmac-sightings-log",
+      "blocks": {
+        "r1": {
+          "type": "record",
+          "settings": {
+            "code": "PMAC-S-0001",
+            "kind": "statuette",
+            "city": "Rome",
+            "coordinates": "41.9028° N, 12.4964° E",
+            "datetime": "2026-10-09 23:44:17",
+            "status": "located",
+            "camera": "CAM 03 // TREVI",
+            "description": "Chrome specimen observed beside a public fountain for 41 seconds. Signal source confirmed: PMAC N°01.",
+            "image_asset": "pmac-sighting-rome.webp",
+            "link": "/products/statuetta-pmac-n-01-rome"
+          }
+        },
+        "r2": {
+          "type": "record",
+          "settings": {
+            "code": "PMAC-S-0002",
+            "kind": "statuette",
+            "city": "Paris",
+            "coordinates": "48.8566° N, 2.3522° E",
+            "datetime": "2026-10-11 02:13:05",
+            "status": "active",
+            "camera": "CAM 11 // METRO",
+            "description": "Static anomaly on an empty platform after the last train. Thermal reading: none. Transmission still active.",
+            "image_asset": "pmac-sighting-paris.webp",
+            "link": "/products/statuetta-pmac-n-02-paris"
+          }
+        },
+        "r3": {
+          "type": "record",
+          "settings": {
+            "code": "PMAC-S-0003",
+            "kind": "statuette",
+            "city": "London",
+            "coordinates": "51.5072° N, 0.1276° W",
+            "datetime": "2026-10-14 21:58:40",
+            "status": "signal_detected",
+            "camera": "CAM 07 // WEST END",
+            "description": "Weak signal on a wet street. Figure visible for 3 frames, position unconfirmed.",
+            "image_asset": "pmac-sighting-london.webp",
+            "link": "/products/statuetta-pmac-n-03-london"
+          }
+        },
+        "r4": {
+          "type": "record",
+          "settings": {
+            "code": "PMAC-S-0004",
+            "kind": "statuette",
+            "city": "Berlin",
+            "coordinates": "52.5200° N, 13.4050° E",
+            "datetime": "2026-10-17 04:02:51",
+            "status": "signal_lost",
+            "camera": "CAM 02 // UNDERPASS",
+            "description": "Last known frame before the feed dropped. Specimen no longer in range.",
+            "image_asset": "pmac-sighting-berlin.webp",
+            "link": "/products/statuetta-pmac-n-04-berlin"
+          }
+        },
+        "r5": {
+          "type": "record",
+          "settings": {
+            "code": "PMAC-S-0007",
+            "kind": "statuette",
+            "city": "Amsterdam",
+            "coordinates": "52.3676° N, 4.9041° E",
+            "datetime": "2026-10-20 19:30:12",
+            "status": "active",
+            "camera": "CAM 05 // CANAL",
+            "description": "Radio interference logged along the canal ring. Visual pending.",
+            "image_asset": "",
+            "link": "/products/statuetta-pmac-n-07-amsterdam"
+          }
+        },
+        "r6": {
+          "type": "record",
+          "settings": {
+            "code": "PMAC-C-0012",
+            "kind": "community",
+            "city": "Milan",
+            "coordinates": "45.4642° N, 9.1900° E",
+            "datetime": "2026-10-22 18:05:33",
+            "status": "spotted",
+            "camera": "COMMUNITY",
+            "description": "Subject wearing PMAC Hoodie Ricezione reported near Porta Nuova. Awaiting photo verification.",
+            "image_asset": ""
+          }
+        }
+      },
+      "block_order": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "settings": {
+        "label": "SIGHTINGS // DATABASE",
+        "heading": "Sightings Log",
+        "show_community": true,
+        "color_scheme": "scheme-1"
+      }
+    },
     "sighting_submit": {
       "type": "sighting-submit",
       "settings": {}
     }
   },
-  "order": ["sighting_submit"]
+  "order": [
+    "sightings_log",
+    "sighting_submit"
+  ]
 }

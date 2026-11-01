@@ -1,0 +1,33 @@
+{%- comment -%}
+  Restituisce (da usare con capture) la data ISO di apertura del drop di un prodotto,
+  vuota se il prodotto non è in un drop o se l'apertura è già passata.
+  Fonti, in ordine: tag prodotto "drop:AAAA-MM-GGTHH:MM" → lista handle nelle
+  Impostazioni tema (PMAC — Sistema → Drop programmato).
+  Usage: {%- capture drop_at -%}{% render 'pmac-drop-at', product: product %}{%- endcapture -%}
+{%- endcomment -%}
+{%- liquid
+  assign drop_at = ''
+  for tag in product.tags
+    assign t = tag | downcase
+    if t contains 'drop:'
+      assign drop_at = t | remove_first: 'drop:' | strip
+    endif
+  endfor
+  if drop_at == blank and settings.pmac_drop_enabled
+    assign handles = settings.pmac_drop_products | newline_to_br | split: '<br />'
+    for h in handles
+      assign hs = h | strip
+      if hs == product.handle
+        assign drop_at = settings.pmac_drop_datetime | strip
+      endif
+    endfor
+  endif
+  if drop_at != blank
+    assign now_s = 'now' | date: '%s' | plus: 0
+    assign drop_s = drop_at | date: '%s' | plus: 0
+    if drop_s <= now_s
+      assign drop_at = ''
+    endif
+  endif
+-%}
+{{- drop_at -}}

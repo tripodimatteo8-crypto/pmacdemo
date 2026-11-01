@@ -1,0 +1,20 @@
+{%- comment -%}
+  Pannello "accesso negato" in scheda prodotto per un drop non ancora aperto.
+  Usage: {% render 'pmac-drop-lock', drop_at: drop_at %}
+{%- endcomment -%}
+<div class="pmac-drop-lock">
+  <p class="pmac-drop-lock__head pmac-mono">
+    <span class="pmac-drop-lock__dot" aria-hidden="true"></span>
+    {{ settings.pmac_drop_label | default: 'CLASSIFIED' }} // ACCESS DENIED
+  </p>
+  <div class="pmac-drop-lock__count pmac-mono" data-pmac-drop-countdown="{{ drop_at }}" data-format="blocks">
+    <span><b data-d>00</b><small>DAYS</small></span>
+    <span><b data-h>00</b><small>HRS</small></span>
+    <span><b data-m>00</b><small>MIN</small></span>
+    <span><b data-s>00</b><small>SEC</small></span>
+  </div>
+  <p class="pmac-drop-lock__note">
+    Signal locked. This piece unlocks automatically on
+    <span class="pmac-mono" data-pmac-drop-date="{{ drop_at }}">{{ drop_at | date: '%d.%m.%Y — %H:%M' }}</span>.
+  </p>
+</div>

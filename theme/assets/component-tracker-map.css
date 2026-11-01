@@ -568,3 +568,32 @@
     animation: none !important;
   }
 }
+
+/* ---------- Scansione radar sulla mappa (sotto i pin, non cliccabile) ---------- */
+.pmac-tracker-map__viewport::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 160vmax;
+  height: 160vmax;
+  margin: -80vmax 0 0 -80vmax;
+  z-index: 450;
+  pointer-events: none;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent 0deg, transparent 300deg, rgba(242, 241, 237, 0.09) 356deg, rgba(242, 241, 237, 0.18) 360deg);
+  animation: pmac-radar-sweep 7s linear infinite;
+  mix-blend-mode: screen;
+}
+
+@keyframes pmac-radar-sweep {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pmac-tracker-map__viewport::after {
+    display: none;
+  }
+}

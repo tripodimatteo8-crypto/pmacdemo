@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="js" lang="{{ request.locale.iso_code }}">
+<html class="js" lang="{{ request.locale.iso_code }}" data-pmac-phase="{{ settings.pmac_phase | default: '3' }}">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -268,6 +268,7 @@
         --pmac-chrome-gradient: linear-gradient(115deg, var(--pmac-chrome-1) 0%, var(--pmac-chrome-2) 22%, var(--pmac-chrome-3) 45%, var(--pmac-chrome-2) 62%, var(--pmac-chrome-1) 80%, var(--pmac-chrome-3) 100%);
         --pmac-sheen-opacity: {{ settings.chrome_sheen_intensity | divided_by: 100.0 }};
         --pmac-signal: {{ settings.signal_color }};
+        --pmac-hazard: {{ settings.hazard_color | default: '#F2C230' }};
         --pmac-cut: {% if settings.enable_cut_corners %}1{% else %}0{% endif %};
         --pmac-cut-size: 1.4rem;
 
@@ -348,6 +349,10 @@
     {%- endif -%}
 
     <link rel="stylesheet" href="{{ 'pmac-base.css' | asset_url }}">
+    <link rel="stylesheet" href="{{ 'component-pmac-drop.css' | asset_url }}">
+    {%- if settings.enable_page_transitions -%}
+      <style>@media (prefers-reduced-motion: no-preference) { @view-transition { navigation: auto; } }</style>
+    {%- endif -%}
     {%- if settings.cart_type == 'drawer' -%}
       <link rel="stylesheet" href="{{ 'component-pmac-cart-motion.css' | asset_url }}">
     {%- endif -%}
@@ -373,6 +378,15 @@
     {%- endif -%}
 
     {%- render 'pmac-scroll-errors' -%}
+    {%- if template.name == 'index' and settings.enable_pmac_intro -%}
+      {%- render 'pmac-intro' -%}
+    {%- endif -%}
+    {%- if settings.enable_pmac_signals and template.name != 'cart' -%}
+      {%- render 'pmac-signals' -%}
+    {%- endif -%}
+    {%- if settings.pmac_phase == '4' -%}
+      {%- render 'pmac-contamination' -%}
+    {%- endif -%}
 
     {%- if settings.cart_type == 'drawer' -%}
       {%- render 'cart-drawer' -%}
@@ -457,7 +471,8 @@
         customCursor: {{ settings.enable_custom_cursor | json }},
         pageTransitions: {{ settings.enable_page_transitions | json }},
         rabbit: {{ settings.enable_pmac_rabbit | json }},
-        rabbitFrequency: {{ settings.pmac_rabbit_frequency | json }}
+        rabbitFrequency: {% if settings.pmac_phase == '4' %}{{ settings.pmac_rabbit_frequency | divided_by: 2 | at_least: 1 | json }}{% else %}{{ settings.pmac_rabbit_frequency | json }}{% endif %},
+        phase: {{ settings.pmac_phase | default: '3' | json }}
       };
     </script>
     <script src="{{ 'pmac-reveal.js' | asset_url }}" defer="defer"></script>
@@ -473,5 +488,6 @@
       <script src="{{ 'pmac-rabbit.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
     <script src="{{ 'pmac-scroll-errors.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'pmac-drop.js' | asset_url }}" defer="defer"></script>
   </body>
 </html>

@@ -27,6 +27,20 @@
     }
     box.classList.toggle('is-full', count >= capacity);
 
+    // Stato narrativo + barra a segmenti (brief: CONTAMINATION IN PROGRESS, BOX LOADING...)
+    const stateEl = document.getElementById('PmacBoxState');
+    if (stateEl && !box.classList.contains('is-launching')) {
+      let state = 'BOX EMPTY // AWAITING SPECIMENS';
+      if (count > 0) state = ratio < 0.34 ? 'CONTAMINATION IN PROGRESS' : ratio < 0.67 ? 'BOX LOADING' : ratio < 1 ? 'PACKAGE PREPARING' : 'READY FOR LAUNCH';
+      if (stateEl.textContent !== state) {
+        stateEl.textContent = state;
+        stateEl.classList.remove('is-new');
+        void stateEl.offsetWidth;
+        stateEl.classList.add('is-new');
+      }
+    }
+    box.querySelectorAll('.pmac-box-contagio__seg').forEach((seg, i) => seg.classList.toggle('is-on', i < count));
+
     if (animateParticles && count > lastCount && particlesHost) {
       spawnParticles(particlesHost, Math.min(count - lastCount, 5));
     }
@@ -177,6 +191,8 @@
     event.preventDefault();
     checkoutBtn.dataset.pmacLaunching = 'true';
     box.classList.add('is-launching');
+    const stateEl = document.getElementById('PmacBoxState');
+    if (stateEl) stateEl.textContent = 'BOX SEALED // PMAC DELIVERY IN PROGRESS';
 
     setTimeout(() => {
       checkoutBtn.form?.requestSubmit(checkoutBtn);

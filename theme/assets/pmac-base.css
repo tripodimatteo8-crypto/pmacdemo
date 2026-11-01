@@ -5,9 +5,18 @@
    impostazione del tema e referenzialo da variabile. */
 
 /* ---------- Niente scroll orizzontale (es. drawer off-canvas più larghi del viewport) ---------- */
+/* "clip" e non "hidden": hidden trasforma html/body in contenitori di scroll e
+   rompe position: sticky dell'header (spariva scrollando invece di restare). */
 html,
 body {
-  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+@supports not (overflow-x: clip) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
 }
 
 /* ---------- Foto prodotto mai tagliate nelle card (griglia/correlati) ----------
@@ -24,6 +33,24 @@ body {
 .menu-drawer__menu-item {
   text-transform: uppercase;
   letter-spacing: 0.04em;
+}
+
+/* Menu desktop su una riga sola (con il logo centrato lo spazio a sinistra è
+   limitato: con 5 voci "Archive" andava a capo a 1440px). */
+@media screen and (min-width: 990px) {
+  .header__inline-menu .list-menu--inline {
+    flex-wrap: nowrap;
+  }
+
+  .header__inline-menu .header__menu-item {
+    padding: 1.2rem 0.75rem;
+    white-space: nowrap;
+    font-size: 1.3rem;
+  }
+
+  .header__inline-menu .list-menu--inline > li:first-child .header__menu-item {
+    padding-left: 0;
+  }
 }
 
 /* ---------- Header + marquee: overlay trasparente stile Gentle Monster ---------- */
@@ -47,9 +74,9 @@ body {
   z-index: 100;
 }
 
-body:not(.pmac-hero-overlay) {
-  padding-top: calc(var(--header-height, 7rem) + var(--pmac-marquee-height));
-}
+/* Nota: l'header di Dawn (sticky "always") resta nel flusso della pagina, quindi
+   non serve spingere giù il body: il vecchio padding-top creava un vuoto di
+   ~128px tra marquee e header su tutte le pagine interne. */
 
 .pmac-marquee-bar,
 .section-header .header-wrapper {
@@ -508,18 +535,41 @@ body.pmac-custom-cursor {
   }
 }
 
-/* ---------- Transizioni di pagina (View Transitions API) ---------- */
+/* ---------- Transizioni di pagina (View Transitions API) ----------
+   La pagina vecchia si scurisce e arretra, la nuova entra con una "tendina"
+   dall'alto, come un nuovo frame che arriva dal sistema di monitoraggio.
+   Solo CSS: zero JS, non rallenta la navigazione; i browser senza supporto
+   navigano normalmente. */
 @media (prefers-reduced-motion: no-preference) {
-  @view-transition {
-    navigation: auto;
+  /* @view-transition { navigation: auto } è in layout/theme.liquid, attivo solo
+     se "Transizioni fluide tra pagine" è acceso nelle impostazioni del tema. */
+  ::view-transition-group(root) {
+    animation-duration: 560ms;
   }
 
   ::view-transition-old(root) {
-    animation: pmac-fade-out var(--dur-med) var(--ease-pmac) forwards;
+    animation: pmac-vt-out 420ms cubic-bezier(0.7, 0, 0.84, 0) both;
   }
 
   ::view-transition-new(root) {
-    animation: pmac-fade-in var(--dur-med) var(--ease-pmac) forwards;
+    animation: pmac-vt-in 620ms cubic-bezier(0.16, 1, 0.3, 1) 60ms both;
+  }
+}
+
+@keyframes pmac-vt-out {
+  to {
+    opacity: 0.25;
+    transform: scale(0.985);
+    filter: brightness(0.4);
+  }
+}
+
+@keyframes pmac-vt-in {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
   }
 }
 

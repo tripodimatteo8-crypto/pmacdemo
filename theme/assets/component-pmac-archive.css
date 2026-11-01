@@ -1,0 +1,244 @@
+/* PMAC — Archive (registro missioni) */
+.pmac-archive {
+  padding: 6rem 0 8rem;
+}
+
+.pmac-archive__head {
+  max-width: 64rem;
+  margin-bottom: 4rem;
+}
+
+.pmac-archive__heading {
+  font-family: var(--font-heading-family);
+  font-weight: var(--font-heading-weight);
+  text-transform: uppercase;
+  font-size: clamp(3.6rem, 8vw, 8rem);
+  line-height: 0.95;
+  margin: 1.2rem 0 1.6rem;
+}
+
+.pmac-archive__text {
+  color: rgba(var(--color-foreground), 0.72);
+}
+
+.pmac-archive__legend,
+.pmac-archive__row {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr) 22rem 8rem 14rem;
+  align-items: center;
+  gap: 2rem;
+}
+
+.pmac-archive__legend {
+  padding: 0 0 1.2rem;
+  font-size: 1rem;
+  letter-spacing: 0.18em;
+  color: rgba(var(--color-foreground), 0.45);
+  border-bottom: 1px solid rgba(var(--color-foreground), 0.25);
+}
+
+.pmac-archive__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pmac-archive__item {
+  border-bottom: 1px solid rgba(var(--color-foreground), 0.14);
+  animation: pmac-archive-in 800ms var(--ease-pmac) calc(var(--i, 0) * 90ms) both;
+}
+
+.pmac-archive__row {
+  position: relative;
+  padding: 2.8rem 0;
+  color: rgb(var(--color-foreground));
+  text-decoration: none;
+  transition: padding var(--dur-med) var(--ease-pmac), background-color var(--dur-med) var(--ease-pmac);
+}
+
+a.pmac-archive__row:hover {
+  padding-left: 1.6rem;
+  padding-right: 1.6rem;
+  background-color: rgba(var(--color-foreground), 0.04);
+}
+
+.pmac-archive__num {
+  font-size: 1.2rem;
+  letter-spacing: 0.12em;
+  color: rgba(var(--color-foreground), 0.5);
+}
+
+.pmac-archive__title {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+.pmac-archive__name {
+  font-family: var(--font-heading-family);
+  font-weight: var(--font-heading-weight);
+  text-transform: uppercase;
+  font-size: clamp(2.4rem, 4.2vw, 4.8rem);
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+
+.pmac-archive__sub,
+.pmac-archive__meta {
+  font-size: 1.1rem;
+  letter-spacing: 0.14em;
+  color: rgba(var(--color-foreground), 0.6);
+  text-transform: uppercase;
+}
+
+.pmac-archive__status {
+  justify-self: end;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  letter-spacing: 0.18em;
+  border: 1px solid rgba(var(--color-foreground), 0.35);
+}
+
+.pmac-archive__status[data-status='active'] {
+  border-color: var(--pmac-signal);
+  color: var(--pmac-signal);
+}
+
+.pmac-archive__status[data-status='classified'] {
+  background: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+  border-color: rgb(var(--color-foreground));
+}
+
+.pmac-archive__status[data-status='archived'] {
+  opacity: 0.55;
+}
+
+/* immagine che "affiora" al passaggio del mouse */
+.pmac-archive__peek {
+  position: absolute;
+  right: 16rem;
+  top: 50%;
+  width: 15rem;
+  aspect-ratio: 1;
+  transform: translate3d(0, -50%, 0) rotate(-2deg);
+  clip-path: inset(50% 0 50% 0);
+  transition: clip-path var(--dur-med) var(--ease-pmac), transform var(--dur-med) var(--ease-pmac);
+  pointer-events: none;
+  z-index: 2;
+  background: #0a0a0b;
+  border: 1px solid rgba(var(--color-foreground), 0.25);
+}
+
+.pmac-archive__peek img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+a.pmac-archive__row:hover .pmac-archive__peek {
+  clip-path: inset(0 0 0 0);
+  transform: translate3d(0, -50%, 0) rotate(0deg);
+}
+
+/* missioni CLASSIFIED: testo oscurato a barre, che "sfarfalla" al passaggio */
+.pmac-archive__redacted {
+  display: inline-block;
+  width: var(--w, 12ch);
+  max-width: 100%;
+  color: transparent;
+  background: rgb(var(--color-foreground));
+  user-select: none;
+  white-space: nowrap;
+  overflow: hidden;
+  vertical-align: middle;
+  height: 0.82em;
+}
+
+.pmac-archive__item.is-classified .pmac-archive__row:hover .pmac-archive__redacted {
+  animation: pmac-archive-glitch 600ms steps(3) infinite;
+}
+
+.pmac-archive__item.is-classified .pmac-archive__num,
+.pmac-archive__item.is-classified .pmac-archive__meta {
+  color: rgba(var(--color-foreground), 0.35);
+}
+
+@keyframes pmac-archive-glitch {
+  0% {
+    transform: translateX(0);
+    clip-path: inset(0 0 0 0);
+  }
+  33% {
+    transform: translateX(-4px);
+    clip-path: inset(0 12% 0 0);
+  }
+  66% {
+    transform: translateX(3px);
+    clip-path: inset(20% 0 10% 4%);
+  }
+}
+
+@keyframes pmac-archive-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 2.4rem, 0);
+  }
+}
+
+@media screen and (max-width: 989px) {
+  .pmac-archive__legend {
+    display: none;
+  }
+
+  .pmac-archive__row {
+    grid-template-columns: 4rem minmax(0, 1fr) auto;
+    grid-template-areas:
+      'num title status'
+      'num meta meta';
+    gap: 0.8rem 1.4rem;
+    padding: 2.2rem 0;
+  }
+
+  .pmac-archive__num {
+    grid-area: num;
+    align-self: start;
+    padding-top: 0.6rem;
+  }
+
+  .pmac-archive__title {
+    grid-area: title;
+  }
+
+  .pmac-archive__status {
+    grid-area: status;
+    align-self: start;
+  }
+
+  .pmac-archive__meta {
+    grid-area: meta;
+    display: inline;
+  }
+
+  .pmac-archive__meta + .pmac-archive__meta {
+    display: none;
+  }
+
+  .pmac-archive__peek {
+    display: none;
+  }
+
+  a.pmac-archive__row:hover {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pmac-archive__item,
+  .pmac-archive__redacted {
+    animation: none !important;
+  }
+}

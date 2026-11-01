@@ -153,9 +153,18 @@
         "id": "type_mono_font",
         "label": "Font monospazio (coordinate, status, countdown)",
         "options": [
-          { "value": "jetbrains-mono", "label": "JetBrains Mono" },
-          { "value": "ibm-plex-mono", "label": "IBM Plex Mono" },
-          { "value": "space-mono", "label": "Space Mono" }
+          {
+            "value": "jetbrains-mono",
+            "label": "JetBrains Mono"
+          },
+          {
+            "value": "ibm-plex-mono",
+            "label": "IBM Plex Mono"
+          },
+          {
+            "value": "space-mono",
+            "label": "Space Mono"
+          }
         ],
         "default": "jetbrains-mono",
         "info": "Caricato da Google Fonts, usato solo per label tecniche (SIGNAL DETECTED, coordinate, countdown)."
@@ -206,6 +215,13 @@
         "id": "signal_color",
         "label": "Colore segnale (stato live / avvistamento)",
         "default": "#C73B2F"
+      },
+      {
+        "type": "color",
+        "id": "hazard_color",
+        "label": "Giallo nastro PMAC (box / lancio)",
+        "default": "#F2C230",
+        "info": "Usato solo per il nastro giallo-nero della Box Contagio e dell'animazione di lancio."
       },
       {
         "type": "header",
@@ -264,6 +280,158 @@
         "step": 1,
         "unit": "min",
         "default": 3
+      },
+      {
+        "type": "header",
+        "content": "Fase narrativa del lancio"
+      },
+      {
+        "type": "select",
+        "id": "pmac_phase",
+        "label": "Fase attiva",
+        "default": "3",
+        "options": [
+          {
+            "value": "1",
+            "label": "01 — Signal detected (viaggio)"
+          },
+          {
+            "value": "2",
+            "label": "02 — PMAC has been sighted"
+          },
+          {
+            "value": "3",
+            "label": "03 — Statuette localizzate"
+          },
+          {
+            "value": "4",
+            "label": "04 — Contamination in progress"
+          },
+          {
+            "value": "5",
+            "label": "05 — Collection revealed"
+          }
+        ],
+        "info": "Cambia indicatore di stato, messaggi e livello di interferenza su tutto il sito. In fase 04 compare l'effetto contaminazione."
+      },
+      {
+        "type": "text",
+        "id": "pmac_phase_message",
+        "label": "Messaggio di fase (opzionale)",
+        "info": "Se vuoto usa il testo standard della fase (es. CONTAMINATION IN PROGRESS)."
+      },
+      {
+        "type": "header",
+        "content": "Intro del portale"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_pmac_intro",
+        "label": "Mostra l'intro animata in homepage",
+        "default": true,
+        "info": "Una sola volta per sessione, si salta con un click. Dura circa 2 secondi."
+      },
+      {
+        "type": "textarea",
+        "id": "pmac_intro_lines",
+        "label": "Righe dell'intro (una per riga)",
+        "default": "ESTABLISHING LINK — EARTH ⇄ PLANET 121\nCALIBRATING RADAR ARRAY\nSIGNAL ACQUIRED"
+      },
+      {
+        "type": "header",
+        "content": "Notifiche di sistema"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_pmac_signals",
+        "label": "Mostra notifiche durante la navigazione",
+        "default": true
+      },
+      {
+        "type": "textarea",
+        "id": "pmac_signal_messages",
+        "label": "Messaggi (uno per riga)",
+        "default": "NEW SIGNAL DETECTED — MILAN\nPMAC #07 HAS BEEN LOCATED — AMSTERDAM\nTRANSMISSION RECEIVED\nANOMALY LOGGED — 41.9028° N, 12.4964° E\nPMAC SIGHTING CONFIRMED — PARIS"
+      },
+      {
+        "type": "range",
+        "id": "pmac_signal_interval",
+        "label": "Intervallo tra notifiche",
+        "min": 10,
+        "max": 90,
+        "step": 5,
+        "unit": "s",
+        "default": 25
+      },
+      {
+        "type": "range",
+        "id": "pmac_signal_max",
+        "label": "Massimo notifiche per sessione",
+        "min": 1,
+        "max": 10,
+        "step": 1,
+        "default": 4
+      },
+      {
+        "type": "header",
+        "content": "Drop programmato"
+      },
+      {
+        "type": "checkbox",
+        "id": "pmac_drop_enabled",
+        "label": "Attiva drop programmato",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "pmac_drop_datetime",
+        "label": "Apertura (data e ora)",
+        "default": "2026-11-06T18:00:00+01:00",
+        "info": "Formato AAAA-MM-GGTHH:MM:SS+01:00. Prima di questa data i prodotti del drop sono bloccati, poi diventano acquistabili da soli."
+      },
+      {
+        "type": "textarea",
+        "id": "pmac_drop_products",
+        "label": "Prodotti del drop (handle, uno per riga)",
+        "default": "statuetta-pmac-n-09-athens\nstatuetta-pmac-n-10-warsaw",
+        "info": "In alternativa aggiungi al prodotto il tag drop:AAAA-MM-GGTHH:MM (es. drop:2026-12-01T18:00)."
+      },
+      {
+        "type": "select",
+        "id": "pmac_drop_label",
+        "label": "Stato mostrato prima dell'apertura",
+        "default": "CLASSIFIED",
+        "options": [
+          {
+            "value": "CLASSIFIED",
+            "label": "CLASSIFIED"
+          },
+          {
+            "value": "SIGNAL LOCKED",
+            "label": "SIGNAL LOCKED"
+          },
+          {
+            "value": "TRANSMISSION PENDING",
+            "label": "TRANSMISSION PENDING"
+          }
+        ]
+      },
+      {
+        "type": "header",
+        "content": "Menu"
+      },
+      {
+        "type": "text",
+        "id": "pmac_extra_nav_label",
+        "label": "Voce extra nel menu",
+        "default": "Archive",
+        "info": "Aggiunta in fondo al menu principale. Lascia vuoto per nasconderla."
+      },
+      {
+        "type": "url",
+        "id": "pmac_extra_nav_url",
+        "label": "Link voce extra",
+        "default": "/collections"
       }
     ]
   },

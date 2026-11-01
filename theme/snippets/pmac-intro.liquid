@@ -1,0 +1,185 @@
+{%- comment -%}
+  Intro del portale PMAC (solo homepage, una volta per sessione, saltabile).
+  Testi: Impostazioni tema → PMAC — Sistema → Intro del portale.
+  Puramente decorativa: il sito sotto si carica normalmente e l'intro non blocca nulla.
+  Se il JS non parte, la regola CSS "failsafe" la nasconde comunque dopo 4,5s.
+{%- endcomment -%}
+{%- liquid
+  assign intro_lines = settings.pmac_intro_lines | newline_to_br | split: '<br />'
+-%}
+<script>
+  (function () {
+    try {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      if (sessionStorage.getItem('pmacIntroSeen')) return;
+      document.documentElement.classList.add('pmac-intro-on');
+    } catch (e) {}
+  })();
+</script>
+
+<style>
+  .pmac-intro { display: none; }
+  .pmac-intro-on .pmac-intro {
+    position: fixed; inset: 0; z-index: 2147483000; display: block; color: #F2F1ED;
+    pointer-events: auto; cursor: pointer;
+    animation: pmac-intro-failsafe 0s linear 4.5s forwards;
+  }
+  @keyframes pmac-intro-failsafe { to { visibility: hidden; pointer-events: none; } }
+  .pmac-intro .pmac-intro__half {
+    display: block; /* Dawn nasconde i div vuoti (div:empty) */
+    position: absolute; left: 0; right: 0; height: 50.5%; background: #060607;
+    transition: transform 900ms cubic-bezier(0.76, 0, 0.24, 1);
+  }
+  .pmac-intro__half--top { top: 0; }
+  .pmac-intro__half--bottom { bottom: 0; }
+  .pmac-intro.is-leaving .pmac-intro__half--top { transform: translate3d(0, -101%, 0); }
+  .pmac-intro.is-leaving .pmac-intro__half--bottom { transform: translate3d(0, 101%, 0); }
+  .pmac-intro.is-leaving { pointer-events: none; }
+  .pmac-intro__hud { position: absolute; inset: 0; transition: opacity 280ms ease; }
+  .pmac-intro.is-leaving .pmac-intro__hud { opacity: 0; }
+  .pmac-intro__corner {
+    position: absolute; font-size: 1rem; letter-spacing: 0.16em; color: rgba(242, 241, 237, 0.55);
+  }
+  .pmac-intro__corner--tl { top: 2.4rem; left: 2.4rem; }
+  .pmac-intro__corner--tr { top: 2.4rem; right: 2.4rem; }
+  .pmac-intro__corner--bl { bottom: 2.4rem; left: 2.4rem; color: var(--pmac-signal, #C73B2F); }
+  .pmac-intro__corner--br { bottom: 2.4rem; right: 2.4rem; animation: pmac-intro-blink 1s steps(1) infinite; }
+  .pmac-intro__center {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: min(36rem, 84vw); display: flex; flex-direction: column; align-items: center; gap: 2rem;
+  }
+  .pmac-intro__radar {
+    position: relative; width: min(22rem, 56vw); aspect-ratio: 1; border-radius: 50%; overflow: hidden;
+    animation: pmac-intro-pop 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .pmac-intro__radar-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .pmac-intro__radar-svg circle, .pmac-intro__radar-svg line {
+    fill: none; stroke: rgba(242, 241, 237, 0.22); stroke-width: 0.6;
+  }
+  .pmac-intro__sweep {
+    position: absolute; inset: 0; border-radius: 50%;
+    background: conic-gradient(from 0deg, rgba(242, 241, 237, 0.0) 0deg, rgba(242, 241, 237, 0.0) 290deg, rgba(242, 241, 237, 0.38) 359deg, rgba(242, 241, 237, 0) 360deg);
+    animation: pmac-intro-spin 1.4s linear infinite;
+  }
+  .pmac-intro__blip {
+    position: absolute; left: var(--x); top: var(--y); width: 6px; height: 6px; margin: -3px 0 0 -3px;
+    border-radius: 50%; background: #F2F1ED; opacity: 0;
+    animation: pmac-intro-blip 1.4s ease-out var(--d) infinite;
+  }
+  .pmac-intro__blip--lock { background: var(--pmac-signal, #C73B2F); box-shadow: 0 0 0 0 var(--pmac-signal, #C73B2F); }
+  .pmac-intro__readout { font-size: 1.2rem; letter-spacing: 0.12em; color: rgba(242, 241, 237, 0.8); min-height: 1.6em; }
+  .pmac-intro__lines { list-style: none; margin: 0; padding: 0; text-align: center; min-height: 6rem; }
+  .pmac-intro__lines li {
+    font-size: 1.1rem; letter-spacing: 0.16em; line-height: 2; color: rgba(242, 241, 237, 0.65);
+    opacity: 0; clip-path: inset(0 100% 0 0);
+    animation: pmac-intro-type 520ms steps(24) calc(250ms + var(--i) * 560ms) forwards;
+  }
+  .pmac-intro__lines li:last-child { color: #F2F1ED; }
+  .pmac-intro__bar { width: 100%; height: 2px; background: rgba(242, 241, 237, 0.15); overflow: hidden; }
+  .pmac-intro__bar span {
+    display: block; height: 100%; background: #F2F1ED; transform-origin: left; transform: scaleX(0);
+    animation: pmac-intro-load 1.9s cubic-bezier(0.65, 0, 0.35, 1) 150ms forwards;
+  }
+  @keyframes pmac-intro-spin { to { transform: rotate(360deg); } }
+  @keyframes pmac-intro-blip { 0% { opacity: 0; transform: scale(0.4); } 12% { opacity: 1; transform: scale(1.4); } 100% { opacity: 0; transform: scale(1); } }
+  @keyframes pmac-intro-type { to { opacity: 1; clip-path: inset(0 0 0 0); } }
+  @keyframes pmac-intro-load { to { transform: scaleX(1); } }
+  @keyframes pmac-intro-pop { from { opacity: 0; transform: scale(0.82); } }
+  @keyframes pmac-intro-blink { 50% { opacity: 0; } }
+  @media screen and (max-width: 749px) {
+    .pmac-intro__corner { font-size: 0.9rem; }
+    .pmac-intro__corner--tl, .pmac-intro__corner--bl { left: 1.6rem; }
+    .pmac-intro__corner--tr, .pmac-intro__corner--br { right: 1.6rem; }
+  }
+</style>
+
+<div class="pmac-intro" id="PmacIntro" aria-hidden="true">
+  <div class="pmac-intro__half pmac-intro__half--top"></div>
+  <div class="pmac-intro__half pmac-intro__half--bottom"></div>
+
+  <div class="pmac-intro__hud">
+    <div class="pmac-intro__corner pmac-intro__corner--tl pmac-mono">PMAC // MONITORING CENTER</div>
+    <div class="pmac-intro__corner pmac-intro__corner--tr pmac-mono" data-intro-clock>--:--:-- UTC</div>
+    <div class="pmac-intro__corner pmac-intro__corner--bl pmac-mono">{%- render 'pmac-phase-label' -%}</div>
+    <div class="pmac-intro__corner pmac-intro__corner--br pmac-mono">CLICK TO SKIP</div>
+
+    <div class="pmac-intro__center">
+      <div class="pmac-intro__radar">
+        <svg viewBox="0 0 200 200" class="pmac-intro__radar-svg">
+          <circle cx="100" cy="100" r="96" />
+          <circle cx="100" cy="100" r="68" />
+          <circle cx="100" cy="100" r="40" />
+          <line x1="100" y1="2" x2="100" y2="198" />
+          <line x1="2" y1="100" x2="198" y2="100" />
+        </svg>
+        <span class="pmac-intro__sweep"></span>
+        <span class="pmac-intro__blip" style="--x: 64%; --y: 30%; --d: 0.35s;"></span>
+        <span class="pmac-intro__blip" style="--x: 30%; --y: 62%; --d: 0.9s;"></span>
+        <span class="pmac-intro__blip pmac-intro__blip--lock" style="--x: 71%; --y: 70%; --d: 1.45s;"></span>
+      </div>
+
+      <div class="pmac-intro__readout pmac-mono">
+        <span data-intro-coords>00.0000° N, 00.0000° E</span>
+      </div>
+
+      <ol class="pmac-intro__lines pmac-mono">
+        {%- for line in intro_lines -%}
+          {%- assign l = line | strip -%}
+          {%- if l != blank -%}
+            <li style="--i: {{ forloop.index0 }};">{{ l | escape }}</li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ol>
+
+      <div class="pmac-intro__bar"><span></span></div>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    if (!root.classList.contains('pmac-intro-on')) return;
+    var intro = document.getElementById('PmacIntro');
+    if (!intro) return;
+
+    var clock = intro.querySelector('[data-intro-clock]');
+    var coords = intro.querySelector('[data-intro-coords]');
+    var target = [41.9028, 12.4964];
+    var start = performance.now();
+    var done = false;
+
+    function fmt(n) { return n.toFixed(4); }
+    function tick(now) {
+      if (done) return;
+      var t = Math.min((now - start) / 1800, 1);
+      var e = 1 - Math.pow(1 - t, 3);
+      if (coords) {
+        var lat = target[0] * e + (1 - e) * (Math.random() * 90);
+        var lng = target[1] * e + (1 - e) * (Math.random() * 180);
+        coords.textContent = fmt(lat) + '° N, ' + fmt(lng) + '° E' + (t >= 1 ? '  — LOCKED' : '');
+      }
+      if (clock) clock.textContent = new Date().toISOString().slice(11, 19) + ' UTC';
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+
+    function leave() {
+      if (done) return;
+      done = true;
+      try { sessionStorage.setItem('pmacIntroSeen', '1'); } catch (e) {}
+      intro.classList.add('is-leaving');
+      document.dispatchEvent(new CustomEvent('pmac:intro-done'));
+      setTimeout(function () {
+        root.classList.remove('pmac-intro-on');
+        intro.remove();
+      }, 950);
+    }
+
+    intro.addEventListener('click', leave);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' || e.key === 'Enter') leave(); }, { once: true });
+    setTimeout(leave, 2500);
+  })();
+</script>

@@ -106,6 +106,10 @@
                 <rect width="14" height="14" style="fill:var(--pmac-white)"></rect>
                 <rect width="7" height="14" style="fill:var(--pmac-black)"></rect>
               </pattern>
+              <pattern id="PmacBoxHazard" width="12" height="12" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+                <rect width="12" height="12" style="fill:var(--pmac-hazard, #F2C230)"></rect>
+                <rect width="6" height="12" style="fill:#0a0a0b"></rect>
+              </pattern>
             </defs>
             <rect
               id="PmacBoxFill"
@@ -119,6 +123,10 @@
             <rect class="pmac-box-contagio__outline" x="15" y="14" width="130" height="92"></rect>
             <path class="pmac-box-contagio__flap" d="M15 14 L80 32 L145 14"></path>
             <line class="pmac-box-contagio__tape" x1="80" y1="14" x2="80" y2="106"></line>
+            <g class="pmac-box-contagio__seal" style="clip-path: inset(0 0 0 0);">
+              <rect x="6" y="52" width="148" height="16" transform="rotate(-24 80 60)" style="fill: url(#PmacBoxHazard);"></rect>
+              <rect x="6" y="52" width="148" height="16" transform="rotate(24 80 60)" style="fill: url(#PmacBoxHazard);"></rect>
+            </g>
             <text class="pmac-box-contagio__hazard" x="80" y="68" text-anchor="middle">☣</text>
           </svg>
           <div class="pmac-box-contagio__particles" id="PmacBoxParticles"></div>
@@ -126,6 +134,28 @@
         <div class="pmac-box-contagio__meta">
           <span class="pmac-system-label pmac-system-label--static">Box Contagio</span>
           <span class="pmac-box-contagio__count pmac-mono" id="PmacBoxCount">{{ cart.item_count }} / 08</span>
+        </div>
+        {%- liquid
+          assign box_ratio = cart.item_count | times: 1.0 | divided_by: 8
+          if cart.item_count == 0
+            assign box_state = 'BOX EMPTY // AWAITING SPECIMENS'
+          elsif box_ratio < 0.34
+            assign box_state = 'CONTAMINATION IN PROGRESS'
+          elsif box_ratio < 0.67
+            assign box_state = 'BOX LOADING'
+          elsif box_ratio < 1
+            assign box_state = 'PACKAGE PREPARING'
+          else
+            assign box_state = 'READY FOR LAUNCH'
+          endif
+        -%}
+        <div class="pmac-box-contagio__status">
+          <span class="pmac-box-contagio__state pmac-mono" id="PmacBoxState">{{ box_state }}</span>
+          <span class="pmac-box-contagio__bar" aria-hidden="true">
+            {%- for i in (1..8) -%}
+              <span class="pmac-box-contagio__seg{% if i <= cart.item_count %} is-on{% endif %}"></span>
+            {%- endfor -%}
+          </span>
         </div>
       </div>
 

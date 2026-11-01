@@ -1,3 +1,4 @@
+{%- capture pmac_drop_at -%}{% render 'pmac-drop-at', product: product %}{%- endcapture -%}
 <product-info
   id="MainProduct-{{ section.id }}"
   class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}"
@@ -108,7 +109,12 @@
                     </a>
                   </div>
                 {%- when 'price' -%}
-                  <div id="price-{{ section.id }}" role="status" {{ block.shopify_attributes }}>
+                  {%- if pmac_drop_at != blank -%}
+                    <p class="pmac-drop-price pmac-drop-price--large pmac-mono" data-pmac-drop="{{ pmac_drop_at }}">
+                      {{ settings.pmac_drop_label | default: 'CLASSIFIED' }} — PRICE WITHHELD
+                    </p>
+                  {%- endif -%}
+                  <div id="price-{{ section.id }}" role="status" {{ block.shopify_attributes }}{% if pmac_drop_at != blank %} class="pmac-drop-hidden" data-pmac-drop="{{ pmac_drop_at }}"{% endif %}>
                     {%- render 'price',
                       product: product,
                       use_variant: true,
@@ -232,7 +238,8 @@
                 {%- when 'quantity_selector' -%}
                   <div
                     id="Quantity-Form-{{ section.id }}"
-                    class="product-form__input product-form__quantity{% if settings.inputs_shadow_vertical_offset != 0 and settings.inputs_shadow_vertical_offset < 0 %} product-form__quantity-top{% endif %}"
+                    class="product-form__input product-form__quantity{% if settings.inputs_shadow_vertical_offset != 0 and settings.inputs_shadow_vertical_offset < 0 %} product-form__quantity-top{% endif %}{% if pmac_drop_at != blank %} pmac-drop-hidden{% endif %}"
+                    {% if pmac_drop_at != blank %}data-pmac-drop="{{ pmac_drop_at }}"{% endif %}
                     {{ block.shopify_attributes }}
                   >
                     {% comment %} TODO: enable theme-check once `item_count_for_variant` is accepted as valid filter {% endcomment %}
@@ -493,6 +500,12 @@
                     product_form_id: product_form_id
                   %}
                 {%- when 'buy_buttons' -%}
+                  {%- if pmac_drop_at != blank -%}
+                    <div data-pmac-drop="{{ pmac_drop_at }}" class="pmac-drop-lock-wrap">
+                      {%- render 'pmac-drop-lock', drop_at: pmac_drop_at -%}
+                    </div>
+                  {%- endif -%}
+                  <div{% if pmac_drop_at != blank %} class="pmac-drop-hidden" data-pmac-drop="{{ pmac_drop_at }}"{% endif %}>
                   {%- render 'buy-buttons',
                     block: block,
                     product: product,
@@ -500,6 +513,7 @@
                     section_id: section.id,
                     show_pickup_availability: true
                   -%}
+                  </div>
                 {%- when 'rating' -%}
                   {%- if product.metafields.reviews.rating.value != blank -%}
                     <div class="rating-wrapper">

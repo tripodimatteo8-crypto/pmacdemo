@@ -10,6 +10,11 @@
 {% endif %}
 
 <div class="pmac-marquee-bar color-{{ section.settings.color_scheme }} gradient">
+  <div class="pmac-phase-chip pmac-mono" title="{%- render 'pmac-phase-label' -%}">
+    <span class="pmac-phase-chip__dot" aria-hidden="true"></span>
+    <span class="pmac-phase-chip__full">{%- render 'pmac-phase-label' -%}</span>
+    <span class="pmac-phase-chip__short">{%- render 'pmac-phase-label', short: true -%}</span>
+  </div>
   {%- if section.blocks.size > 0 -%}
     <div
       class="pmac-marquee"
@@ -38,6 +43,66 @@
 </div>
 
 {% stylesheet %}
+  .pmac-phase-chip {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    height: 100%;
+    padding: 0 1.4rem;
+    border-right: 1px solid rgba(var(--color-foreground), 0.14);
+    background: rgb(var(--color-background));
+    position: relative;
+    z-index: 1;
+    font-size: 1rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: rgb(var(--color-foreground));
+  }
+
+  .pmac-phase-chip__dot {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: var(--pmac-signal);
+    animation: pmac-phase-blink 1.4s steps(1) infinite;
+  }
+
+  .pmac-phase-chip__short {
+    display: none;
+  }
+
+  [data-pmac-phase='4'] .pmac-phase-chip {
+    color: var(--pmac-signal);
+  }
+
+  @keyframes pmac-phase-blink {
+    50% {
+      opacity: 0.2;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .pmac-phase-chip {
+      padding: 0 1rem;
+    }
+
+    .pmac-phase-chip__full {
+      display: none;
+    }
+
+    .pmac-phase-chip__short {
+      display: inline;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pmac-phase-chip__dot {
+      animation: none;
+    }
+  }
+
   .pmac-marquee-bar {
     display: flex;
     align-items: center;
@@ -47,6 +112,8 @@
 
   .pmac-marquee-bar .pmac-marquee {
     height: 100%;
+    flex: 1;
+    min-width: 0;
   }
 
   .pmac-marquee__item {
