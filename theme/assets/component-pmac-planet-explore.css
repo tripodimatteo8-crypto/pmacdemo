@@ -30,6 +30,13 @@
   touch-action: pan-y;
 }
 
+@media screen and (max-width: 749px) {
+  /* su mobile 16:9 è troppo basso: il coniglio diventava minuscolo */
+  .pmac-planet__stage {
+    aspect-ratio: 1 / 1;
+  }
+}
+
 @media screen and (min-width: 750px) {
   .pmac-planet__stage {
     aspect-ratio: 21 / 9;
