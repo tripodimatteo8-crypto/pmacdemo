@@ -40,7 +40,8 @@
     for (let i = 0; i < quantity; i++) {
       const particle = document.createElement('span');
       particle.className = 'pmac-box-contagio__particle';
-      particle.style.animationDelay = `${i * 90}ms`;
+      // parte dopo lo slide del drawer, così si vede davvero
+      particle.style.animationDelay = `${420 + i * 110}ms`;
       particlesHost.appendChild(particle);
       particle.addEventListener('animationend', () => particle.remove());
     }
@@ -73,6 +74,96 @@
       });
     });
   }
+
+  /* ---------- Movimento drawer (vedi component-pmac-cart-motion.css) ---------- */
+  const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Ingresso a cascata solo quando il drawer si apre: la classe viene tolta
+  // subito dopo, così gli update di quantità non ri-animano tutto.
+  const drawer = document.querySelector('cart-drawer');
+  let enteringTimer = null;
+  let enteringSince = 0;
+  if (drawer && 'MutationObserver' in window) {
+    let wasActive = drawer.classList.contains('active');
+    new MutationObserver(() => {
+      const isActive = drawer.classList.contains('active');
+      if (isActive && !wasActive && !reduceMotion()) {
+        drawer.classList.add('pmac-entering');
+        enteringSince = performance.now();
+        clearTimeout(enteringTimer);
+        enteringTimer = setTimeout(() => drawer.classList.remove('pmac-entering', 'pmac-settled'), 1300);
+      }
+      // NB: classList.remove riscrive l'attributo anche se la classe non c'è,
+      // il che ri-scatenerebbe questo observer all'infinito: controlla prima.
+      if (!isActive && drawer.classList.contains('pmac-entering')) drawer.classList.remove('pmac-entering', 'pmac-settled');
+      wasActive = isActive;
+    }).observe(drawer, { attributes: true, attributeFilter: ['class'] });
+  }
+
+  const bumpCartIcon = () => {
+    const icon = document.getElementById('cart-icon-bubble');
+    if (!icon || reduceMotion()) return;
+    icon.classList.remove('pmac-bump');
+    void icon.offsetWidth; // riavvia l'animazione
+    icon.classList.add('pmac-bump');
+    setTimeout(() => icon.classList.remove('pmac-bump'), 700);
+  };
+
+  // Dawn ri-renderizza il drawer due volte dopo un'aggiunta (risposta di /cart/add
+  // e poi refresh di cart-drawer-items): per ~2s ri-marchiamo la riga nuova a ogni
+  // re-render, così l'evidenza sopravvive. Dawn ordina le righe dalla più recente.
+  let justAdded = null;
+  const applyJustAdded = () => {
+    if (!justAdded || performance.now() > justAdded.until) return;
+    const rows = document.querySelectorAll('#CartDrawer .cart-item');
+    if (!rows.length) return;
+    let row = rows[0];
+    if (justAdded.variantId) {
+      const input = document.querySelector(
+        `#CartDrawer .cart-item input[data-quantity-variant-id="${justAdded.variantId}"]`
+      );
+      if (input) row = input.closest('.cart-item') || row;
+    }
+    if (!row.classList.contains('pmac-just-added')) row.classList.add('pmac-just-added');
+  };
+
+  if (drawer && 'MutationObserver' in window) {
+    new MutationObserver((mutations) => {
+      const replacedContent = mutations.some((m) => [...m.addedNodes].some((n) => n.nodeType === 1));
+      if (!replacedContent) return; // es. testo della macchina da scrivere
+      // Dawn sostituisce il contenuto anche a drawer già aperto (secondo refresh):
+      // gli elementi nuovi non devono rifare l'ingresso da zero, appaiono già fermi.
+      if (
+        drawer.classList.contains('pmac-entering') &&
+        !drawer.classList.contains('pmac-settled') &&
+        performance.now() - enteringSince > 120
+      ) {
+        drawer.classList.add('pmac-settled');
+      }
+      if (justAdded) applyJustAdded();
+    }).observe(drawer, { childList: true, subtree: true });
+  }
+
+  const markJustAdded = (variantId) => {
+    justAdded = { variantId, until: performance.now() + 2000 };
+    setTimeout(() => { justAdded = null; }, 2100);
+    requestAnimationFrame(() => requestAnimationFrame(applyJustAdded));
+    bumpCartIcon();
+  };
+
+  if (typeof subscribe === 'function' && typeof PUB_SUB_EVENTS !== 'undefined') {
+    subscribe(PUB_SUB_EVENTS.cartUpdate, (event) => {
+      if (event?.source === 'product-form') markJustAdded(event.productVariantId);
+      else bumpCartIcon();
+    });
+  }
+
+  // Rimozione: l'articolo esce subito, il drawer si aggiorna quando risponde il server.
+  document.addEventListener('click', (event) => {
+    const remove = event.target.closest('cart-drawer cart-remove-button');
+    if (!remove) return;
+    remove.closest('.cart-item')?.classList.add('pmac-removing');
+  });
 
   // Al checkout: la box si sigilla e il razzo parte, poi si procede davvero al checkout.
   // Delegato su document perché il bottone viene ri-renderizzato a ogni update del carrello.

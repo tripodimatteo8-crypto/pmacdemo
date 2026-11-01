@@ -42,6 +42,9 @@
     );
   }
 
+  // target ("pin-N") -> [lat, lng], per centrare la mappa dal click su una tile
+  const pinLatLngs = {};
+
   if (!customElements.get('pmac-tracker-map')) {
     class PmacTrackerMap extends HTMLElement {
       connectedCallback() {
@@ -92,6 +95,7 @@
             alt: pin.city,
           }).addTo(this.markersLayer);
           marker.on('click', () => openCard(pin.target));
+          pinLatLngs[pin.target] = latlng;
 
           if (pin.city) {
             marker.bindTooltip(pin.city.toUpperCase(), {
@@ -158,6 +162,20 @@
   }
 
   window.pmacOpenTrackerCard = openCard;
+
+  // Tile della griglia: apre la card e porta la mappa sul pin corrispondente.
+  section?.querySelectorAll('[data-tracker-open]').forEach((tile) => {
+    tile.addEventListener('click', () => {
+      const target = tile.dataset.trackerOpen;
+      openCard(target);
+      const mapEl = section.querySelector('pmac-tracker-map');
+      const latlng = pinLatLngs[target];
+      if (mapEl?.leafletMap && latlng) {
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        mapEl.leafletMap.flyTo(latlng, 6, { animate: !reduce, duration: 1.2 });
+      }
+    });
+  });
 
   section?.querySelectorAll('[data-tracker-card-close]').forEach((btn) => {
     btn.addEventListener('click', closeCard);

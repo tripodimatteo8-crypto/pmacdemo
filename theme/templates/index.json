@@ -319,7 +319,10 @@
         "label": "PHASE 03 // SIGHTED",
         "heading": "PMAC Tracker",
         "intro": "<p>Ten signals, one each, intercepted on Earth. Touch one on the map to open the file.</p>",
-        "color_scheme": "scheme-1"
+        "color_scheme": "scheme-1",
+        "show_intro": false,
+        "show_tiles": true,
+        "tiles_heading": "THE TEN PIECES"
       }
     },
     "pmac_planet_explore": {

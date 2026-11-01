@@ -1,16 +1,24 @@
 {{ 'component-tracker-map.css' | asset_url | stylesheet_tag }}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-<div class="pmac-tracker-map-section color-{{ section.settings.color_scheme }} gradient">
-  <div class="page-width pmac-tracker-map-section__intro pmac-reveal-group">
-    <p class="pmac-system-label" data-pmac-scramble="{{ section.settings.label | escape }}">
-      {{ section.settings.label }}
-    </p>
-    <h1 class="pmac-tracker-map-section__heading">{{ section.settings.heading }}</h1>
-    {%- if section.settings.intro != blank -%}
-      <div class="pmac-tracker-map-section__text rte">{{ section.settings.intro }}</div>
-    {%- endif -%}
-  </div>
+<div class="pmac-tracker-map-section color-{{ section.settings.color_scheme }} gradient{% unless section.settings.show_intro %} pmac-tracker-map-section--compact{% endunless %}">
+  {%- liquid
+    assign heading_tag = 'h2'
+    if template.name == 'page'
+      assign heading_tag = 'h1'
+    endif
+  -%}
+  {%- if section.settings.show_intro -%}
+    <div class="page-width pmac-tracker-map-section__intro pmac-reveal-group">
+      <p class="pmac-system-label" data-pmac-scramble="{{ section.settings.label | escape }}">
+        {{ section.settings.label }}
+      </p>
+      <{{ heading_tag }} class="pmac-tracker-map-section__heading">{{ section.settings.heading }}</{{ heading_tag }}>
+      {%- if section.settings.intro != blank -%}
+        <div class="pmac-tracker-map-section__text rte">{{ section.settings.intro }}</div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
 
   <pmac-tracker-map class="pmac-tracker-map">
     <div class="pmac-tracker-map__toolbar">
@@ -45,6 +53,65 @@
     </script>
   </pmac-tracker-map>
 
+  {%- if section.settings.show_tiles -%}
+    <div class="page-width pmac-tracker-tiles-wrap">
+      {%- if section.settings.tiles_heading != blank -%}
+        <p class="pmac-system-label pmac-system-label--static pmac-tracker-tiles__label">
+          {{ section.settings.tiles_heading }}
+        </p>
+      {%- endif -%}
+      <ul class="pmac-tracker-tiles" role="list">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'statuetta' -%}
+            {%- liquid
+              assign is_taken = false
+              if block.settings.product != blank and block.settings.product.available == false
+                assign is_taken = true
+              endif
+              assign tile_image = block.settings.image
+              if tile_image == blank
+                assign tile_image = block.settings.product.featured_image
+              endif
+            -%}
+            <li class="pmac-tracker-tiles__item" style="--pmac-tile-index: {{ forloop.index0 }};">
+              <button
+                type="button"
+                class="pmac-tracker-tile{% if is_taken %} is-taken{% endif %}"
+                data-tracker-open="pin-{{ forloop.index }}"
+                data-status="{{ block.settings.status }}"
+                aria-label="PMAC N°{{ block.settings.number | default: forloop.index }} — {{ block.settings.city | escape }}"
+              >
+                <span class="pmac-tracker-tile__media">
+                  {%- if tile_image != blank -%}
+                    {{
+                      tile_image
+                      | image_url: width: 700
+                      | image_tag:
+                        loading: 'lazy',
+                        widths: '300, 450, 600, 700',
+                        sizes: '(min-width: 990px) calc((100vw - 10rem) / 5), (min-width: 750px) 33vw, 50vw',
+                        alt: ''
+                    }}
+                  {%- else -%}
+                    <img src="{{ 'pmac-tracker-pin-placeholder.jpg' | asset_url }}" alt="" width="900" height="900" loading="lazy">
+                  {%- endif -%}
+                  <span class="pmac-tracker-tile__number pmac-mono">N°{{ block.settings.number | default: forloop.index }}</span>
+                </span>
+                <span class="pmac-tracker-tile__meta">
+                  <span class="pmac-tracker-tile__city">{{ block.settings.city }}</span>
+                  <span class="pmac-tracker-tile__status pmac-mono">
+                    <span class="pmac-tracker-tile__dot" aria-hidden="true"></span>
+                    {%- render 'pmac-tracker-status', status: block.settings.status, is_taken: is_taken -%}
+                  </span>
+                </span>
+              </button>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    </div>
+  {%- endif -%}
+
   <div class="pmac-tracker-card" data-tracker-card aria-hidden="true">
     <span class="pmac-tracker-card__scrim" data-tracker-card-close></span>
     <div class="pmac-tracker-card__panel" role="dialog" aria-modal="true">
@@ -60,22 +127,17 @@
         if block.settings.product != blank and block.settings.product.available == false
           assign is_taken = true
         endif
-
-        case block.settings.status
-          when 'located'
-            assign status_label = 'PMAC LOCATED'
-          when 'active'
-            assign status_label = 'ACTIVE'
-          when 'signal_lost'
-            assign status_label = 'SIGNAL LOST'
-          else
-            assign status_label = 'SIGNAL DETECTED'
-        endcase
       -%}
       <template data-tracker-template="pin-{{ forloop.index }}">
-        <div class="pmac-tracker-card__media">
+        <div class="pmac-tracker-card__media{% if block.settings.image == blank and block.settings.product.featured_image %} pmac-tracker-card__media--product{% endif %}">
           {%- if block.settings.image != blank -%}
             {{ block.settings.image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '400, 600, 900' }}
+          {%- elsif block.settings.product.featured_image -%}
+            {{
+              block.settings.product.featured_image
+              | image_url: width: 900
+              | image_tag: loading: 'lazy', widths: '400, 600, 900', sizes: '(min-width: 750px) 420px, 100vw'
+            }}
           {%- else -%}
             <img src="{{ 'pmac-tracker-pin-placeholder.jpg' | asset_url }}" alt="" width="900" height="900" loading="lazy">
           {%- endif -%}
@@ -85,7 +147,7 @@
             PMAC N°{{ block.settings.number | default: forloop.index }}/10 — {{ block.settings.city }}
           </p>
           <span class="pmac-tracker-card__status pmac-mono{% if is_taken %} is-taken{% endif %}">
-            {% if is_taken %}COLLECTED{% else %}{{ status_label }}{% endif %}
+            {%- render 'pmac-tracker-status', status: block.settings.status, is_taken: is_taken -%}
           </span>
           {%- if block.settings.coordinates != blank -%}
             <p class="pmac-tracker-card__coords pmac-mono">{{ block.settings.coordinates }}</p>
@@ -144,6 +206,25 @@
       "id": "intro",
       "label": "Testo introduttivo",
       "default": "<p>Ten signals, one each, intercepted on Earth. Touch one on the map to open the file.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_intro",
+      "label": "Mostra titolo e testo",
+      "info": "Disattiva in homepage se sopra c'è già il teaser del Tracker.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tiles",
+      "label": "Mostra griglia statuette sotto la mappa",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "tiles_heading",
+      "label": "Etichetta griglia",
+      "default": "THE TEN PIECES"
     },
     {
       "type": "color_scheme",

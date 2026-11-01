@@ -137,7 +137,7 @@
   height: 0.7rem;
   background: var(--pmac-signal);
   left: 50%;
-  animation: pmac-box-drop 650ms var(--ease-pmac) forwards;
+  animation: pmac-box-drop 700ms var(--ease-pmac) both;
 }
 
 @keyframes pmac-box-drop {

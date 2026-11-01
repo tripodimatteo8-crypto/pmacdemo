@@ -348,6 +348,9 @@
     {%- endif -%}
 
     <link rel="stylesheet" href="{{ 'pmac-base.css' | asset_url }}">
+    {%- if settings.cart_type == 'drawer' -%}
+      <link rel="stylesheet" href="{{ 'component-pmac-cart-motion.css' | asset_url }}">
+    {%- endif -%}
 
     <script>
       if (Shopify.designMode) {
