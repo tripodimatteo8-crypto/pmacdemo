@@ -321,6 +321,15 @@
         "intro": "<p>Ten signals, one each, intercepted on Earth. Touch one on the map to open the file.</p>",
         "color_scheme": "scheme-1"
       }
+    },
+    "pmac_planet_explore": {
+      "type": "pmac-planet-explore",
+      "settings": {
+        "label": "TRANSMISSION FROM PLANET 121",
+        "heading": "Planet 121",
+        "intro": "<p>Home world of the signal. Move the rabbit across the surface.</p>",
+        "color_scheme": "scheme-1"
+      }
     }
   },
   "order": [
@@ -330,6 +339,7 @@
     "pmac_showroom",
     "pmac_specimen_3d",
     "tracker_teaser",
-    "tracker_map"
+    "tracker_map",
+    "pmac_planet_explore"
   ]
 }

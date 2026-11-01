@@ -27,7 +27,7 @@
   background: var(--pmac-black);
   border: 1px solid rgba(var(--color-foreground), 0.12);
   overflow: hidden;
-  touch-action: none;
+  touch-action: pan-y;
 }
 
 @media screen and (min-width: 750px) {

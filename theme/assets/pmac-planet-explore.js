@@ -61,9 +61,25 @@ if (stage && canvas && window.customElements) {
     ArrowRight: 'right', KeyD: 'right',
   };
 
+  // La scena è attiva solo quando è visibile: così sulla homepage le frecce
+  // continuano a scorrere la pagina finché il pianeta non è in vista.
+  let inView = false;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver((entries) => {
+      inView = entries[0].isIntersecting;
+      if (!inView) Object.keys(input).forEach((k) => { input[k] = false; });
+    }, { threshold: 0.5 }).observe(stage);
+  } else {
+    inView = true;
+  }
+
   window.addEventListener('keydown', (e) => {
     const dir = keyMap[e.code];
-    if (dir) { input[dir] = true; e.preventDefault(); }
+    if (!dir || !inView) return;
+    const tag = (e.target && e.target.tagName) || '';
+    if (/^(INPUT|TEXTAREA|SELECT)$/.test(tag) || (e.target && e.target.isContentEditable)) return;
+    input[dir] = true;
+    e.preventDefault();
   });
   window.addEventListener('keyup', (e) => {
     const dir = keyMap[e.code];
@@ -92,6 +108,7 @@ if (stage && canvas && window.customElements) {
   function animate() {
     requestAnimationFrame(animate);
     const delta = Math.min(clock.getDelta(), 0.05);
+    if (!inView) return; // fuori schermo: niente rendering
     t += delta;
 
     velocity.set(0, 0, 0);

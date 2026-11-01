@@ -5,7 +5,13 @@
     <p class="pmac-system-label" data-pmac-scramble="{{ section.settings.label | escape }}">
       {{ section.settings.label }}
     </p>
-    <h1 class="pmac-planet__heading">{{ section.settings.heading }}</h1>
+    {%- liquid
+      assign heading_tag = 'h2'
+      if template.name == 'page'
+        assign heading_tag = 'h1'
+      endif
+    -%}
+    <{{ heading_tag }} class="pmac-planet__heading">{{ section.settings.heading }}</{{ heading_tag }}>
     {%- if section.settings.intro != blank -%}
       <div class="pmac-planet__text rte">{{ section.settings.intro }}</div>
     {%- endif -%}
