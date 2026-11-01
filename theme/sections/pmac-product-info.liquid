@@ -2,8 +2,24 @@
 
 <div class="pmac-product-info color-{{ section.settings.color_scheme }} gradient">
   <div class="page-width">
+    {%- assign pmac_type = product.type | strip | downcase -%}
     {%- for block in section.blocks -%}
-      {%- if block.type == 'disclosure' -%}
+      {%- liquid
+        assign show_block = true
+        assign block_types = block.settings.product_types | strip
+        if block_types != blank
+          assign show_block = false
+          assign type_list = block_types | downcase | split: ','
+          for t in type_list
+            assign t_clean = t | strip
+            if t_clean == pmac_type
+              assign show_block = true
+              break
+            endif
+          endfor
+        endif
+      -%}
+      {%- if block.type == 'disclosure' and show_block -%}
         <details class="pmac-product-info__item" {{ block.shopify_attributes }}>
           <summary class="pmac-product-info__summary">
             <span class="pmac-mono">{{ block.settings.heading }}</span>
@@ -43,6 +59,12 @@
           "type": "richtext",
           "id": "content",
           "label": "Contenuto"
+        },
+        {
+          "type": "text",
+          "id": "product_types",
+          "label": "Tipi prodotto",
+          "info": "Separati da virgola, es. T-Shirt, Top. Lascia vuoto per mostrarla su tutti i prodotti. Deve corrispondere al campo Tipo del prodotto."
         }
       ]
     }
