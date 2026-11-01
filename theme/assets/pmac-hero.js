@@ -9,6 +9,16 @@
       this.timer = null;
       this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+      // A tutto schermo l'hero parte sotto marquee + header: sottraiamo quello spazio
+      // così titolo, link e progress restano dentro la prima schermata.
+      this.fitToViewport = () => {
+        if (window.scrollY > 0 && this.style.getPropertyValue('--pmac-hero-offset')) return;
+        const top = Math.max(0, Math.round(this.getBoundingClientRect().top + window.scrollY));
+        this.style.setProperty('--pmac-hero-offset', `${top}px`);
+      };
+      this.fitToViewport();
+      window.addEventListener('resize', this.fitToViewport, { passive: true });
+
       this.dots.forEach((dot, i) => {
         dot.addEventListener('click', () => this.goTo(i));
       });

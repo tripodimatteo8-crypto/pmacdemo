@@ -15,39 +15,39 @@
         "slide-1": {
           "type": "slide",
           "settings": {
-            "system_label": "SIGNAL DETECTED // PHASE 01",
+            "system_label": "",
             "heading": "Arrival",
-            "subheading": "Planet 121 to Earth. Monitoring begins.",
-            "link_1_label": "Enter",
+            "subheading": "",
+            "link_1_label": "Clothing",
             "link_1_url": "shopify://collections/intercettazioni",
-            "link_2_label": "Tracker",
-            "link_2_url": "/pages/pmac-tracker",
+            "link_2_label": "View Campaign",
+            "link_2_url": "/#pmac-showroom",
             "color_scheme": "scheme-1"
           }
         },
         "slide-2": {
           "type": "slide",
           "settings": {
-            "system_label": "PHASE 02 // INTERCEPTED",
+            "system_label": "",
             "heading": "Intercepted",
-            "subheading": "The first transmission reached us.",
-            "link_1_label": "View Collection",
+            "subheading": "",
+            "link_1_label": "Clothing",
             "link_1_url": "shopify://collections/intercettazioni",
-            "link_2_label": "Planet 121",
-            "link_2_url": "/pages/planet-121",
+            "link_2_label": "View Campaign",
+            "link_2_url": "/#pmac-showroom",
             "color_scheme": "scheme-1"
           }
         },
         "slide-3": {
           "type": "slide",
           "settings": {
-            "system_label": "PHASE 03 // SIGHTED",
+            "system_label": "",
             "heading": "Ten Signals",
-            "subheading": "One planet. Ten pieces. Each one real.",
-            "link_1_label": "Sightings",
-            "link_1_url": "/pages/pmac-tracker",
-            "link_2_label": "",
-            "link_2_url": "",
+            "subheading": "",
+            "link_1_label": "Clothing",
+            "link_1_url": "shopify://collections/intercettazioni",
+            "link_2_label": "View Campaign",
+            "link_2_url": "/#pmac-showroom",
             "color_scheme": "scheme-1"
           }
         }
@@ -59,7 +59,8 @@
       ],
       "settings": {
         "full_screen": true,
-        "slide_duration": 6
+        "slide_duration": 6,
+        "content_alignment": "center"
       }
     },
     "trending_search": {
@@ -96,7 +97,8 @@
         "label": "Trending",
         "placeholder": "Search the signal…",
         "color_scheme": "scheme-1"
-      }
+      },
+      "disabled": true
     },
     "featured_collection": {
       "type": "featured-collection",
@@ -162,7 +164,7 @@
         "tile-4"
       ],
       "settings": {
-        "label": "ARCHIVE // MATERIAL STUDY",
+        "label": "CAMPAIGN // PMAC SHOWROOM",
         "heading": "Showroom",
         "color_scheme": "scheme-1"
       }
@@ -174,7 +176,8 @@
         "heading": "The Rabbit",
         "text": "<p>Scanned and reconstructed from the recovered specimen. One of ten signals, now in three dimensions.</p>",
         "color_scheme": "scheme-1"
-      }
+      },
+      "disabled": true
     },
     "tracker_teaser": {
       "type": "tracker-teaser",
@@ -337,12 +340,12 @@
   },
   "order": [
     "pmac_hero",
-    "trending_search",
     "featured_collection",
-    "pmac_showroom",
-    "pmac_specimen_3d",
     "tracker_teaser",
     "tracker_map",
-    "pmac_planet_explore"
+    "pmac_planet_explore",
+    "pmac_showroom",
+    "trending_search",
+    "pmac_specimen_3d"
   ]
 }

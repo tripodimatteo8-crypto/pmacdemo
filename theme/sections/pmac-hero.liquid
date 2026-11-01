@@ -5,9 +5,9 @@
 -%}
 
 <pmac-hero
-  class="pmac-hero"
+  class="pmac-hero pmac-hero--align-{{ section.settings.content_alignment | default: 'center' }}"
   data-duration="{{ section.settings.slide_duration }}"
-  style="--pmac-hero-height: {% if section.settings.full_screen %}100svh{% else %}82vh{% endif %};"
+  style="--pmac-hero-height: {% if section.settings.full_screen %}calc(100svh - var(--pmac-hero-offset, 0px)){% else %}82vh{% endif %};"
 >
   <div class="pmac-hero__slides">
     {%- for block in section.blocks -%}
@@ -120,6 +120,16 @@
       "step": 1,
       "unit": "s",
       "default": 6
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Allineamento testi e link",
+      "options": [
+        { "value": "center", "label": "Centrato (stile editoriale)" },
+        { "value": "left", "label": "A sinistra" }
+      ],
+      "default": "center"
     }
   ],
   "blocks": [

@@ -106,19 +106,27 @@
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 2.4rem;
+  bottom: 1.4rem;
   z-index: 2;
   display: flex;
-  gap: 0.8rem;
+  gap: 0.6rem;
   padding: 0 clamp(2rem, 5vw, 6rem);
 }
 
+/* Linee sottili (2px) come Gentle Monster; il padding resta per l'area di tocco */
 .pmac-hero__progress .pmac-progress {
   flex: 1;
-  background: rgba(255, 255, 255, 0.25);
+  box-sizing: content-box;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.3);
+  background-clip: content-box;
   border: 0;
-  padding: 0.8rem 0;
+  padding: 1.1rem 0;
   cursor: pointer;
+}
+
+.pmac-hero__progress .pmac-progress .pmac-progress__fill {
+  inset: 1.1rem 0;
 }
 
 .pmac-hero__progress .pmac-progress__fill {
@@ -154,5 +162,59 @@
 
   .pmac-hero__links {
     gap: 1.6rem;
+  }
+}
+
+/* ---------- Variante centrata (riferimento: hero Gentle Monster) ----------
+   Titolo medio centrato e due link sottolineati sotto, niente blocco testo a sinistra. */
+.pmac-hero--align-center .pmac-hero__content {
+  bottom: 6.8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.pmac-hero--align-center .pmac-hero__heading {
+  font-size: clamp(2.6rem, 4.4vw, 5.6rem);
+  line-height: 1.05;
+  letter-spacing: 0.02em;
+  margin: 0 0 2.4rem;
+  max-width: none;
+}
+
+.pmac-hero--align-center .pmac-hero__label,
+.pmac-hero--align-center .pmac-hero__subheading {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.pmac-hero--align-center .pmac-hero__links {
+  justify-content: center;
+  gap: 4rem;
+}
+
+.pmac-hero--align-center .pmac-hero__links .pmac-link {
+  font-size: 1.6rem;
+  letter-spacing: 0.02em;
+  text-underline-offset: 0.35em;
+}
+
+.pmac-hero--align-center .pmac-hero__overlay {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, 0.3) 100%);
+}
+
+@media screen and (max-width: 749px) {
+  .pmac-hero--align-center .pmac-hero__content {
+    bottom: 6.4rem;
+  }
+
+  .pmac-hero--align-center .pmac-hero__heading {
+    font-size: clamp(2.6rem, 8vw, 3.6rem);
+    margin-bottom: 2rem;
+  }
+
+  .pmac-hero--align-center .pmac-hero__links {
+    gap: 3.2rem;
   }
 }

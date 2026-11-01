@@ -1,6 +1,6 @@
 {{ 'component-pmac-showroom.css' | asset_url | stylesheet_tag }}
 
-<div class="pmac-showroom color-{{ section.settings.color_scheme }} gradient">
+<div id="pmac-showroom" class="pmac-showroom color-{{ section.settings.color_scheme }} gradient">
   <div class="page-width">
     {%- if section.settings.label != blank -%}
       <p class="pmac-system-label pmac-showroom__label" data-pmac-scramble="{{ section.settings.label | escape }}">
@@ -24,8 +24,8 @@
             <img
               src="{{ 'pmac-showroom-' | append: forloop.index | append: '.webp' | asset_url }}"
               alt=""
-              width="992"
-              height="992"
+              width="1400"
+              height="1400"
               loading="lazy"
             >
           {%- endif -%}
