@@ -159,9 +159,14 @@
         endif
       -%}
       <template data-tracker-template="pin-{{ forloop.index }}">
-        <div class="pmac-tracker-card__media{% if block.settings.image == blank and block.settings.product.featured_image %} pmac-tracker-card__media--product{% endif %}">
+        {%- assign has_sighting_photo = false -%}
+        {%- if block.settings.image != blank or block.settings.image_asset != blank -%}{%- assign has_sighting_photo = true -%}{%- endif -%}
+        <div class="pmac-tracker-card__media{% if has_sighting_photo == false and block.settings.product.featured_image %} pmac-tracker-card__media--product{% endif %}{% if has_sighting_photo %} pmac-tracker-card__media--sighting{% endif %}">
           {%- if block.settings.image != blank -%}
             {{ block.settings.image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '400, 600, 900' }}
+          {%- elsif block.settings.image_asset != blank -%}
+            {%- comment -%} foto di avvistamento (la stessa del Sightings log) {%- endcomment -%}
+            <img src="{{ block.settings.image_asset | asset_url }}" alt="Sighting — {{ block.settings.city | escape }}" width="1200" height="896" loading="lazy">
           {%- elsif block.settings.product.featured_image -%}
             {{
               block.settings.product.featured_image
@@ -170,6 +175,12 @@
             }}
           {%- else -%}
             <img src="{{ 'pmac-tracker-pin-placeholder.jpg' | asset_url }}" alt="" width="900" height="900" loading="lazy">
+          {%- endif -%}
+          {%- if has_sighting_photo -%}
+            <span class="pmac-tracker-card__osd pmac-mono" aria-hidden="true">
+              <span><span class="pmac-tracker-card__rec"></span>REC // SIGHTING</span>
+              <span>{{ block.settings.sighting_datetime }}</span>
+            </span>
           {%- endif -%}
         </div>
         <div class="pmac-tracker-card__body">
@@ -201,6 +212,10 @@
               {% if is_taken %}View Piece{% else %}Shop{% endif %}
             </a>
           {%- endif -%}
+          <div class="pmac-tracker-card__qr">
+            <span class="pmac-tracker-card__qr-code" data-pmac-qr="{{ shop.url }}/pages/pmac-tracker#pin-{{ forloop.index }}"></span>
+            <p class="pmac-mono">SCAN TO TRACK<br>PMAC N°{{ block.settings.number | default: forloop.index }}/10</p>
+          </div>
         </div>
       </template>
     {%- endif -%}
@@ -210,6 +225,7 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer="defer"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer="defer"></script>
 <script src="{{ 'pmac-supabase-client.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'pmac-qrcode.min.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'pmac-tracker-map.js' | asset_url }}" defer="defer"></script>
 <script src="{{ 'pmac-tracker-community.js' | asset_url }}" defer="defer"></script>
 
@@ -296,7 +312,13 @@
         {
           "type": "image_picker",
           "id": "image",
-          "label": "Foto statuetta"
+          "label": "Foto statuetta / avvistamento"
+        },
+        {
+          "type": "text",
+          "id": "image_asset",
+          "label": "Oppure foto avvistamento (file del tema)",
+          "info": "Es. pmac-sighting-london.webp. Se vuota si usa la foto del prodotto collegato."
         },
         {
           "type": "text",

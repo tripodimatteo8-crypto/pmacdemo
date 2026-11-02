@@ -9,13 +9,14 @@
 {%- liquid
   assign lines = section.settings.lines | newline_to_br | split: '<br />'
 -%}
-<div class="pmac-launch color-{{ section.settings.color_scheme }} gradient" data-pmac-launch>
+<div class="pmac-launch color-{{ section.settings.color_scheme }} gradient{% unless section.settings.show_box %} pmac-launch--rocket-only{% endunless %}" data-pmac-launch data-box="{{ section.settings.show_box }}">
   <div class="pmac-launch__hud pmac-mono" aria-hidden="true">
     <span>PMAC // LAUNCH CONTROL</span>
     <span data-launch-clock>T-00:00:09</span>
   </div>
 
   <div class="pmac-launch__stage">
+    {%- if section.settings.show_box -%}
     <div class="pmac-launch__box" aria-hidden="true">
       <svg viewBox="0 0 240 200" class="pmac-launch__box-svg">
         <defs>
@@ -37,6 +38,7 @@
         </g>
       </svg>
     </div>
+    {%- endif -%}
 
     <div class="pmac-launch__film" aria-hidden="true">
       <video
@@ -82,8 +84,9 @@
   "tag": "section",
   "class": "section",
   "settings": [
+    { "type": "checkbox", "id": "show_box", "label": "Mostra prima la chiusura della box", "default": false, "info": "Spento: solo il decollo del razzo." },
     { "type": "textarea", "id": "lines", "label": "Messaggi della sequenza (uno per riga)",
-      "default": "ORDER TRANSMISSION CONFIRMED\nBOX SEALED // PMAC TAPE APPLIED\nCONTAGION DISPATCHED\nPMAC PACKAGE LAUNCHED\nDELIVERY TO EARTH IN PROGRESS" },
+      "default": "ORDER TRANSMISSION CONFIRMED\nIGNITION\nPMAC PACKAGE LAUNCHED\nDELIVERY TO EARTH IN PROGRESS" },
     { "type": "text", "id": "final_label", "label": "Testo di sistema finale", "default": "MISSION STARTED" },
     { "type": "text", "id": "heading", "label": "Titolo finale", "default": "Your contagion is on its way" },
     { "type": "richtext", "id": "text", "label": "Testo finale", "default": "<p>The PMAC box has left the monitoring center. You will receive the tracking coordinates by email as soon as it enters Earth's orbit.</p>" },

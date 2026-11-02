@@ -249,3 +249,8 @@
     opacity: 0;
   }
 }
+
+/* Solo razzo: niente fase box, il flash arriva con l'accensione del video */
+.pmac-launch--rocket-only.is-film .pmac-launch__stage::after {
+  animation-delay: 1.3s;
+}

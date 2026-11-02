@@ -615,3 +615,83 @@ a.pmac-tracker-tile {
 .pmac-tracker-tile--product .pmac-tracker-tile__city {
   font-size: 1.4rem;
 }
+
+/* ---------- Card: foto di avvistamento (stile telecamera) ---------- */
+.pmac-tracker-card__media--sighting img {
+  object-fit: cover;
+  filter: contrast(1.08);
+}
+
+.pmac-tracker-card__media--sighting::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(180deg, rgba(0, 0, 0, 0.18) 0 1px, transparent 1px 3px);
+}
+
+.pmac-tracker-card__osd {
+  position: absolute;
+  left: 1.4rem;
+  right: 1.4rem;
+  bottom: 1.2rem;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 1rem;
+  letter-spacing: 0.14em;
+  color: rgba(242, 241, 237, 0.92);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.pmac-tracker-card__osd > span:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pmac-tracker-card__rec {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--pmac-signal);
+  animation: pmac-tile-blink 1.2s steps(1) infinite;
+}
+
+/* ---------- Card: QR "scan to track" ---------- */
+.pmac-tracker-card__qr {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  margin-top: 2.4rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(242, 241, 237, 0.14);
+}
+
+.pmac-tracker-card__qr-code {
+  flex: none;
+  display: block;
+  width: 8.4rem;
+  height: 8.4rem;
+  padding: 0.6rem;
+  background: #f2f1ed;
+}
+
+.pmac-tracker-card__qr-code svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.pmac-tracker-card__qr p {
+  margin: 0;
+  font-size: 1rem;
+  letter-spacing: 0.16em;
+  line-height: 1.8;
+  color: rgba(242, 241, 237, 0.65);
+}
+
+.pmac-tracker-card__media.pmac-tracker-card__media--sighting {
+  aspect-ratio: 4 / 3;
+}

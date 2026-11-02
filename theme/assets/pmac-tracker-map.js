@@ -151,8 +151,20 @@
     if (!template) return;
     cardContent.innerHTML = '';
     cardContent.appendChild(template.content.cloneNode(true));
+    drawQr(cardContent);
     card.setAttribute('data-open', '');
     card.removeAttribute('aria-hidden');
+  }
+
+  // QR "scan to track" nella scheda (stesso link diretto stampato sulle statuette)
+  function drawQr(scope) {
+    scope.querySelectorAll('[data-pmac-qr]').forEach((el) => {
+      if (el.firstChild || typeof qrcode === 'undefined') return;
+      const qr = qrcode(0, 'M');
+      qr.addData(el.dataset.pmacQr);
+      qr.make();
+      el.innerHTML = qr.createSvgTag({ cellSize: 4, margin: 0, scalable: true });
+    });
   }
 
   function closeCard() {

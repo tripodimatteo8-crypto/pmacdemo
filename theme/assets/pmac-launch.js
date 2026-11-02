@@ -17,7 +17,9 @@
     const s = Math.abs(ms) / 1000;
     return `${ms < 0 ? 'T-' : 'T+'}${String(Math.floor(s / 60)).padStart(2, '0')}:${s % 60 < 10 ? '0' : ''}${(s % 60).toFixed(1)}`;
   };
-  const LIFTOFF = 4600;
+  const rocketOnly = root.dataset.box !== 'true';
+  // solo razzo: il video parte subito (accensione ~1,5s, decollo ~2,4s dall'inizio)
+  const LIFTOFF = rocketOnly ? 2700 : 4600;
 
   const tickClock = () => {
     const t = performance.now() - start;
@@ -55,6 +57,23 @@
     }
     start = performance.now();
     tickClock();
+    if (rocketOnly) {
+      at(250, () => {
+        root.classList.add('is-film');
+        document.dispatchEvent(new CustomEvent('pmac:launch'));
+        if (video) {
+          const p = video.play();
+          if (p && p.catch) p.catch(() => {});
+        }
+      });
+      logAt(0, 400);
+      logAt(1, 1700);
+      logAt(2, LIFTOFF + 200);
+      logAt(3, 4300);
+      for (let i = 4; i < items.length; i++) logAt(i, 4300 + (i - 3) * 500);
+      at(5000, () => root.classList.add('is-done'));
+      return;
+    }
     requestAnimationFrame(() => root.classList.add('is-drawing'));
     logAt(0, 300);
     at(1300, () => root.classList.add('is-sealed'));
