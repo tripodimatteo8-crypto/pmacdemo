@@ -135,7 +135,13 @@
         "s9",
         "s10"
       ],
-      "settings": {}
+      "settings": {
+        "tiles_source": "collection",
+        "tiles_collection": "intercettazioni",
+        "tiles_limit": 10,
+        "show_tiles": true,
+        "tiles_heading": "THE TEN PIECES"
+      }
     }
   },
   "order": [

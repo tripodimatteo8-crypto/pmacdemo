@@ -597,3 +597,21 @@
     display: none;
   }
 }
+
+/* ---------- Tile prodotto (griglia "The Ten Pieces" con i capi) ---------- */
+a.pmac-tracker-tile {
+  text-decoration: none;
+}
+
+.pmac-tracker-tile--product .pmac-tracker-tile__media {
+  background: var(--pmac-black);
+}
+
+.pmac-tracker-tile--product .pmac-tracker-tile__media img {
+  padding: 0;
+  object-fit: contain;
+}
+
+.pmac-tracker-tile--product .pmac-tracker-tile__city {
+  font-size: 1.4rem;
+}

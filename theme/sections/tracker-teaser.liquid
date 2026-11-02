@@ -28,6 +28,7 @@
       {%- endif -%}
     </div>
 
+    {%- if section.settings.show_countdown -%}
     <div class="pmac-tracker-teaser__countdown" data-pmac-countdown="{{ section.settings.countdown_target }}">
       <p class="pmac-system-label pmac-system-label--static">{{ section.settings.countdown_label }}</p>
       <div class="pmac-tracker-teaser__digits pmac-mono">
@@ -49,10 +50,13 @@
         </div>
       </div>
     </div>
+    {%- endif -%}
   </div>
 </div>
 
-<script src="{{ 'pmac-countdown.js' | asset_url }}" defer="defer"></script>
+{%- if section.settings.show_countdown -%}
+  <script src="{{ 'pmac-countdown.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
 
 {% schema %}
 {
@@ -97,6 +101,12 @@
     {
       "type": "header",
       "content": "Countdown"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_countdown",
+      "label": "Mostra countdown",
+      "default": true
     },
     {
       "type": "text",

@@ -191,7 +191,8 @@
         "link_url": "",
         "countdown_label": "NEXT DROP",
         "countdown_target": "2026-11-06T18:00:00",
-        "color_scheme": "scheme-2"
+        "color_scheme": "scheme-2",
+        "show_countdown": false
       }
     },
     "tracker_map": {
@@ -327,7 +328,10 @@
         "color_scheme": "scheme-1",
         "show_intro": false,
         "show_tiles": true,
-        "tiles_heading": "THE TEN PIECES"
+        "tiles_heading": "THE TEN PIECES",
+        "tiles_source": "collection",
+        "tiles_collection": "intercettazioni",
+        "tiles_limit": 10
       }
     },
     "pmac_planet_explore": {

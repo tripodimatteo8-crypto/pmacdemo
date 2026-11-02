@@ -28,6 +28,12 @@ body {
   object-fit: contain !important;
 }
 
+/* Riquadro foto sempre quadrato e pieno: lo sfondo è lo stesso nero delle foto
+   prodotto (#060606), così la foto 4:5 centrata "contain" appare come un quadrato. */
+.card .card__inner .card__media {
+  background: var(--pmac-black);
+}
+
 /* ---------- Menu header sempre maiuscolo (desktop + drawer mobile) ---------- */
 .header__inline-menu .header__menu-item,
 .menu-drawer__menu-item {
@@ -201,8 +207,10 @@ body:not(.pmac-hero-overlay) .pmac-marquee-bar {
 }
 
 /* ---------- Card prodotto: riflesso cromato on hover ---------- */
+/* NB: niente position: relative qui: Dawn posiziona card__media in absolute per
+   riempire il riquadro; "relative" lo faceva restringere nel flex della card
+   (foto piccola a sinistra con una striscia accanto). Absolute basta per lo ::after. */
 .card-wrapper .card__media {
-  position: relative;
   overflow: hidden;
   isolation: isolate;
 }
@@ -215,7 +223,7 @@ body:not(.pmac-hero-overlay) .pmac-marquee-bar {
   pointer-events: none;
   background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, var(--pmac-sheen-opacity)) 48%, transparent 66%);
   background-size: 250% 100%;
-  background-position: 150% 0;
+  background-position: 220% 0; /* a riposo completamente fuori dal riquadro */
   transition: background-position var(--dur-slow) var(--ease-pmac);
 }
 

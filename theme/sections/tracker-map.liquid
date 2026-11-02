@@ -61,6 +61,35 @@
         </p>
       {%- endif -%}
       <ul class="pmac-tracker-tiles" role="list">
+        {%- if section.settings.tiles_source == 'collection' and section.settings.tiles_collection != blank -%}
+          {%- for p in section.settings.tiles_collection.products limit: section.settings.tiles_limit -%}
+            <li class="pmac-tracker-tiles__item" style="--pmac-tile-index: {{ forloop.index0 }};">
+              <a class="pmac-tracker-tile pmac-tracker-tile--product{% unless p.available %} is-taken{% endunless %}" href="{{ p.url }}" data-status="{% if p.available %}active{% else %}signal_lost{% endif %}">
+                <span class="pmac-tracker-tile__media">
+                  {%- if p.featured_image -%}
+                    {{
+                      p.featured_image
+                      | image_url: width: 700
+                      | image_tag:
+                        loading: 'lazy',
+                        widths: '300, 450, 600, 700',
+                        sizes: '(min-width: 990px) calc((100vw - 10rem) / 5), (min-width: 750px) 33vw, 50vw',
+                        alt: p.title
+                    }}
+                  {%- endif -%}
+                  <span class="pmac-tracker-tile__number pmac-mono">N°{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+                </span>
+                <span class="pmac-tracker-tile__meta">
+                  <span class="pmac-tracker-tile__city">{{ p.title }}</span>
+                  <span class="pmac-tracker-tile__status pmac-mono">
+                    <span class="pmac-tracker-tile__dot" aria-hidden="true"></span>
+                    {%- if p.available -%}{{ p.type | upcase }} // {{ p.price | money }}{%- else -%}COLLECTED{%- endif -%}
+                  </span>
+                </span>
+              </a>
+            </li>
+          {%- endfor -%}
+        {%- else -%}
         {%- for block in section.blocks -%}
           {%- if block.type == 'statuetta' -%}
             {%- liquid
@@ -108,6 +137,7 @@
             </li>
           {%- endif -%}
         {%- endfor -%}
+        {%- endif -%}
       </ul>
     </div>
   {%- endif -%}
@@ -219,6 +249,30 @@
       "id": "show_tiles",
       "label": "Mostra griglia statuette sotto la mappa",
       "default": true
+    },
+    {
+      "type": "select",
+      "id": "tiles_source",
+      "label": "Contenuto della griglia",
+      "options": [
+        { "value": "statuettes", "label": "Le statuette del Tracker" },
+        { "value": "collection", "label": "Prodotti di una collezione" }
+      ],
+      "default": "statuettes"
+    },
+    {
+      "type": "collection",
+      "id": "tiles_collection",
+      "label": "Collezione (se 'Prodotti di una collezione')"
+    },
+    {
+      "type": "range",
+      "id": "tiles_limit",
+      "label": "Numero di pezzi",
+      "min": 2,
+      "max": 20,
+      "step": 1,
+      "default": 10
     },
     {
       "type": "text",
