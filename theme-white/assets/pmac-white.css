@@ -298,3 +298,6 @@ cart-drawer .drawer__inner {
     left: 1.6rem;
   }
 }
+
+/* scheda del tracker: velo chiaro sulla mappa, come il carrello */
+.pmac-tracker-card__scrim { background: rgba(255, 255, 255, 0.6); }
