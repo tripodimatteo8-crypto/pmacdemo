@@ -77,10 +77,84 @@
         "heading": "The Dwelling",
         "color_scheme": "scheme-1"
       }
+    },
+    "journey": {
+      "type": "pmac-journey",
+      "blocks": {
+        "s1": {
+          "type": "stage",
+          "settings": {
+            "kicker": "VIAGGIO",
+            "title": "Journey",
+            "line": "Almost silent. Something has left Planet 121.",
+            "image_asset": "pmac-stage-1.webp"
+          }
+        },
+        "s2": {
+          "type": "stage",
+          "settings": {
+            "kicker": "INTERCETTAZIONI",
+            "title": "Interceptions",
+            "line": "Signals and interference start reaching Earth.",
+            "image_asset": "pmac-stage-2.webp"
+          }
+        },
+        "s3": {
+          "type": "stage",
+          "settings": {
+            "kicker": "AVVISTAMENTO",
+            "title": "Sighting",
+            "line": "PMAC is seen for the first time.",
+            "image_asset": "pmac-stage-3.webp"
+          }
+        },
+        "s4": {
+          "type": "stage",
+          "settings": {
+            "kicker": "STATUETTE",
+            "title": "Statuettes",
+            "line": "The Tracker activates: ten points on the map.",
+            "image_asset": "pmac-stage-4.webp"
+          }
+        },
+        "s5": {
+          "type": "stage",
+          "settings": {
+            "kicker": "CONTAGIO",
+            "title": "Contagion",
+            "line": "The contagion begins. The site transforms.",
+            "image_asset": "pmac-stage-5.webp"
+          }
+        },
+        "s6": {
+          "type": "stage",
+          "settings": {
+            "kicker": "COLLEZIONE",
+            "title": "Collection",
+            "line": "The collection is revealed and the shop opens.",
+            "image_asset": "pmac-stage-6.webp"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6"
+      ],
+      "settings": {
+        "label": "THE JOURNEY // PLANET 121 ⇄ EARTH",
+        "heading": "Six transmissions",
+        "current_stage": "auto",
+        "color_scheme": "scheme-1"
+      }
     }
   },
   "order": [
     "planet_explore",
+    "journey",
     "habitat"
   ]
 }

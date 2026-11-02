@@ -64,6 +64,7 @@
     logAt(2, 3000);
     at(3300, () => {
       root.classList.add('is-film');
+      document.dispatchEvent(new CustomEvent('pmac:launch'));
       if (video) {
         const p = video.play();
         if (p && p.catch) p.catch(() => {});

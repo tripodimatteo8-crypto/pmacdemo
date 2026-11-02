@@ -39,12 +39,28 @@
             "text": "Signal detected from Planet 121",
             "link": ""
           }
+        },
+        "announcement-bar-3": {
+          "type": "announcement",
+          "settings": {
+            "text": "Earth → Planet 121 // 121 light-years",
+            "link": "/pages/planet-121"
+          }
+        },
+        "announcement-bar-4": {
+          "type": "announcement",
+          "settings": {
+            "text": "Journey log: day 121, signal stable",
+            "link": ""
+          }
         }
       },
       "block_order": [
-        "announcement-bar-0",
+        "announcement-bar-3",
+        "announcement-bar-2",
         "announcement-bar-1",
-        "announcement-bar-2"
+        "announcement-bar-4",
+        "announcement-bar-0"
       ]
     },
     "header": {

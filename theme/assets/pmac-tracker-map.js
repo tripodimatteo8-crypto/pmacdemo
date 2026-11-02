@@ -159,7 +159,28 @@
     if (!card) return;
     card.removeAttribute('data-open');
     card.setAttribute('aria-hidden', 'true');
+    if (/^#pin-\d+$/.test(location.hash)) history.replaceState(null, '', location.pathname + location.search);
   }
+
+  // Link diretto a una statuetta (es. /pages/pmac-tracker#pin-9, usato dai QR):
+  // porta alla mappa, la centra sul pin e apre la scheda.
+  function openFromHash() {
+    const m = location.hash.match(/^#pin-(\d+)$/);
+    if (!m || !section) return;
+    const target = `pin-${parseInt(m[1], 10)}`;
+    const mapEl = section.querySelector('pmac-tracker-map');
+    let tries = 0;
+    const go = () => {
+      if (!(mapEl && mapEl.leafletMap && pinLatLngs[target]) && tries++ < 40) return setTimeout(go, 150);
+      mapEl?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (mapEl?.leafletMap && pinLatLngs[target]) mapEl.leafletMap.flyTo(pinLatLngs[target], 6, { duration: 1.2 });
+      setTimeout(() => openCard(target), 700);
+    };
+    go();
+  }
+  window.addEventListener('hashchange', openFromHash);
+  if (document.readyState === 'complete') openFromHash();
+  else window.addEventListener('load', openFromHash);
 
   window.pmacOpenTrackerCard = openCard;
 
@@ -167,6 +188,7 @@
   section?.querySelectorAll('[data-tracker-open]').forEach((tile) => {
     tile.addEventListener('click', () => {
       const target = tile.dataset.trackerOpen;
+      history.replaceState(null, '', `#${target}`);
       openCard(target);
       const mapEl = section.querySelector('pmac-tracker-map');
       const latlng = pinLatLngs[target];

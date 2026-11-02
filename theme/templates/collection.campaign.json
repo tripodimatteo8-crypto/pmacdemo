@@ -1,0 +1,83 @@
+{
+  "sections": {
+    "campaign": {
+      "type": "pmac-campaign",
+      "blocks": {
+        "l1": {
+          "type": "look",
+          "settings": {
+            "image_asset": "pmac-campaign-1.webp",
+            "caption": "Rocket hangar — departure bay",
+            "product": "hoodie-ricezione",
+            "layout": "left"
+          }
+        },
+        "l2": {
+          "type": "look",
+          "settings": {
+            "image_asset": "pmac-campaign-3.webp",
+            "caption": "Corridor of arches — signal room",
+            "product": "pantalone-sartoriale-cromo",
+            "layout": "right"
+          }
+        },
+        "l3": {
+          "type": "look",
+          "settings": {
+            "image_asset": "pmac-campaign-5.webp",
+            "caption": "Radio array — interception point",
+            "product": "cardigan-frequenza",
+            "layout": "full"
+          }
+        },
+        "v1": {
+          "type": "interlude",
+          "settings": {
+            "video_asset": "pmac-journey.mp4",
+            "poster_asset": "pmac-journey-poster.webp",
+            "text": "121 light-years. One signal."
+          }
+        },
+        "l4": {
+          "type": "look",
+          "settings": {
+            "image_asset": "pmac-campaign-4.webp",
+            "caption": "Specimen N°01, held",
+            "product": "t-shirt-zip-asimmetrica",
+            "layout": "left"
+          }
+        },
+        "l5": {
+          "type": "look",
+          "settings": {
+            "image_asset": "pmac-campaign-6.webp",
+            "caption": "Detail — four iron buttons",
+            "product": "dolcevita-segnale",
+            "layout": "right"
+          }
+        }
+      },
+      "block_order": [
+        "l1",
+        "l2",
+        "l3",
+        "v1",
+        "l4",
+        "l5"
+      ],
+      "settings": {
+        "cover_asset": "pmac-campaign-2.webp",
+        "label": "CAMPAIGN // MISSION 01",
+        "heading": "Intercettazioni",
+        "subheading": "EARTH ⇄ PLANET 121 — 121 LIGHT-YEARS",
+        "intro": "<p>The first transmission, worn. Shot between a rocket hangar on Earth and the silent surface of Planet 121: the places PMAC passed through on its way here.</p>",
+        "end_label": "END OF TRANSMISSION",
+        "end_cta": "Shop the collection",
+        "color_scheme": "scheme-1"
+      }
+    }
+  },
+  "order": [
+    "campaign"
+  ]
+}

@@ -2,6 +2,36 @@
 
 <div class="pmac-product-info color-{{ section.settings.color_scheme }} gradient">
   <div class="page-width">
+    {%- assign ptype = product.type | downcase -%}
+    {%- if ptype == 'statuetta' and product.handle contains 'statuetta-pmac-n-' -%}
+      {%- liquid
+        assign pin_n = product.handle | split: 'statuetta-pmac-n-' | last | slice: 0, 2 | plus: 0
+        assign tracker_url = shop.url | append: '/pages/pmac-tracker#pin-' | append: pin_n
+      -%}
+      <div class="pmac-tracker-file">
+        <div class="pmac-tracker-file__qr" data-pmac-qr="{{ tracker_url }}" aria-label="QR code — PMAC Tracker"></div>
+        <div class="pmac-tracker-file__body">
+          <p class="pmac-system-label pmac-system-label--static">TRACKER FILE // PMAC N°{{ pin_n | prepend: '0' | slice: -2, 2 }}/10</p>
+          <p class="pmac-tracker-file__text">Every statuette carries this code. Scan it to open its live file on the PMAC Tracker: position, status, sighting log.</p>
+          <a class="pmac-link" href="/pages/pmac-tracker#pin-{{ pin_n }}">Open on the map</a>
+        </div>
+      </div>
+      <script src="{{ 'pmac-qrcode.min.js' | asset_url }}" defer="defer"></script>
+      <script>
+        window.addEventListener('DOMContentLoaded', () => {
+          const el = document.querySelector('[data-pmac-qr]');
+          const draw = () => {
+            if (!el || typeof qrcode === 'undefined') return false;
+            const qr = qrcode(0, 'M');
+            qr.addData(el.dataset.pmacQr);
+            qr.make();
+            el.innerHTML = qr.createSvgTag({ cellSize: 4, margin: 0, scalable: true });
+            return true;
+          };
+          if (!draw()) window.addEventListener('load', draw, { once: true });
+        });
+      </script>
+    {%- endif -%}
     {%- assign pmac_type = product.type | strip | downcase -%}
     {%- for block in section.blocks -%}
       {%- liquid

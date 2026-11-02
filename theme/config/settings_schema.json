@@ -335,7 +335,7 @@
         "type": "textarea",
         "id": "pmac_intro_lines",
         "label": "Righe dell'intro (una per riga)",
-        "default": "ESTABLISHING LINK — EARTH ⇄ PLANET 121\nCALIBRATING RADAR ARRAY\nSIGNAL ACQUIRED"
+        "default": "ESTABLISHING LINK — EARTH ⇄ PLANET 121\nDISTANCE: 121 LIGHT-YEARS\nSIGNAL ACQUIRED"
       },
       {
         "type": "header",
@@ -432,6 +432,28 @@
         "id": "pmac_extra_nav_url",
         "label": "Link voce extra",
         "default": "/collections"
+      },
+      {
+        "type": "header",
+        "content": "Viaggio verso il Pianeta 121"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_pmac_trajectory",
+        "label": "Mostra la traiettoria Terra → Pianeta 121 in homepage",
+        "default": true,
+        "info": "Indicatore laterale che scende con lo scroll: distanza in anni luce e tappe del viaggio."
+      },
+      {
+        "type": "header",
+        "content": "Audio"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_pmac_sound",
+        "label": "Mostra l'interruttore audio",
+        "default": true,
+        "info": "L'audio parte sempre spento: è il visitatore ad accenderlo (SOUND ON nella barra in alto)."
       }
     ]
   },

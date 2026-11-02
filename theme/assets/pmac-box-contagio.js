@@ -159,6 +159,7 @@
   }
 
   const markJustAdded = (variantId) => {
+    document.dispatchEvent(new CustomEvent('pmac:cart-add'));
     justAdded = { variantId, until: performance.now() + 2000 };
     setTimeout(() => { justAdded = null; }, 2100);
     requestAnimationFrame(() => requestAnimationFrame(applyJustAdded));

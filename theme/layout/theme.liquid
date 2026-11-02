@@ -387,6 +387,9 @@
     {%- if settings.pmac_phase == '4' -%}
       {%- render 'pmac-contamination' -%}
     {%- endif -%}
+    {%- if template.name == 'index' and settings.enable_pmac_trajectory -%}
+      {%- render 'pmac-trajectory' -%}
+    {%- endif -%}
 
     {%- if settings.cart_type == 'drawer' -%}
       {%- render 'cart-drawer' -%}

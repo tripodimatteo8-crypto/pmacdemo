@@ -92,6 +92,7 @@
       '<button type="button" class="pmac-signal__close" aria-label="Close">×</button></div>' +
       '<div class="pmac-signal__text"></div><span class="pmac-signal__life"></span>';
     host.appendChild(toast);
+    document.dispatchEvent(new CustomEvent('pmac:signal'));
     scramble(toast.querySelector('.pmac-signal__text'), messages[idx]);
     toast.querySelector('.pmac-signal__close').addEventListener('click', () => dismiss(toast));
     setTimeout(() => dismiss(toast), LIFE);

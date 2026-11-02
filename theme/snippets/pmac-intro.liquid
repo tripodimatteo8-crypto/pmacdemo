@@ -36,6 +36,9 @@
   .pmac-intro.is-leaving .pmac-intro__half--bottom { transform: translate3d(0, 101%, 0); }
   .pmac-intro.is-leaving { pointer-events: none; }
   .pmac-intro__hud { position: absolute; inset: 0; transition: opacity 280ms ease; }
+  .pmac-intro__stars { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .pmac-intro__center, .pmac-intro__corner { z-index: 1; }
+  .pmac-intro__radar { background: radial-gradient(circle, rgba(6, 6, 7, 0.85) 0%, rgba(6, 6, 7, 0.55) 70%, rgba(6, 6, 7, 0) 100%); }
   .pmac-intro.is-leaving .pmac-intro__hud { opacity: 0; }
   .pmac-intro__corner {
     position: absolute; font-size: 1rem; letter-spacing: 0.16em; color: rgba(242, 241, 237, 0.55);
@@ -98,6 +101,7 @@
   <div class="pmac-intro__half pmac-intro__half--bottom"></div>
 
   <div class="pmac-intro__hud">
+    <canvas class="pmac-intro__stars" data-intro-stars></canvas>
     <div class="pmac-intro__corner pmac-intro__corner--tl pmac-mono">PMAC // MONITORING CENTER</div>
     <div class="pmac-intro__corner pmac-intro__corner--tr pmac-mono" data-intro-clock>--:--:-- UTC</div>
     <div class="pmac-intro__corner pmac-intro__corner--bl pmac-mono">{%- render 'pmac-phase-label' -%}</div>
@@ -119,7 +123,7 @@
       </div>
 
       <div class="pmac-intro__readout pmac-mono">
-        <span data-intro-coords>00.0000° N, 00.0000° E</span>
+        <span data-intro-coords>00.0000° S, 000.0000° E</span>
       </div>
 
       <ol class="pmac-intro__lines pmac-mono">
@@ -147,7 +151,7 @@
 
     var clock = intro.querySelector('[data-intro-clock]');
     var coords = intro.querySelector('[data-intro-coords]');
-    var target = [41.9028, 12.4964];
+    var target = [12.0121, 121.0]; // Pianeta 121 (habitat di PMAC): 12.0121° S, 121.0000° E
     var start = performance.now();
     var done = false;
 
@@ -159,12 +163,58 @@
       if (coords) {
         var lat = target[0] * e + (1 - e) * (Math.random() * 90);
         var lng = target[1] * e + (1 - e) * (Math.random() * 180);
-        coords.textContent = fmt(lat) + '° N, ' + fmt(lng) + '° E' + (t >= 1 ? '  — LOCKED' : '');
+        coords.textContent = fmt(lat) + '° S, ' + fmt(lng) + '° E' + (t >= 1 ? '  — PLANET 121 LOCKED' : '');
       }
       if (clock) clock.textContent = new Date().toISOString().slice(11, 19) + ' UTC';
       requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);
+
+    // Salto nell'iperspazio: le stelle accelerano, "saltano" e rallentano all'arrivo
+    var cv = intro.querySelector('[data-intro-stars]');
+    if (cv && cv.getContext) {
+      var ctx = cv.getContext('2d');
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var W, H, stars = [];
+      var size = function () {
+        W = cv.clientWidth; H = cv.clientHeight;
+        cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      };
+      size();
+      for (var i = 0; i < 420; i++) stars.push({ x: Math.random() * 2 - 1, y: Math.random() * 2 - 1, z: Math.random() });
+      var t0 = performance.now(), last = t0;
+      var speedAt = function (ms) {
+        if (ms < 300) return 0.05;
+        if (ms < 1300) return 0.05 + Math.pow((ms - 300) / 1000, 2) * 2.4; // accelera
+        if (ms < 2100) return 2.45 - ((ms - 1300) / 800) * 2.38;            // decelera: arrivo
+        return 0.07;
+      };
+      var draw = function (now) {
+        if (!document.getElementById('PmacIntro')) return;
+        var dt = Math.min((now - last) / 1000, 0.05); last = now;
+        var v = speedAt(now - t0);
+        ctx.fillStyle = 'rgba(6, 6, 7, ' + (v > 1 ? 0.35 : 0.6) + ')';
+        ctx.fillRect(0, 0, W, H);
+        var cx = W / 2, cy = H / 2, f = Math.max(W, H) * 0.5;
+        ctx.strokeStyle = 'rgba(242, 241, 237, 0.85)';
+        for (var j = 0; j < stars.length; j++) {
+          var st = stars[j];
+          var pz = st.z;
+          st.z -= v * dt;
+          if (st.z <= 0.02) { st.x = Math.random() * 2 - 1; st.y = Math.random() * 2 - 1; st.z = 1; continue; }
+          var sx = cx + (st.x / st.z) * f * 0.5, sy = cy + (st.y / st.z) * f * 0.5;
+          var px = cx + (st.x / pz) * f * 0.5, py = cy + (st.y / pz) * f * 0.5;
+          if (sx < 0 || sx > W || sy < 0 || sy > H) continue;
+          ctx.lineWidth = Math.max(0.4, (1 - st.z) * 1.8);
+          ctx.globalAlpha = Math.min(1, (1 - st.z) * 1.4);
+          ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(sx, sy); ctx.stroke();
+        }
+        ctx.globalAlpha = 1;
+        requestAnimationFrame(draw);
+      };
+      requestAnimationFrame(draw);
+      window.addEventListener('resize', size);
+    }
 
     function leave() {
       if (done) return;
