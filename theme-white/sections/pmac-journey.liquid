@@ -1,0 +1,109 @@
+{{ 'component-pmac-journey.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  The Journey — la sequenza narrativa del lancio (brief: VIAGGIO → INTERCETTAZIONI →
+  AVVISTAMENTO → STATUETTE → CONTAGIO → COLLEZIONE). Lo stato di ogni tappa segue la
+  fase attiva (Impostazioni tema → PMAC — Sistema → Fase narrativa): passate COMPLETE,
+  corrente IN PROGRESS, future CLASSIFIED. Desktop: scorrimento orizzontale legato
+  allo scroll; mobile: swipe.
+{%- endcomment -%}
+{%- liquid
+  assign phase = settings.pmac_phase | default: '3' | plus: 0
+  assign current_stage = phase | plus: 1
+  if section.settings.current_stage != 'auto'
+    assign current_stage = section.settings.current_stage | plus: 0
+  endif
+-%}
+<div class="pmac-journey color-{{ section.settings.color_scheme }} gradient" data-pmac-journey style="--count: {{ section.blocks.size }};">
+  <div class="pmac-journey__sticky">
+    <header class="page-width pmac-journey__head">
+      <div>
+        <p class="pmac-system-label" data-pmac-scramble="{{ section.settings.label | escape }}">{{ section.settings.label }}</p>
+        <h2 class="pmac-journey__heading">{{ section.settings.heading }}</h2>
+      </div>
+      {%- if section.settings.text != blank -%}
+        <div class="pmac-journey__text rte">{{ section.settings.text }}</div>
+      {%- endif -%}
+    </header>
+
+    <div class="pmac-journey__viewport">
+      <ol class="pmac-journey__track" role="list" data-journey-track>
+        {%- for block in section.blocks -%}
+          {%- liquid
+            if forloop.index < current_stage
+              assign st = 'complete'
+              assign st_label = 'COMPLETE'
+            elsif forloop.index == current_stage
+              assign st = 'current'
+              assign st_label = 'IN PROGRESS'
+            else
+              assign st = 'locked'
+              assign st_label = 'CLASSIFIED'
+            endif
+            assign img_src = blank
+            if block.settings.image != blank
+              assign img_src = block.settings.image | image_url: width: 900
+            elsif block.settings.image_asset != blank
+              assign img_src = block.settings.image_asset | asset_url
+            endif
+          -%}
+          <li class="pmac-journey__panel is-{{ st }}" {{ block.shopify_attributes }}>
+            <div class="pmac-journey__media">
+              {%- if img_src != blank -%}
+                <img src="{{ img_src }}" alt="{{ block.settings.title | escape }}" loading="lazy" width="1200" height="1490">
+              {%- endif -%}
+              <span class="pmac-journey__num pmac-mono">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+              <span class="pmac-journey__status pmac-mono">{{ st_label }}</span>
+            </div>
+            <div class="pmac-journey__body">
+              <p class="pmac-journey__kicker pmac-mono">{{ block.settings.kicker }}</p>
+              <h3 class="pmac-journey__title">{{ block.settings.title }}</h3>
+              <p class="pmac-journey__line">{{ block.settings.line }}</p>
+            </div>
+          </li>
+        {%- endfor -%}
+      </ol>
+    </div>
+
+    <div class="page-width pmac-journey__progress" aria-hidden="true">
+      <span class="pmac-journey__bar"><span data-journey-bar></span></span>
+      <span class="pmac-journey__ends pmac-mono"><span>PLANET 121</span><span>EARTH</span></span>
+    </div>
+  </div>
+</div>
+
+<script src="{{ 'pmac-journey.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "PMAC — The Journey",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Testo di sistema", "default": "THE JOURNEY // PLANET 121 ⇄ EARTH" },
+    { "type": "text", "id": "heading", "label": "Titolo", "default": "Six transmissions" },
+    { "type": "richtext", "id": "text", "label": "Testo", "default": "<p>Every collection follows the same route, from the first signal to the reveal. The site moves with it.</p>" },
+    { "type": "select", "id": "current_stage", "label": "Tappa in corso", "default": "auto", "options": [
+      { "value": "auto", "label": "Automatica (segue la fase narrativa)" },
+      { "value": "1", "label": "01" }, { "value": "2", "label": "02" }, { "value": "3", "label": "03" },
+      { "value": "4", "label": "04" }, { "value": "5", "label": "05" }, { "value": "6", "label": "06" }
+    ] },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:sections.all.colors.label", "default": "scheme-1" }
+  ],
+  "blocks": [
+    {
+      "type": "stage",
+      "name": "Tappa",
+      "limit": 8,
+      "settings": [
+        { "type": "text", "id": "kicker", "label": "Etichetta", "default": "VIAGGIO" },
+        { "type": "text", "id": "title", "label": "Titolo", "default": "Journey" },
+        { "type": "textarea", "id": "line", "label": "Testo breve" },
+        { "type": "image_picker", "id": "image", "label": "Immagine" },
+        { "type": "text", "id": "image_asset", "label": "Oppure file immagine del tema", "info": "Es. pmac-stage-1.webp" }
+      ]
+    }
+  ],
+  "presets": [ { "name": "PMAC — The Journey", "blocks": [ { "type": "stage" }, { "type": "stage" }, { "type": "stage" } ] } ]
+}
+{% endschema %}

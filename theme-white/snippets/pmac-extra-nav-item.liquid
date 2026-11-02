@@ -1,0 +1,41 @@
+{%- comment -%}
+  Voce extra in fondo al menu principale (Impostazioni tema → PMAC — Sistema → Menu).
+  Non viene mostrata se il menu contiene già un link con lo stesso URL.
+  Usage: {% render 'pmac-extra-nav-item', menu: section.settings.menu, variant: 'desktop' | 'drawer' %}
+{%- endcomment -%}
+{%- liquid
+  assign extra_label = settings.pmac_extra_nav_label | strip
+  assign extra_url = settings.pmac_extra_nav_url | default: '/collections'
+  assign already_there = false
+  for l in menu.links
+    if l.url == extra_url
+      assign already_there = true
+    endif
+  endfor
+  assign is_current = false
+  if request.path == extra_url
+    assign is_current = true
+  endif
+-%}
+{%- if extra_label != blank and already_there == false -%}
+  <li>
+    {%- if variant == 'drawer' -%}
+      <a
+        href="{{ extra_url }}"
+        class="menu-drawer__menu-item list-menu__item link link--text focus-inset{% if is_current %} menu-drawer__menu-item--active{% endif %}"
+        {% if is_current %}aria-current="page"{% endif %}
+      >
+        {{ extra_label | escape }}
+      </a>
+    {%- else -%}
+      <a
+        href="{{ extra_url }}"
+        class="header__menu-item list-menu__item link link--text focus-inset pmac-nav-link"
+        data-nav-preview="{{ extra_label | strip | downcase }}"
+        {% if is_current %}aria-current="page"{% endif %}
+      >
+        <span{% if is_current %} class="header__active-menu-item"{% endif %}>{{ extra_label | escape }}</span>
+      </a>
+    {%- endif -%}
+  </li>
+{%- endif -%}

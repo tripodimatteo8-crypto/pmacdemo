@@ -1,0 +1,151 @@
+{{ 'component-pmac-campaign.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  Campaign / Lookbook (brief E): apertura a tutto schermo, galleria editoriale con
+  look collegati ai prodotti, interludio video. Pensata come vista alternativa della
+  collezione: /collections/<handle>?view=campaign.
+{%- endcomment -%}
+{%- liquid
+  if section.settings.cover != blank
+    assign cover_src = section.settings.cover | image_url: width: 2400
+  else
+    assign cover_src = section.settings.cover_asset | asset_url
+  endif
+  assign shop_url = section.settings.shop_link | default: collection.url | default: '/collections/all'
+-%}
+<div class="pmac-campaign color-{{ section.settings.color_scheme }} gradient" data-pmac-campaign>
+  <header class="pmac-campaign__open">
+    <img class="pmac-campaign__cover" src="{{ cover_src }}" alt="" width="2400" height="1340" fetchpriority="high">
+    <span class="pmac-campaign__shade" aria-hidden="true"></span>
+    <div class="page-width pmac-campaign__title-wrap">
+      <p class="pmac-system-label" data-pmac-scramble="{{ section.settings.label | escape }}">{{ section.settings.label }}</p>
+      <h1 class="pmac-campaign__title">{{ section.settings.heading | default: collection.title }}</h1>
+      <p class="pmac-campaign__sub pmac-mono">{{ section.settings.subheading }}</p>
+    </div>
+    <span class="pmac-campaign__cue pmac-mono" aria-hidden="true">SCROLL // LOOK 01–{{ section.blocks.size | prepend: '0' | slice: -2, 2 }}</span>
+  </header>
+
+  {%- if section.settings.intro != blank -%}
+    <div class="page-width pmac-campaign__intro rte" data-reveal>{{ section.settings.intro }}</div>
+  {%- endif -%}
+
+  <div class="page-width pmac-campaign__grid">
+    {%- assign look_n = 0 -%}
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when 'look' -%}
+          {%- liquid
+            if block.settings.image != blank
+              assign src = block.settings.image | image_url: width: 1600
+            else
+              assign src = block.settings.image_asset | asset_url
+            endif
+            assign p = block.settings.product
+            assign look_n = look_n | plus: 1
+          -%}
+          <figure class="pmac-campaign__look pmac-campaign__look--{{ block.settings.layout }}" data-reveal {{ block.shopify_attributes }}>
+            <div class="pmac-campaign__frame">
+              {%- if block.settings.layout == 'full' -%}
+                <img src="{{ src }}" alt="{{ block.settings.caption | escape }}" loading="lazy" width="1600" height="893">
+              {%- else -%}
+                <img src="{{ src }}" alt="{{ block.settings.caption | escape }}" loading="lazy" width="1200" height="1490">
+              {%- endif -%}
+            </div>
+            <figcaption class="pmac-campaign__cap pmac-mono">
+              <span>LOOK {{ look_n | prepend: '0' | slice: -2, 2 }}</span>
+              <span>{{ block.settings.caption }}</span>
+              {%- if p != blank -%}
+                <a class="pmac-link" href="{{ p.url }}">{{ p.title }}</a>
+              {%- endif -%}
+            </figcaption>
+          </figure>
+        {%- when 'interlude' -%}
+          <div class="pmac-campaign__interlude" data-reveal {{ block.shopify_attributes }}>
+            {%- if block.settings.video_asset != blank -%}
+              <video src="{{ block.settings.video_asset | asset_url }}" {% if block.settings.poster_asset != blank %}poster="{{ block.settings.poster_asset | asset_url }}"{% endif %} muted loop playsinline preload="metadata" data-campaign-video></video>
+            {%- endif -%}
+            <p class="pmac-campaign__quote">{{ block.settings.text }}</p>
+          </div>
+      {%- endcase -%}
+    {%- endfor -%}
+  </div>
+
+  <div class="page-width pmac-campaign__end" data-reveal>
+    <p class="pmac-system-label pmac-system-label--static">{{ section.settings.end_label }}</p>
+    <a class="pmac-campaign__shop" href="{{ shop_url }}">{{ section.settings.end_cta }} <span aria-hidden="true">→</span></a>
+  </div>
+</div>
+
+<script>
+  (() => {
+    const root = document.querySelector('[data-pmac-campaign]');
+    if (!root) return;
+    const items = root.querySelectorAll('[data-reveal]');
+    const vids = root.querySelectorAll('[data-campaign-video]');
+    if (!('IntersectionObserver' in window)) { items.forEach((i) => i.classList.add('is-in')); return; }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } });
+    }, { threshold: 0.18 });
+    items.forEach((i) => io.observe(i));
+    const vio = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { const v = e.target; if (e.isIntersecting) { const p = v.play(); if (p && p.catch) p.catch(() => {}); } else { v.pause(); } });
+    }, { threshold: 0.25 });
+    vids.forEach((v) => vio.observe(v));
+    const cover = root.querySelector('.pmac-campaign__cover');
+    if (cover && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      let ticking = false;
+      window.addEventListener('scroll', () => {
+        if (ticking) return; ticking = true;
+        requestAnimationFrame(() => { ticking = false; const y = Math.min(window.scrollY, window.innerHeight); cover.style.transform = `scale(${1.08 - y / window.innerHeight * 0.08}) translate3d(0, ${y * 0.18}px, 0)`; });
+      }, { passive: true });
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "PMAC — Campaign",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "image_picker", "id": "cover", "label": "Immagine di apertura" },
+    { "type": "text", "id": "cover_asset", "label": "Oppure file del tema", "default": "pmac-campaign-2.webp" },
+    { "type": "text", "id": "label", "label": "Testo di sistema", "default": "CAMPAIGN // MISSION 01" },
+    { "type": "text", "id": "heading", "label": "Titolo (vuoto = nome collezione)" },
+    { "type": "text", "id": "subheading", "label": "Sottotitolo", "default": "EARTH ⇄ PLANET 121 — 121 LIGHT-YEARS" },
+    { "type": "richtext", "id": "intro", "label": "Testo introduttivo" },
+    { "type": "text", "id": "end_label", "label": "Testo finale", "default": "END OF TRANSMISSION" },
+    { "type": "text", "id": "end_cta", "label": "Testo link finale", "default": "Shop the collection" },
+    { "type": "url", "id": "shop_link", "label": "Link finale (vuoto = collezione)" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:sections.all.colors.label", "default": "scheme-1" }
+  ],
+  "blocks": [
+    {
+      "type": "look",
+      "name": "Look",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Foto" },
+        { "type": "text", "id": "image_asset", "label": "Oppure file del tema", "default": "pmac-campaign-1.webp" },
+        { "type": "text", "id": "caption", "label": "Didascalia", "default": "Rocket hangar, Earth" },
+        { "type": "product", "id": "product", "label": "Prodotto indossato" },
+        { "type": "select", "id": "layout", "label": "Impaginazione", "default": "left", "options": [
+          { "value": "full", "label": "Tutta larghezza" },
+          { "value": "left", "label": "Verticale a sinistra" },
+          { "value": "right", "label": "Verticale a destra" },
+          { "value": "center", "label": "Verticale al centro" }
+        ] }
+      ]
+    },
+    {
+      "type": "interlude",
+      "name": "Interludio video",
+      "settings": [
+        { "type": "text", "id": "video_asset", "label": "File video del tema", "default": "pmac-journey.mp4" },
+        { "type": "text", "id": "poster_asset", "label": "Anteprima (file del tema)" },
+        { "type": "text", "id": "text", "label": "Testo", "default": "121 light-years. One signal." }
+      ]
+    }
+  ],
+  "presets": [ { "name": "PMAC — Campaign" } ]
+}
+{% endschema %}

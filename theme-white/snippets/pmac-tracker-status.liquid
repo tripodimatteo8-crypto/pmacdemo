@@ -1,0 +1,14 @@
+{%- comment -%}
+  Etichetta di status di una statuetta del Tracker.
+  Usage: {% render 'pmac-tracker-status', status: block.settings.status, is_taken: is_taken %}
+{%- endcomment -%}
+{%- if is_taken -%}
+  COLLECTED
+{%- else -%}
+  {%- case status -%}
+    {%- when 'located' -%}PMAC LOCATED
+    {%- when 'active' -%}ACTIVE
+    {%- when 'signal_lost' -%}SIGNAL LOST
+    {%- else -%}SIGNAL DETECTED
+  {%- endcase -%}
+{%- endif -%}

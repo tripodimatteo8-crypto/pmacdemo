@@ -1,0 +1,261 @@
+.pmac-typing {
+  justify-content: center;
+  padding: 1.6rem 2rem 0;
+}
+
+.pmac-typing__cursor {
+  animation: pmac-typing-blink 1s steps(1) infinite;
+}
+
+@keyframes pmac-typing-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.pmac-box-contagio {
+  padding: 2rem 2rem 1.6rem;
+  border-bottom: 1px solid rgba(var(--color-foreground), 0.14);
+  text-align: center;
+}
+
+.pmac-box-contagio__stage {
+  position: relative;
+  width: 11rem;
+  margin: 0 auto 1rem;
+}
+
+.pmac-box-contagio__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.pmac-box-contagio__fill {
+  opacity: 0.92;
+  transform: scaleY(0);
+  transition: transform var(--dur-slow) var(--ease-pmac);
+}
+
+.pmac-box-contagio.is-full .pmac-box-contagio__fill {
+  animation: pmac-box-pulse 1.4s var(--ease-pmac) infinite;
+}
+
+@keyframes pmac-box-pulse {
+  0%, 100% { opacity: 0.92; }
+  50% { opacity: 1; }
+}
+
+/* ---------- Sigillo + razzo (animazione al checkout) ---------- */
+.pmac-box-contagio__rocket-wrap {
+  position: absolute;
+  left: 50%;
+  bottom: 54%;
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.pmac-box-contagio.is-launching .pmac-box-contagio__rocket-wrap {
+  opacity: 1;
+}
+
+.pmac-box-contagio__rocket {
+  display: block;
+  transition: transform 1.6s cubic-bezier(0.5, 0, 1, 0.5), opacity 0.4s ease 1.2s;
+}
+
+.pmac-box-contagio.is-launching .pmac-box-contagio__rocket {
+  transform: translateY(-16rem);
+  opacity: 0;
+}
+
+.pmac-box-contagio__flame {
+  animation: pmac-flame 0.12s infinite alternate;
+  transform-origin: 20px 60px;
+}
+
+@keyframes pmac-flame {
+  to {
+    transform: scaleY(0.55);
+  }
+}
+
+.pmac-box-contagio.is-launching .pmac-box-contagio__hazard {
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-pmac);
+}
+
+.pmac-box-contagio.is-launching .pmac-box-contagio__tape {
+  stroke: var(--pmac-signal);
+  stroke-width: 3;
+  transition: stroke-width 0.3s var(--ease-pmac), stroke 0.3s var(--ease-pmac);
+}
+
+.pmac-box-contagio.is-launching .pmac-box-contagio__flap {
+  stroke: var(--pmac-signal);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pmac-box-contagio__rocket {
+    transition: none;
+  }
+}
+
+.pmac-box-contagio__outline {
+  fill: none;
+  stroke: rgba(var(--color-foreground), 0.7);
+  stroke-width: 1.5;
+}
+
+.pmac-box-contagio__flap,
+.pmac-box-contagio__tape {
+  fill: none;
+  stroke: rgba(var(--color-foreground), 0.45);
+  stroke-width: 1;
+}
+
+.pmac-box-contagio__hazard {
+  font-size: 2.2rem;
+  fill: rgba(var(--color-foreground), 0.5);
+  font-family: var(--font-mono-family);
+}
+
+.pmac-box-contagio__particles {
+  position: absolute;
+  inset: -4rem -2rem auto -2rem;
+  height: 6rem;
+  pointer-events: none;
+}
+
+.pmac-box-contagio__particle {
+  position: absolute;
+  top: 0;
+  width: 0.7rem;
+  height: 0.7rem;
+  background: var(--pmac-signal);
+  left: 50%;
+  animation: pmac-box-drop 700ms var(--ease-pmac) both;
+}
+
+@keyframes pmac-box-drop {
+  0% {
+    transform: translate(-50%, 0) scale(1);
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, 7.4rem) scale(0.4);
+    opacity: 0;
+  }
+}
+
+.pmac-box-contagio__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.pmac-box-contagio__count {
+  font-size: 1.2rem;
+  letter-spacing: 0.08em;
+  color: rgba(var(--color-foreground), 0.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pmac-box-contagio__fill {
+    transition: none;
+  }
+
+  .pmac-box-contagio__particle {
+    display: none;
+  }
+}
+
+
+/* ---------- Stato narrativo + barra a segmenti ---------- */
+.pmac-box-contagio__status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 1.2rem;
+}
+
+.pmac-box-contagio__state {
+  font-size: 1rem;
+  letter-spacing: 0.16em;
+  color: rgb(var(--color-foreground));
+}
+
+.pmac-box-contagio__state.is-new {
+  animation: pmac-box-state 900ms steps(6);
+}
+
+.pmac-box-contagio__bar {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 3px;
+  width: min(22rem, 100%);
+}
+
+.pmac-box-contagio__seg {
+  display: block;
+  height: 4px;
+  background: rgba(var(--color-foreground), 0.15);
+  transition: background-color 400ms var(--ease-pmac);
+}
+
+.pmac-box-contagio__seg.is-on {
+  background: rgb(var(--color-foreground));
+}
+
+.pmac-box-contagio.is-full .pmac-box-contagio__seg.is-on {
+  background: var(--pmac-hazard, #f2c230);
+}
+
+/* ---------- Sigillo giallo-nero al lancio ---------- */
+.pmac-box-contagio__seal {
+  opacity: 0;
+}
+
+.pmac-box-contagio.is-launching .pmac-box-contagio__seal {
+  opacity: 1;
+  animation: pmac-box-seal 520ms var(--ease-pmac) both;
+}
+
+@keyframes pmac-box-seal {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes pmac-box-state {
+  0% {
+    opacity: 0.2;
+  }
+  20% {
+    opacity: 1;
+  }
+  40% {
+    opacity: 0.3;
+  }
+  60% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pmac-box-contagio__state.is-new,
+  .pmac-box-contagio.is-launching .pmac-box-contagio__seal {
+    animation: none;
+  }
+}

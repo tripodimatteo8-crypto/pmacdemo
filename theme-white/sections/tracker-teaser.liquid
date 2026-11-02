@@ -1,0 +1,136 @@
+{{ 'component-tracker-teaser.css' | asset_url | stylesheet_tag }}
+
+<div class="pmac-tracker-teaser color-{{ section.settings.color_scheme }} gradient pmac-grain">
+  <div class="pmac-tracker-teaser__media">
+    {%- if section.settings.image != blank -%}
+      {{
+        section.settings.image
+        | image_url: width: 2000
+        | image_tag: loading: 'lazy', sizes: '100vw', widths: '750, 1100, 1500, 2000'
+      }}
+    {%- else -%}
+      <img src="{{ 'pmac-tracker-teaser.webp' | asset_url }}" alt="" width="1152" height="768" loading="lazy">
+    {%- endif -%}
+    <span class="pmac-tracker-teaser__overlay"></span>
+  </div>
+
+  <div class="page-width pmac-tracker-teaser__grid pmac-reveal-group">
+    <div class="pmac-tracker-teaser__content">
+      <p class="pmac-system-label" data-pmac-scramble="{{ section.settings.label | escape }}">
+        {{ section.settings.label }}
+      </p>
+      <h2 class="pmac-tracker-teaser__heading">{{ section.settings.heading }}</h2>
+      <div class="pmac-tracker-teaser__text rte">{{ section.settings.text }}</div>
+      {%- if section.settings.link_label != blank -%}
+        <a href="{{ section.settings.link_url | default: '#' }}" class="pmac-link pmac-tracker-teaser__link">
+          {{ section.settings.link_label }}
+        </a>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.show_countdown -%}
+    <div class="pmac-tracker-teaser__countdown" data-pmac-countdown="{{ section.settings.countdown_target }}">
+      <p class="pmac-system-label pmac-system-label--static">{{ section.settings.countdown_label }}</p>
+      <div class="pmac-tracker-teaser__digits pmac-mono">
+        <div class="pmac-tracker-teaser__digit">
+          <span data-countdown-days>00</span>
+          <small>GG</small>
+        </div>
+        <div class="pmac-tracker-teaser__digit">
+          <span data-countdown-hours>00</span>
+          <small>OO</small>
+        </div>
+        <div class="pmac-tracker-teaser__digit">
+          <span data-countdown-minutes>00</span>
+          <small>MM</small>
+        </div>
+        <div class="pmac-tracker-teaser__digit">
+          <span data-countdown-seconds>00</span>
+          <small>SS</small>
+        </div>
+      </div>
+    </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{%- if section.settings.show_countdown -%}
+  <script src="{{ 'pmac-countdown.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "PMAC — Tracker teaser",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Immagine di sfondo"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Testo di sistema",
+      "default": "FASE 03 // AVVISTAMENTO"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Titolo",
+      "default": "PMAC Tracker"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Testo",
+      "default": "<p>10 statuette 1/1 sparse sulla mappa del mondo. Il prossimo segnale verrà trasmesso al conto alla rovescia.</p>"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Testo link",
+      "default": "Esplora la mappa"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Countdown"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_countdown",
+      "label": "Mostra countdown",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "countdown_label",
+      "label": "Etichetta countdown",
+      "default": "PROSSIMO DROP"
+    },
+    {
+      "type": "text",
+      "id": "countdown_target",
+      "label": "Data/ora countdown (ISO, es. 2026-11-06T18:00:00)",
+      "default": "2026-11-06T18:00:00"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-2"
+    }
+  ],
+  "presets": [
+    {
+      "name": "PMAC — Tracker teaser"
+    }
+  ]
+}
+{% endschema %}

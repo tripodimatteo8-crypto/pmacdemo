@@ -1,0 +1,23 @@
+{%- comment -%}
+  Testo della fase narrativa attiva (Impostazioni tema → PMAC — Sistema → Fase narrativa).
+  Usage: {% render 'pmac-phase-label' %}  /  {% render 'pmac-phase-label', short: true %}
+{%- endcomment -%}
+{%- liquid
+  assign phase = settings.pmac_phase | default: '3'
+  case phase
+    when '1'
+      assign phase_msg = 'SIGNAL DETECTED'
+    when '2'
+      assign phase_msg = 'PMAC HAS BEEN SIGHTED'
+    when '4'
+      assign phase_msg = 'CONTAMINATION IN PROGRESS'
+    when '5'
+      assign phase_msg = 'COLLECTION REVEALED'
+    else
+      assign phase_msg = '10 STATUETTES LOCALIZED'
+  endcase
+  if settings.pmac_phase_message != blank
+    assign phase_msg = settings.pmac_phase_message | upcase
+  endif
+-%}
+{%- if short -%}PHASE 0{{ phase }}{%- else -%}PHASE 0{{ phase }} // {{ phase_msg }}{%- endif -%}

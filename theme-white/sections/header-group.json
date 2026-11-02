@@ -1,0 +1,89 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.header.name",
+  "type": "header",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "settings": {
+        "speed": 70,
+        "color_scheme": "scheme-1",
+        "show_social": false
+      },
+      "blocks": {
+        "announcement-bar-0": {
+          "type": "announcement",
+          "settings": {
+            "text": "Worldwide shipping, tracked",
+            "link": ""
+          }
+        },
+        "announcement-bar-1": {
+          "type": "announcement",
+          "settings": {
+            "text": "PMAC Tracker — ten signals, incoming",
+            "link": "/pages/pmac-tracker"
+          }
+        },
+        "announcement-bar-2": {
+          "type": "announcement",
+          "settings": {
+            "text": "Signal detected from Planet 121",
+            "link": ""
+          }
+        },
+        "announcement-bar-3": {
+          "type": "announcement",
+          "settings": {
+            "text": "Earth → Planet 121 // 121 light-years",
+            "link": "/pages/planet-121"
+          }
+        },
+        "announcement-bar-4": {
+          "type": "announcement",
+          "settings": {
+            "text": "Journey log: day 121, signal stable",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "announcement-bar-3",
+        "announcement-bar-2",
+        "announcement-bar-1",
+        "announcement-bar-4",
+        "announcement-bar-0"
+      ]
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "menu_color_scheme": "scheme-1",
+        "logo_position": "middle-center",
+        "menu": "main-menu",
+        "menu_type_desktop": "mega",
+        "sticky_header_type": "always",
+        "show_line_separator": false,
+        "enable_country_selector": false,
+        "enable_language_selector": false,
+        "mobile_logo_position": "center",
+        "margin_bottom": 0,
+        "padding_top": 24,
+        "padding_bottom": 24
+      }
+    }
+  },
+  "order": [
+    "announcement-bar",
+    "header"
+  ]
+}

@@ -1,0 +1,137 @@
+{{ 'component-pmac-sightings-log.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  Database avvistamenti (brief D — Sightings): ogni record ha codice, città, coordinate,
+  data/ora, status, tipo, descrizione e foto/video. I record si aggiungono come blocchi
+  dall'editor del tema; gli avvistamenti della community approvati in Supabase vengono
+  aggiunti in coda automaticamente (assets/pmac-sightings-log.js).
+{%- endcomment -%}
+
+<div class="pmac-slog color-{{ section.settings.color_scheme }} gradient" data-pmac-slog data-community="{{ section.settings.show_community }}">
+  <div class="page-width">
+    <header class="pmac-slog__head pmac-reveal-group">
+      <p class="pmac-system-label" data-pmac-scramble="{{ section.settings.label | escape }}">{{ section.settings.label }}</p>
+      <h1 class="pmac-slog__heading">{{ section.settings.heading }}</h1>
+      {%- if section.settings.text != blank -%}
+        <div class="pmac-slog__text rte">{{ section.settings.text }}</div>
+      {%- endif -%}
+    </header>
+
+    <div class="pmac-slog__toolbar pmac-mono" role="toolbar" aria-label="Filter sightings">
+      <button type="button" class="pmac-slog__filter is-active" data-filter="all">ALL <span data-count="all"></span></button>
+      <button type="button" class="pmac-slog__filter" data-filter="statuette">STATUETTES <span data-count="statuette"></span></button>
+      <button type="button" class="pmac-slog__filter" data-filter="community">COMMUNITY <span data-count="community"></span></button>
+      <span class="pmac-slog__live"><span class="pmac-slog__rec" aria-hidden="true"></span>LIVE FEED</span>
+    </div>
+
+    <ol class="pmac-slog__grid" role="list" data-pmac-slog-grid>
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign img_src = blank
+          if block.settings.image != blank
+            assign img_src = block.settings.image | image_url: width: 900
+          elsif block.settings.image_asset != blank
+            assign img_src = block.settings.image_asset | asset_url
+          endif
+          case block.settings.status
+            when 'located'
+              assign st = 'PMAC LOCATED'
+            when 'active'
+              assign st = 'ACTIVE'
+            when 'collected'
+              assign st = 'COLLECTED'
+            when 'signal_lost'
+              assign st = 'SIGNAL LOST'
+            when 'spotted'
+              assign st = 'PMAC SPOTTED'
+            else
+              assign st = 'SIGNAL DETECTED'
+          endcase
+        -%}
+        <li class="pmac-slog__item" data-kind="{{ block.settings.kind }}" style="--i: {{ forloop.index0 }};" {{ block.shopify_attributes }}>
+          <article class="pmac-slog__card">
+            <div class="pmac-slog__media{% if img_src == blank and block.settings.video == blank %} is-novisual{% endif %}">
+              {%- if block.settings.video != blank -%}
+                {{ block.settings.video | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: false, image_size: '900x' }}
+              {%- elsif img_src != blank -%}
+                <img src="{{ img_src }}" alt="{{ block.settings.city | escape }} — {{ block.settings.code | escape }}" loading="lazy" width="1200" height="896">
+              {%- else -%}
+                <span class="pmac-slog__novisual pmac-mono">NO VISUAL // DATA ONLY</span>
+              {%- endif -%}
+              <span class="pmac-slog__osd pmac-mono" aria-hidden="true">
+                <span><span class="pmac-slog__rec"></span>REC</span>
+                <span>{{ block.settings.camera | default: 'CAM 01' }}</span>
+              </span>
+              <span class="pmac-slog__stamp pmac-mono" aria-hidden="true">{{ block.settings.datetime }}</span>
+              <span class="pmac-slog__scan" aria-hidden="true"></span>
+            </div>
+            <div class="pmac-slog__body">
+              <div class="pmac-slog__row pmac-mono">
+                <span class="pmac-slog__code">{{ block.settings.code }}</span>
+                <span class="pmac-slog__status" data-status="{{ block.settings.status }}">{{ st }}</span>
+              </div>
+              <h2 class="pmac-slog__city">{{ block.settings.city }}</h2>
+              <p class="pmac-slog__coords pmac-mono">{{ block.settings.coordinates }}</p>
+              {%- if block.settings.description != blank -%}
+                <p class="pmac-slog__desc">{{ block.settings.description }}</p>
+              {%- endif -%}
+              {%- if block.settings.link != blank -%}
+                <a class="pmac-link pmac-slog__link" href="{{ block.settings.link }}">Open file</a>
+              {%- endif -%}
+            </div>
+          </article>
+        </li>
+      {%- endfor -%}
+    </ol>
+  </div>
+</div>
+
+<script src="{{ 'pmac-sightings-log.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "PMAC — Sightings log",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Testo di sistema", "default": "SIGHTINGS // DATABASE" },
+    { "type": "text", "id": "heading", "label": "Titolo", "default": "Sightings Log" },
+    { "type": "richtext", "id": "text", "label": "Testo", "default": "<p>Every anomaly recorded on Earth, logged by the monitoring center. Statuette signals and community reports are cross-checked before they enter the database.</p>" },
+    { "type": "checkbox", "id": "show_community", "label": "Aggiungi gli avvistamenti community approvati", "default": true },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:sections.all.colors.label", "default": "scheme-1" }
+  ],
+  "blocks": [
+    {
+      "type": "record",
+      "name": "Avvistamento",
+      "settings": [
+        { "type": "text", "id": "code", "label": "Codice identificativo", "default": "PMAC-S-0001" },
+        { "type": "select", "id": "kind", "label": "Tipo", "default": "statuette", "options": [
+          { "value": "statuette", "label": "Statuetta" },
+          { "value": "community", "label": "Community (capo indossato)" }
+        ] },
+        { "type": "text", "id": "city", "label": "Città", "default": "Rome" },
+        { "type": "text", "id": "coordinates", "label": "Coordinate", "default": "41.9028° N, 12.4964° E" },
+        { "type": "text", "id": "datetime", "label": "Data e ora", "default": "2026-10-09 23:44:17" },
+        { "type": "select", "id": "status", "label": "Status", "default": "signal_detected", "options": [
+          { "value": "signal_detected", "label": "Signal detected" },
+          { "value": "located", "label": "PMAC located" },
+          { "value": "active", "label": "Active" },
+          { "value": "collected", "label": "Collected" },
+          { "value": "signal_lost", "label": "Signal lost" },
+          { "value": "spotted", "label": "PMAC spotted (community)" }
+        ] },
+        { "type": "text", "id": "camera", "label": "Etichetta camera", "default": "CAM 01" },
+        { "type": "textarea", "id": "description", "label": "Descrizione" },
+        { "type": "image_picker", "id": "image", "label": "Foto" },
+        { "type": "text", "id": "image_asset", "label": "Oppure file immagine del tema", "info": "Es. pmac-sighting-rome.webp" },
+        { "type": "video", "id": "video", "label": "Video (opzionale)" },
+        { "type": "url", "id": "link", "label": "Link (es. prodotto statuetta)" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "PMAC — Sightings log", "blocks": [ { "type": "record" }, { "type": "record" }, { "type": "record" } ] }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,239 @@
+/* PMAC — The Journey (6 tappe del lancio) */
+.pmac-journey {
+  position: relative;
+}
+
+.pmac-journey__sticky {
+  padding: 6rem 0 4rem;
+}
+
+.pmac-journey__head {
+  display: grid;
+  gap: 1.6rem 4rem;
+  align-items: end;
+  margin-bottom: 3.2rem;
+}
+
+@media screen and (min-width: 990px) {
+  .pmac-journey__head {
+    grid-template-columns: 1fr minmax(0, 42rem);
+  }
+}
+
+.pmac-journey__heading {
+  font-family: var(--font-heading-family);
+  font-weight: var(--font-heading-weight);
+  text-transform: uppercase;
+  font-size: clamp(3.2rem, 6vw, 6.4rem);
+  line-height: 0.95;
+  margin: 1.2rem 0 0;
+}
+
+.pmac-journey__text {
+  color: rgba(var(--color-foreground), 0.72);
+}
+
+.pmac-journey__viewport {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  padding: 0 1.5rem;
+}
+
+.pmac-journey__viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.pmac-journey__track {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 1.6rem;
+  width: max-content;
+  will-change: transform;
+}
+
+.pmac-journey__panel {
+  flex: none;
+  width: min(78vw, 34rem);
+  scroll-snap-align: start;
+}
+
+.pmac-journey__media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: #F4F4F2;
+  border: 1px solid rgba(var(--color-foreground), 0.14);
+}
+
+.pmac-journey__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 1.2s var(--ease-pmac), filter 600ms var(--ease-pmac);
+}
+
+.pmac-journey__panel:hover .pmac-journey__media img {
+  transform: scale(1.04);
+}
+
+.pmac-journey__num {
+  position: absolute;
+  left: 1.4rem;
+  top: 1.2rem;
+  font-size: clamp(3.2rem, 5vw, 5.6rem);
+  line-height: 1;
+  color: #111111;
+  mix-blend-mode: difference;
+}
+
+.pmac-journey__status {
+  position: absolute;
+  right: 1.2rem;
+  top: 1.4rem;
+  padding: 0.4rem 0.8rem;
+  font-size: 1rem;
+  letter-spacing: 0.16em;
+  color: #111111;
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(17, 17, 17, 0.35);
+}
+
+.pmac-journey__panel.is-current .pmac-journey__status {
+  border-color: var(--pmac-signal);
+  color: var(--pmac-signal);
+  animation: pmac-journey-blink 1.4s steps(1) infinite;
+}
+
+.pmac-journey__panel.is-current .pmac-journey__media {
+  border-color: rgba(var(--color-foreground), 0.6);
+}
+
+/* tappe future: oscurate */
+.pmac-journey__panel.is-locked .pmac-journey__media img {
+  filter: grayscale(1) blur(12px) brightness(0.45);
+  transform: scale(1.08);
+}
+
+.pmac-journey__panel.is-locked .pmac-journey__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(-45deg, rgba(17, 17, 17, 0.06) 0 2px, transparent 2px 11px);
+}
+
+.pmac-journey__panel.is-locked .pmac-journey__title,
+.pmac-journey__panel.is-locked .pmac-journey__line {
+  opacity: 0.45;
+}
+
+.pmac-journey__body {
+  padding: 1.6rem 0.2rem 0;
+}
+
+.pmac-journey__kicker {
+  margin: 0;
+  font-size: 1rem;
+  letter-spacing: 0.2em;
+  color: rgba(var(--color-foreground), 0.55);
+}
+
+.pmac-journey__title {
+  font-family: var(--font-heading-family);
+  font-weight: var(--font-heading-weight);
+  text-transform: uppercase;
+  font-size: 2.4rem;
+  line-height: 1.05;
+  margin: 0.6rem 0 0.8rem;
+}
+
+.pmac-journey__line {
+  margin: 0;
+  font-size: 1.4rem;
+  line-height: 1.55;
+  color: rgba(var(--color-foreground), 0.78);
+  max-width: 30ch;
+}
+
+.pmac-journey__progress {
+  margin-top: 2.8rem;
+}
+
+.pmac-journey__bar {
+  display: block;
+  height: 1px;
+  background: rgba(var(--color-foreground), 0.2);
+  overflow: hidden;
+}
+
+.pmac-journey__bar span {
+  display: block;
+  height: 100%;
+  background: rgb(var(--color-foreground));
+  transform-origin: left;
+  transform: scaleX(var(--jp, 0));
+}
+
+.pmac-journey__ends {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.8rem;
+  font-size: 1rem;
+  letter-spacing: 0.18em;
+  color: rgba(var(--color-foreground), 0.5);
+}
+
+/* Desktop: la sezione diventa "alta" e il binario scorre in orizzontale con lo scroll */
+@media screen and (min-width: 990px) and (prefers-reduced-motion: no-preference) {
+  .pmac-journey.is-pinned {
+    height: var(--pin-h, 300vh);
+  }
+
+  .pmac-journey.is-pinned .pmac-journey__sticky {
+    position: sticky;
+    top: 9.2rem;
+    height: calc(100vh - 9.2rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem 0;
+    overflow: hidden;
+  }
+
+  .pmac-journey.is-pinned .pmac-journey__viewport {
+    overflow: visible;
+    padding: 0 max(5rem, calc((100vw - var(--page-width, 120rem)) / 2 + 5rem));
+  }
+
+  .pmac-journey.is-pinned .pmac-journey__panel {
+    width: clamp(26rem, 24vw, 34rem);
+  }
+
+  .pmac-journey.is-pinned .pmac-journey__media {
+    aspect-ratio: auto;
+    height: min(46vh, 42rem);
+  }
+
+  .pmac-journey.is-pinned .pmac-journey__head {
+    margin-bottom: 2.4rem;
+  }
+
+  .pmac-journey.is-pinned .pmac-journey__heading {
+    font-size: clamp(3.2rem, 4.4vw, 5.6rem);
+  }
+}
+
+@keyframes pmac-journey-blink {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pmac-journey__panel.is-current .pmac-journey__status {
+    animation: none;
+  }
+}

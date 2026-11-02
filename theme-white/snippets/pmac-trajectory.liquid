@@ -1,0 +1,29 @@
+{%- comment -%}
+  Traiettoria Terra → Pianeta 121 (solo homepage). Scorrendo la pagina si "viaggia":
+  l'indicatore scende lungo la rotta, la distanza scala da 121 anni luce a 0 e si
+  accende la tappa corrispondente alla sezione in vista. Vedi assets/pmac-trajectory.js.
+{%- endcomment -%}
+<aside class="pmac-traj" id="PmacTrajectory" aria-hidden="true">
+  <div class="pmac-traj__end pmac-traj__end--top pmac-mono"><span class="pmac-traj__planet pmac-traj__planet--earth"></span>EARTH</div>
+  <div class="pmac-traj__rail">
+    <span class="pmac-traj__fill"></span>
+    <span class="pmac-traj__ship"><span></span></span>
+  </div>
+  <div class="pmac-traj__end pmac-traj__end--bottom pmac-mono"><span class="pmac-traj__planet pmac-traj__planet--p121"></span>PLANET 121</div>
+  <div class="pmac-traj__readout pmac-mono">
+    <span class="pmac-traj__stage" data-traj-stage>01 // JOURNEY</span>
+    <span class="pmac-traj__dist"><b data-traj-dist>121.000</b> LY</span>
+  </div>
+</aside>
+<script type="application/json" id="PmacTrajectoryStages">
+  [
+    { "sel": ".section--pmac-hero, .pmac-hero", "label": "01 // JOURNEY" },
+    { "sel": ".featured-collection, [id*='__featured_collection']", "label": "02 // INTERCEPTIONS" },
+    { "sel": ".pmac-tracker-teaser", "label": "03 // SIGHTING" },
+    { "sel": ".pmac-tracker-tiles-wrap", "label": "04 // STATUETTES" },
+    { "sel": ".pmac-planet", "label": "05 // ARRIVAL — PLANET 121", "arrival": true },
+    { "sel": ".pmac-showroom", "label": "06 // COLLECTION" }
+  ]
+</script>
+<link rel="stylesheet" href="{{ 'component-pmac-trajectory.css' | asset_url }}" media="print" onload="this.media='all'">
+<script src="{{ 'pmac-trajectory.js' | asset_url }}" defer="defer"></script>

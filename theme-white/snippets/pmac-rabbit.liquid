@@ -1,0 +1,22 @@
+{% comment %}
+  Coniglio PMAC — compare mentre si scrolla (area E del brief).
+  v4 (31 ottobre 2026): render fisso dal modello 3D cromato (lo stesso usato nella
+  sezione "Specimen 3D" in homepage), ritagliato con sfondo trasparente — sostituisce
+  la silhouette SVG disegnata a mano (v1-v3). Verrà sostituita dall'arte/animazione
+  definitiva del personaggio quando disponibile.
+  Attivabile/disattivabile e con frequenza regolabile da Impostazioni tema > PMAC — Sistema.
+{% endcomment %}
+<div id="pmac-rabbit" aria-hidden="true">
+  {%- if settings.pmac_rabbit_image != blank -%}
+    {{ settings.pmac_rabbit_image | image_url: width: 240 | image_tag: loading: 'lazy', widths: '120, 180, 240' }}
+  {%- else -%}
+    <img
+      class="pmac-rabbit__img"
+      src="{{ 'pmac-rabbit-float.webp' | asset_url }}"
+      alt=""
+      width="291"
+      height="480"
+      loading="lazy"
+    >
+  {%- endif -%}
+</div>

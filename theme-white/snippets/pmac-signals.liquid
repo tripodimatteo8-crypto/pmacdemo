@@ -1,0 +1,25 @@
+{%- comment -%}
+  Notifiche di sistema durante la navigazione (Impostazioni tema → PMAC — Sistema → Notifiche).
+  Decorative: non bloccano nulla, si chiudono da sole, max N per sessione.
+{%- endcomment -%}
+{%- liquid
+  assign lines = settings.pmac_signal_messages | newline_to_br | split: '<br />'
+-%}
+<div class="pmac-signals" id="PmacSignals" aria-hidden="true"></div>
+<script type="application/json" id="PmacSignalsData">
+  {
+    "messages": [
+      {%- assign first = true -%}
+      {%- for line in lines -%}
+        {%- assign l = line | strip -%}
+        {%- if l != blank -%}
+          {%- unless first -%},{%- endunless -%}{{ l | json }}{%- assign first = false -%}
+        {%- endif -%}
+      {%- endfor -%}
+    ],
+    "interval": {{ settings.pmac_signal_interval | default: 25 }},
+    "max": {{ settings.pmac_signal_max | default: 4 }}
+  }
+</script>
+<link rel="stylesheet" href="{{ 'component-pmac-signals.css' | asset_url }}" media="print" onload="this.media='all'">
+<script src="{{ 'pmac-signals.js' | asset_url }}" defer="defer"></script>

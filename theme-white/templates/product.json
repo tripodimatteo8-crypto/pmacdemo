@@ -1,0 +1,235 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "vendor": {
+          "type": "text",
+          "settings": {
+            "text": "{{ product.vendor }}",
+            "text_style": "uppercase"
+          }
+        },
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "picker_type": "button",
+            "swatch_shape": "circle"
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": true,
+            "show_gift_card_recipient": true
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
+        "share": {
+          "type": "share",
+          "settings": {
+            "share_label": "Share"
+          }
+        }
+      },
+      "block_order": [
+        "vendor",
+        "title",
+        "price",
+        "variant_picker",
+        "quantity_selector",
+        "buy_buttons",
+        "description",
+        "share"
+      ],
+      "settings": {
+        "enable_sticky_info": true,
+        "color_scheme": "scheme-1",
+        "media_size": "large",
+        "constrain_to_viewport": true,
+        "media_fit": "contain",
+        "gallery_layout": "stacked",
+        "mobile_thumbnails": "hide",
+        "media_position": "left",
+        "image_zoom": "lightbox",
+        "hide_variants": true,
+        "enable_video_looping": false,
+        "padding_top": 36,
+        "padding_bottom": 12
+      }
+    },
+    "pmac_product_info": {
+      "type": "pmac-product-info",
+      "blocks": {
+        "size_tops": {
+          "type": "disclosure",
+          "settings": {
+            "heading": "SIZE SELECTION &amp; GUIDE",
+            "content": "<p>Oversized, signature silhouette — size down for a closer fit. Chest width (cm): XS 100 · S 106 · M 112 · L 118 · XL 124. Model is 180cm, wearing size M.</p>",
+            "product_types": "T-Shirt, Top, Felpa, Maglieria"
+          }
+        },
+        "size_bottoms": {
+          "type": "disclosure",
+          "settings": {
+            "heading": "SIZE SELECTION &amp; GUIDE",
+            "content": "<p>Relaxed, straight leg with a high rise. Waist (cm): XS 72 · S 76 · M 80 · L 84 · XL 88. Inseam 82cm on all sizes. Model is 180cm, wearing size M.</p>",
+            "product_types": "Pantaloni, Jeans"
+          }
+        },
+        "availability": {
+          "type": "disclosure",
+          "settings": {
+            "heading": "AVAILABILITY",
+            "content": "<p>Each phase is produced in a restricted run. Once a size is intercepted, it does not come back for this transmission — restocks are not guaranteed.</p>",
+            "product_types": "T-Shirt, Top, Felpa, Maglieria, Pantaloni, Jeans"
+          }
+        },
+        "composition_jersey": {
+          "type": "disclosure",
+          "settings": {
+            "heading": "COMPOSITION &amp; PRODUCTION INFO",
+            "content": "<p>100% heavyweight cotton jersey, garment-dyed for a lived-in hand. Finished with gunmetal hardware. Cut and assembled in small batches. Traced from Planet 121, produced on Earth.</p>",
+            "product_types": "T-Shirt, Top"
+          }
+        },
+        "composition_fleece": {
+          "type": "disclosure",
+          "settings": {
+            "heading": "COMPOSITION &amp; PRODUCTION INFO",
+            "content": "<p>Heavyweight brushed cotton fleece, garment-dyed, finished with gunmetal hardware. Cut and assembled in small batches. Traced from Planet 121, produced on Earth.</p>",
+            "product_types": "Felpa"
+          }
+        },
+        "composition_knit": {
+          "type": "disclosure",
+          "settings": {
+            "heading": "COMPOSITION &amp; PRODUCTION INFO",
+            "content": "<p>Fine-gauge knit in a wool and cotton blend, fully fashioned with ribbed edges and gunmetal hardware. Knitted in small batches. Hand wash cold, dry flat.</p>",
+            "product_types": "Maglieria"
+          }
+        },
+        "composition_trousers": {
+          "type": "disclosure",
+          "settings": {
+            "heading": "COMPOSITION &amp; PRODUCTION INFO",
+            "content": "<p>Dense cotton twill with a subtle sheen, pressed creases and gunmetal hardware at the side seams. Cut and assembled in small batches. Traced from Planet 121, produced on Earth.</p>",
+            "product_types": "Pantaloni"
+          }
+        },
+        "composition_denim": {
+          "type": "disclosure",
+          "settings": {
+            "heading": "COMPOSITION &amp; PRODUCTION INFO",
+            "content": "<p>Rigid 100% cotton denim, washed and decoded by hand, finished with gunmetal hardware. Expect the fabric to soften and shape with wear. Wash inside out, cold.</p>",
+            "product_types": "Jeans"
+          }
+        },
+        "statuette_specs": {
+          "type": "disclosure",
+          "settings": {
+            "heading": "SPECIMEN DETAILS",
+            "content": "<p>Hand-finished resin figure of the PMAC specimen, chrome-coated. Approx. 18cm tall. Each piece is paired with one coordinate of the PMAC Tracker.</p>",
+            "product_types": "Statuetta"
+          }
+        },
+        "statuette_edition": {
+          "type": "disclosure",
+          "settings": {
+            "heading": "EDITION",
+            "content": "<p>One of ten. Each statuette is unique to its city and is never reproduced — once collected, its pin on the Tracker switches to Collected.</p>",
+            "product_types": "Statuetta"
+          }
+        },
+        "statuette_care": {
+          "type": "disclosure",
+          "settings": {
+            "heading": "CARE",
+            "content": "<p>Display indoors, away from direct sunlight. Dust with a soft dry cloth; avoid solvents and abrasive cleaners on the chrome finish.</p>",
+            "product_types": "Statuetta"
+          }
+        },
+        "shipping": {
+          "type": "disclosure",
+          "settings": {
+            "heading": "SHIPPING &amp; RETURNS",
+            "content": "<p>Worldwide shipping, tracked from dispatch. EU 2–4 working days, rest of world 5–10 working days. Returns accepted within 14 days, unworn, in original packaging.</p>",
+            "product_types": ""
+          }
+        }
+      },
+      "block_order": [
+        "size_tops",
+        "size_bottoms",
+        "availability",
+        "composition_jersey",
+        "composition_fleece",
+        "composition_knit",
+        "composition_trousers",
+        "composition_denim",
+        "statuette_specs",
+        "statuette_edition",
+        "statuette_care",
+        "shipping"
+      ],
+      "settings": {
+        "color_scheme": "scheme-1"
+      }
+    },
+    "disclosures": {
+      "type": "disclosures",
+      "settings": {
+        "padding_top": 36,
+        "padding_bottom": 0
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "settings": {
+        "heading": "You may also like",
+        "heading_size": "h2",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "color_scheme": "scheme-1",
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "padding_top": 36,
+        "padding_bottom": 28
+      }
+    }
+  },
+  "order": [
+    "main",
+    "pmac_product_info",
+    "disclosures",
+    "related-products"
+  ]
+}

@@ -1,0 +1,398 @@
+{{ 'component-tracker-map.css' | asset_url | stylesheet_tag }}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<div class="pmac-tracker-map-section color-{{ section.settings.color_scheme }} gradient{% unless section.settings.show_intro %} pmac-tracker-map-section--compact{% endunless %}">
+  {%- liquid
+    assign heading_tag = 'h2'
+    if template.name == 'page'
+      assign heading_tag = 'h1'
+    endif
+  -%}
+  {%- if section.settings.show_intro -%}
+    <div class="page-width pmac-tracker-map-section__intro pmac-reveal-group">
+      <p class="pmac-system-label" data-pmac-scramble="{{ section.settings.label | escape }}">
+        {{ section.settings.label }}
+      </p>
+      <{{ heading_tag }} class="pmac-tracker-map-section__heading">{{ section.settings.heading }}</{{ heading_tag }}>
+      {%- if section.settings.intro != blank -%}
+        <div class="pmac-tracker-map-section__text rte">{{ section.settings.intro }}</div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <pmac-tracker-map class="pmac-tracker-map">
+    <div class="pmac-tracker-map__toolbar">
+      <button type="button" class="pmac-tracker-map__zoom-btn" data-tracker-zoom-out aria-label="Zoom out">−</button>
+      <button type="button" class="pmac-tracker-map__zoom-btn" data-tracker-zoom-reset aria-label="Reset zoom">RESET</button>
+      <button type="button" class="pmac-tracker-map__zoom-btn" data-tracker-zoom-in aria-label="Zoom in">+</button>
+    </div>
+
+    <div class="pmac-tracker-map__viewport" data-tracker-viewport></div>
+
+    <script type="application/json" data-tracker-pins>
+      [
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'statuetta' -%}
+            {%- liquid
+              assign is_taken = false
+              if block.settings.product != blank and block.settings.product.available == false
+                assign is_taken = true
+              endif
+            -%}
+            {
+              "target": "pin-{{ forloop.index }}",
+              "city": {{ block.settings.city | default: 'Statuetta' | json }},
+              "coordinates": {{ block.settings.coordinates | json }},
+              "status": {{ block.settings.status | json }},
+              "isTaken": {{ is_taken }},
+              "number": {{ block.settings.number | default: forloop.index | json }}
+            }{% unless forloop.last %},{% endunless %}
+          {%- endif -%}
+        {%- endfor -%}
+      ]
+    </script>
+  </pmac-tracker-map>
+
+  {%- if section.settings.show_tiles -%}
+    <div class="page-width pmac-tracker-tiles-wrap">
+      {%- if section.settings.tiles_heading != blank -%}
+        <p class="pmac-system-label pmac-system-label--static pmac-tracker-tiles__label">
+          {{ section.settings.tiles_heading }}
+        </p>
+      {%- endif -%}
+      <ul class="pmac-tracker-tiles" role="list">
+        {%- if section.settings.tiles_source == 'collection' and section.settings.tiles_collection != blank -%}
+          {%- for p in section.settings.tiles_collection.products limit: section.settings.tiles_limit -%}
+            <li class="pmac-tracker-tiles__item" style="--pmac-tile-index: {{ forloop.index0 }};">
+              <a class="pmac-tracker-tile pmac-tracker-tile--product{% unless p.available %} is-taken{% endunless %}" href="{{ p.url }}" data-status="{% if p.available %}active{% else %}signal_lost{% endif %}">
+                <span class="pmac-tracker-tile__media">
+                  {%- capture pmac_alt -%}{% render 'pmac-alt-image', handle: p.handle %}{%- endcapture -%}
+                  {%- if pmac_alt != blank -%}
+                    <img src="{{ pmac_alt | asset_url }}" alt="{{ p.title | escape }}" loading="lazy" width="1200" height="1200">
+                  {%- elsif p.featured_image -%}
+                    {{
+                      p.featured_image
+                      | image_url: width: 700
+                      | image_tag:
+                        loading: 'lazy',
+                        widths: '300, 450, 600, 700',
+                        sizes: '(min-width: 990px) calc((100vw - 10rem) / 5), (min-width: 750px) 33vw, 50vw',
+                        alt: p.title
+                    }}
+                  {%- endif -%}
+                  <span class="pmac-tracker-tile__number pmac-mono">N°{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+                </span>
+                <span class="pmac-tracker-tile__meta">
+                  <span class="pmac-tracker-tile__city">{{ p.title }}</span>
+                  <span class="pmac-tracker-tile__status pmac-mono">
+                    <span class="pmac-tracker-tile__dot" aria-hidden="true"></span>
+                    {%- if p.available -%}{{ p.type | upcase }} // {{ p.price | money }}{%- else -%}COLLECTED{%- endif -%}
+                  </span>
+                </span>
+              </a>
+            </li>
+          {%- endfor -%}
+        {%- else -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'statuetta' -%}
+            {%- liquid
+              assign is_taken = false
+              if block.settings.product != blank and block.settings.product.available == false
+                assign is_taken = true
+              endif
+              assign tile_image = block.settings.image
+              if tile_image == blank
+                assign tile_image = block.settings.product.featured_image
+              endif
+            -%}
+            <li class="pmac-tracker-tiles__item" style="--pmac-tile-index: {{ forloop.index0 }};">
+              <button
+                type="button"
+                class="pmac-tracker-tile{% if is_taken %} is-taken{% endif %}"
+                data-tracker-open="pin-{{ forloop.index }}"
+                data-status="{{ block.settings.status }}"
+                aria-label="PMAC N°{{ block.settings.number | default: forloop.index }} — {{ block.settings.city | escape }}"
+              >
+                <span class="pmac-tracker-tile__media">
+                  {%- if tile_image != blank -%}
+                    {{
+                      tile_image
+                      | image_url: width: 700
+                      | image_tag:
+                        loading: 'lazy',
+                        widths: '300, 450, 600, 700',
+                        sizes: '(min-width: 990px) calc((100vw - 10rem) / 5), (min-width: 750px) 33vw, 50vw',
+                        alt: ''
+                    }}
+                  {%- else -%}
+                    <img src="{{ 'pmac-tracker-pin-placeholder.jpg' | asset_url }}" alt="" width="900" height="900" loading="lazy">
+                  {%- endif -%}
+                  <span class="pmac-tracker-tile__number pmac-mono">N°{{ block.settings.number | default: forloop.index }}</span>
+                </span>
+                <span class="pmac-tracker-tile__meta">
+                  <span class="pmac-tracker-tile__city">{{ block.settings.city }}</span>
+                  <span class="pmac-tracker-tile__status pmac-mono">
+                    <span class="pmac-tracker-tile__dot" aria-hidden="true"></span>
+                    {%- render 'pmac-tracker-status', status: block.settings.status, is_taken: is_taken -%}
+                  </span>
+                </span>
+              </button>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+        {%- endif -%}
+      </ul>
+    </div>
+  {%- endif -%}
+
+  <div class="pmac-tracker-card" data-tracker-card aria-hidden="true">
+    <span class="pmac-tracker-card__scrim" data-tracker-card-close></span>
+    <div class="pmac-tracker-card__panel" role="dialog" aria-modal="true">
+      <button type="button" class="pmac-tracker-card__close" data-tracker-card-close aria-label="Chiudi">×</button>
+      <div class="pmac-tracker-card__content" data-tracker-card-content></div>
+    </div>
+  </div>
+
+  {%- for block in section.blocks -%}
+    {%- if block.type == 'statuetta' -%}
+      {%- liquid
+        assign is_taken = false
+        if block.settings.product != blank and block.settings.product.available == false
+          assign is_taken = true
+        endif
+      -%}
+      <template data-tracker-template="pin-{{ forloop.index }}">
+        {%- capture pmac_card_alt -%}{% if block.settings.product != blank %}{% render 'pmac-alt-image', handle: block.settings.product.handle %}{% endif %}{%- endcapture -%}
+        {%- assign has_sighting_photo = false -%}
+        {%- if block.settings.image != blank or block.settings.image_asset != blank -%}{%- assign has_sighting_photo = true -%}{%- endif -%}
+        <div class="pmac-tracker-card__media{% if has_sighting_photo == false and block.settings.product.featured_image %} pmac-tracker-card__media--product{% endif %}{% if has_sighting_photo %} pmac-tracker-card__media--sighting{% endif %}">
+          {%- if block.settings.image != blank -%}
+            {{ block.settings.image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '400, 600, 900' }}
+          {%- elsif block.settings.image_asset != blank -%}
+            {%- comment -%} foto di avvistamento (la stessa del Sightings log) {%- endcomment -%}
+            <img src="{{ block.settings.image_asset | asset_url }}" alt="Sighting — {{ block.settings.city | escape }}" width="1200" height="896" loading="lazy">
+          {%- elsif block.settings.product != blank and pmac_card_alt != blank -%}
+            <img src="{{ pmac_card_alt | asset_url }}" alt="{{ block.settings.product.title | escape }}" loading="lazy" width="1200" height="1200">
+          {%- elsif block.settings.product.featured_image -%}
+            {{
+              block.settings.product.featured_image
+              | image_url: width: 900
+              | image_tag: loading: 'lazy', widths: '400, 600, 900', sizes: '(min-width: 750px) 420px, 100vw'
+            }}
+          {%- else -%}
+            <img src="{{ 'pmac-tracker-pin-placeholder.jpg' | asset_url }}" alt="" width="900" height="900" loading="lazy">
+          {%- endif -%}
+          {%- if has_sighting_photo -%}
+            <span class="pmac-tracker-card__osd pmac-mono" aria-hidden="true">
+              <span><span class="pmac-tracker-card__rec"></span>REC // SIGHTING</span>
+              <span>{{ block.settings.sighting_datetime }}</span>
+            </span>
+          {%- endif -%}
+        </div>
+        <div class="pmac-tracker-card__body">
+          <p class="pmac-system-label pmac-system-label--static">
+            PMAC N°{{ block.settings.number | default: forloop.index }}/10 — {{ block.settings.city }}
+          </p>
+          <span class="pmac-tracker-card__status pmac-mono{% if is_taken %} is-taken{% endif %}">
+            {%- render 'pmac-tracker-status', status: block.settings.status, is_taken: is_taken -%}
+          </span>
+          {%- if block.settings.coordinates != blank -%}
+            <p class="pmac-tracker-card__coords pmac-mono">{{ block.settings.coordinates }}</p>
+          {%- endif -%}
+          {%- if block.settings.video != blank -%}
+            <div class="pmac-tracker-card__video">
+              {{ block.settings.video | video_tag: controls: true, muted: true, image_size: '900x' }}
+            </div>
+          {%- endif -%}
+          {%- if block.settings.sighting_info != blank -%}
+            <div class="pmac-tracker-card__sighting rte">{{ block.settings.sighting_info }}</div>
+          {%- endif -%}
+          {%- if block.settings.sighting_datetime != blank -%}
+            <p class="pmac-tracker-card__datetime pmac-mono">{{ block.settings.sighting_datetime }}</p>
+          {%- endif -%}
+          {%- if block.settings.clue != blank -%}
+            <p class="pmac-tracker-card__clue">{{ block.settings.clue }}</p>
+          {%- endif -%}
+          {%- if block.settings.product != blank -%}
+            <a href="{{ block.settings.product.url }}" class="pmac-link pmac-tracker-card__link">
+              {% if is_taken %}View Piece{% else %}Shop{% endif %}
+            </a>
+          {%- endif -%}
+          <div class="pmac-tracker-card__qr">
+            <span class="pmac-tracker-card__qr-code" data-pmac-qr="{{ shop.url }}/pages/pmac-tracker#pin-{{ forloop.index }}"></span>
+            <p class="pmac-mono">SCAN TO TRACK<br>PMAC N°{{ block.settings.number | default: forloop.index }}/10</p>
+          </div>
+        </div>
+      </template>
+    {%- endif -%}
+  {%- endfor -%}
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer="defer"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer="defer"></script>
+<script src="{{ 'pmac-supabase-client.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'pmac-qrcode.min.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'pmac-tracker-map.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'pmac-tracker-community.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "PMAC — Tracker",
+  "tag": "section",
+  "class": "section section--pmac-tracker-map",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Testo di sistema",
+      "default": "PHASE 03 // SIGHTED"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Titolo",
+      "default": "PMAC Tracker"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Testo introduttivo",
+      "default": "<p>Ten signals, one each, intercepted on Earth. Touch one on the map to open the file.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_intro",
+      "label": "Mostra titolo e testo",
+      "info": "Disattiva in homepage se sopra c'è già il teaser del Tracker.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tiles",
+      "label": "Mostra griglia statuette sotto la mappa",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "tiles_source",
+      "label": "Contenuto della griglia",
+      "options": [
+        { "value": "statuettes", "label": "Le statuette del Tracker" },
+        { "value": "collection", "label": "Prodotti di una collezione" }
+      ],
+      "default": "statuettes"
+    },
+    {
+      "type": "collection",
+      "id": "tiles_collection",
+      "label": "Collezione (se 'Prodotti di una collezione')"
+    },
+    {
+      "type": "range",
+      "id": "tiles_limit",
+      "label": "Numero di pezzi",
+      "min": 2,
+      "max": 20,
+      "step": 1,
+      "default": 10
+    },
+    {
+      "type": "text",
+      "id": "tiles_heading",
+      "label": "Etichetta griglia",
+      "default": "THE TEN PIECES"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "statuetta",
+      "name": "Statuetta",
+      "limit": 10,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Foto statuetta / avvistamento"
+        },
+        {
+          "type": "text",
+          "id": "image_asset",
+          "label": "Oppure foto avvistamento (file del tema)",
+          "info": "Es. pmac-sighting-london.webp. Se vuota si usa la foto del prodotto collegato."
+        },
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Numero (es. 01)"
+        },
+        {
+          "type": "text",
+          "id": "city",
+          "label": "Città"
+        },
+        {
+          "type": "text",
+          "id": "coordinates",
+          "label": "Coordinate (testo)",
+          "info": "Es. 41.9028° N, 12.4964° E — usate anche per posizionare il pin sulla mappa reale"
+        },
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Video avvistamento (opzionale)"
+        },
+        {
+          "type": "richtext",
+          "id": "sighting_info",
+          "label": "Informazioni sull'avvistamento"
+        },
+        {
+          "type": "text",
+          "id": "sighting_datetime",
+          "label": "Data e ora avvistamento",
+          "info": "Testo libero, es. 09.10.2026 — 23:44"
+        },
+        {
+          "type": "textarea",
+          "id": "clue",
+          "label": "Indizio"
+        },
+        {
+          "type": "select",
+          "id": "status",
+          "label": "Status narrativo",
+          "options": [
+            { "value": "signal_detected", "label": "Signal detected" },
+            { "value": "located", "label": "PMAC Located" },
+            { "value": "active", "label": "Active" },
+            { "value": "signal_lost", "label": "Signal lost" }
+          ],
+          "default": "signal_detected",
+          "info": "\"Collected\" viene mostrato automaticamente quando il prodotto collegato risulta esaurito."
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Prodotto collegato"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "PMAC — Tracker",
+      "blocks": [
+        { "type": "statuetta" },
+        { "type": "statuetta" },
+        { "type": "statuetta" }
+      ]
+    }
+  ]
+}
+{% endschema %}

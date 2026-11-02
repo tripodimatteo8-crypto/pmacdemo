@@ -1,0 +1,29 @@
+/* Griglia editoriale asimmetrica per le collezioni in evidenza (desktop).
+   Varia solo la larghezza delle card (grid-column span): l'altezza segue
+   l'aspect ratio naturale di ciascuna immagine, senza forzare il crop. */
+@media screen and (min-width: 990px) {
+  ul.pmac-editorial-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    align-items: start;
+  }
+
+  /* Dawn assegna a .grid__item una width/max-width fissa pensata per il suo
+     vecchio layout flexbox: dentro la CSS grid qui sopra va azzerata, altrimenti
+     la card resta stretta anche dentro una colonna "span" larga. */
+  .pmac-editorial-grid > .grid__item {
+    width: auto;
+    max-width: none;
+  }
+
+  .pmac-editorial-grid > .grid__item:nth-child(5n + 1),
+  .pmac-editorial-grid > .grid__item:nth-child(5n + 2) {
+    grid-column: span 3;
+  }
+
+  .pmac-editorial-grid > .grid__item:nth-child(5n + 3),
+  .pmac-editorial-grid > .grid__item:nth-child(5n + 4),
+  .pmac-editorial-grid > .grid__item:nth-child(5n + 5) {
+    grid-column: span 2;
+  }
+}

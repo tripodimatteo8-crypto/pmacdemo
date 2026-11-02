@@ -1,0 +1,62 @@
+.pmac-trending {
+  border-bottom: 1px solid rgba(var(--color-foreground), 0.14);
+}
+
+.pmac-trending__inner {
+  padding: 3.2rem 0 2.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+.pmac-trending__form {
+  display: flex;
+  align-items: baseline;
+  gap: 2.4rem;
+  border-bottom: 1px solid rgba(var(--color-foreground), 0.4);
+  padding-bottom: 1.2rem;
+}
+
+.pmac-trending__label {
+  flex: none;
+}
+
+.pmac-trending__input {
+  flex: 1;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  color: rgb(var(--color-foreground));
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  text-transform: uppercase;
+}
+
+.pmac-trending__input::placeholder {
+  color: rgba(var(--color-foreground), 0.4);
+}
+
+.pmac-trending__submit {
+  flex: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  color: rgb(var(--color-foreground));
+  width: 2rem;
+}
+
+.pmac-trending__submit svg {
+  width: 100%;
+  height: auto;
+}
+
+.pmac-trending__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem 2.6rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}

@@ -1,0 +1,794 @@
+/* PMAC — livello di utility centrale.
+   Tutti i colori/font referenziano le variabili impostate in layout/theme.liquid
+   (a loro volta collegate a config/settings_schema.json). Non aggiungere qui
+   valori di brand fissi: se serve un nuovo colore/font, aggiungilo come
+   impostazione del tema e referenzialo da variabile. */
+
+/* ---------- Niente scroll orizzontale (es. drawer off-canvas più larghi del viewport) ---------- */
+/* "clip" e non "hidden": hidden trasforma html/body in contenitori di scroll e
+   rompe position: sticky dell'header (spariva scrollando invece di restare). */
+html,
+body {
+  overflow-x: clip;
+}
+
+@supports not (overflow-x: clip) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
+}
+
+/* ---------- Foto prodotto mai tagliate nelle card (griglia/correlati) ----------
+   Il contenitore della card (card__media) a volte prende un'altezza diversa dal
+   rapporto reale della foto per via del layout flex di Dawn: con "cover" questo
+   tagliava il capo (es. stivali/orlo fuori dal riquadro). "contain" mostra sempre
+   la foto intera; lo sfondo nero della foto si fonde con quello della card. */
+.card__media img {
+  object-fit: contain !important;
+}
+
+/* Riquadro foto sempre quadrato e pieno: lo sfondo è lo stesso nero delle foto
+   prodotto (#060606), così la foto 4:5 centrata "contain" appare come un quadrato. */
+.card .card__inner .card__media {
+  background: var(--pmac-black);
+}
+
+/* ---------- Menu header sempre maiuscolo (desktop + drawer mobile) ---------- */
+.header__inline-menu .header__menu-item,
+.menu-drawer__menu-item {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Menu desktop su una riga sola (con il logo centrato lo spazio a sinistra è
+   limitato: con 5 voci "Archive" andava a capo a 1440px). */
+@media screen and (min-width: 990px) {
+  .header__inline-menu .list-menu--inline {
+    flex-wrap: nowrap;
+  }
+
+  .header__inline-menu .header__menu-item {
+    padding: 1.2rem 0.75rem;
+    white-space: nowrap;
+    font-size: 1.3rem;
+  }
+
+  .header__inline-menu .list-menu--inline > li:first-child .header__menu-item {
+    padding-left: 0;
+  }
+}
+
+/* ---------- Header + marquee: overlay trasparente stile Gentle Monster ---------- */
+:root {
+  --pmac-marquee-height: 3.6rem;
+}
+
+.announcement-bar-section {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 101;
+}
+
+.section-header {
+  position: fixed;
+  top: var(--pmac-marquee-height);
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+/* Nota: l'header di Dawn (sticky "always") resta nel flusso della pagina, quindi
+   non serve spingere giù il body: il vecchio padding-top creava un vuoto di
+   ~128px tra marquee e header su tutte le pagine interne. */
+
+.pmac-marquee-bar,
+.section-header .header-wrapper {
+  background-color: transparent;
+  border-bottom-color: transparent !important;
+  transition: background-color var(--dur-med) var(--ease-pmac), backdrop-filter var(--dur-med) var(--ease-pmac);
+}
+
+.section-header.scrolled-past-header .header-wrapper,
+body:not(.pmac-hero-overlay) .section-header .header-wrapper,
+.announcement-bar-section:has(+ .section-header.scrolled-past-header) .pmac-marquee-bar {
+  background-color: rgba(var(--color-background), 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+body:not(.pmac-hero-overlay) .pmac-marquee-bar {
+  background-color: rgba(var(--color-background), 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+/* ---------- Testi di sistema (monospazio) ---------- */
+.pmac-system-label {
+  font-family: var(--font-mono-family);
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: rgba(var(--color-foreground), 0.72);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  white-space: nowrap;
+}
+
+.pmac-system-label::before {
+  content: '';
+  width: 0.5em;
+  height: 0.5em;
+  background: var(--pmac-signal);
+  flex: none;
+  animation: pmac-pulse 1.8s var(--ease-pmac) infinite;
+}
+
+.pmac-system-label--static::before {
+  animation: none;
+}
+
+@keyframes pmac-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.7); }
+}
+
+.pmac-mono {
+  font-family: var(--font-mono-family);
+  letter-spacing: 0.04em;
+}
+
+/* ---------- Testo / superfici metalliche ---------- */
+.pmac-chrome-text {
+  background-image: var(--pmac-chrome-gradient);
+  background-size: 220% 100%;
+  background-position: 0% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  transition: background-position var(--dur-slow) var(--ease-pmac);
+}
+
+.pmac-chrome-text:hover,
+.pmac-chrome-text.is-active {
+  background-position: 100% 50%;
+}
+
+.pmac-chrome-fill {
+  background-image: var(--pmac-chrome-gradient);
+  background-size: 220% 100%;
+  background-position: 0% 50%;
+}
+
+/* Sheen: riflesso che scorre on hover, usato su card e link */
+.pmac-sheen {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.pmac-sheen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    rgba(255, 255, 255, var(--pmac-sheen-opacity)) 48%,
+    transparent 66%
+  );
+  background-size: 250% 100%;
+  background-position: 150% 0;
+  transition: background-position var(--dur-slow) var(--ease-pmac);
+}
+
+.pmac-sheen:hover::after,
+.pmac-sheen:focus-visible::after {
+  background-position: -50% 0;
+}
+
+/* ---------- Angoli tagliati (dettaglio industriale) ---------- */
+.pmac-cut-corner {
+  --pmac-cut-size: 1.2rem;
+  clip-path: polygon(
+    calc(var(--pmac-cut, 1) * var(--pmac-cut-size)) 0,
+    100% 0,
+    100% calc(100% - var(--pmac-cut, 1) * var(--pmac-cut-size)),
+    calc(100% - var(--pmac-cut, 1) * var(--pmac-cut-size)) 100%,
+    0 100%,
+    0 calc(var(--pmac-cut, 1) * var(--pmac-cut-size))
+  );
+}
+
+/* ---------- Card prodotto: riflesso cromato on hover ---------- */
+/* NB: niente position: relative qui: Dawn posiziona card__media in absolute per
+   riempire il riquadro; "relative" lo faceva restringere nel flex della card
+   (foto piccola a sinistra con una striscia accanto). Absolute basta per lo ::after. */
+.card-wrapper .card__media {
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.card-wrapper .card__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, var(--pmac-sheen-opacity)) 48%, transparent 66%);
+  background-size: 250% 100%;
+  background-position: 220% 0; /* a riposo completamente fuori dal riquadro */
+  transition: background-position var(--dur-slow) var(--ease-pmac);
+}
+
+.card-wrapper:hover .card__media::after,
+.card-wrapper:focus-within .card__media::after {
+  background-position: -50% 0;
+}
+
+.pmac-cut-corner--sm {
+  --pmac-cut-size: 0.6rem;
+}
+
+/* ---------- Griglia / crocini da monitoraggio ---------- */
+.pmac-reg-mark {
+  position: relative;
+}
+
+.pmac-reg-mark::before,
+.pmac-reg-mark::after {
+  content: '';
+  position: absolute;
+  background: rgba(var(--color-foreground), 0.5);
+}
+
+.pmac-reg-mark::before {
+  width: 1px;
+  height: 0.9em;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.pmac-reg-mark::after {
+  height: 1px;
+  width: 0.9em;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* ---------- Menu mobile a tutto schermo ---------- */
+@media screen and (max-width: 989px) {
+  #menu-drawer.menu-drawer {
+    width: 100vw;
+    max-width: 100vw;
+    height: 100vh;
+    background-color: rgb(var(--color-background));
+    display: flex;
+    align-items: center;
+  }
+
+  .menu-drawer__inner-container {
+    width: 100%;
+  }
+
+  .menu-drawer__navigation .menu-drawer__menu-item {
+    font-family: var(--font-heading-family);
+    font-style: var(--font-heading-style);
+    font-size: clamp(2.6rem, 9vw, 4.2rem);
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    padding-top: 1.1rem !important;
+    padding-bottom: 1.1rem !important;
+  }
+
+  .menu-drawer__navigation > ul {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* ---------- Link sottolineati (stile Gentle Monster) ---------- */
+.pmac-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: underline;
+  text-underline-offset: 0.3em;
+  text-decoration-thickness: 1px;
+  font-size: 1.3rem;
+  letter-spacing: 0.04em;
+  color: rgb(var(--color-foreground));
+  transition: opacity var(--dur-fast) var(--ease-pmac);
+}
+
+.pmac-link:hover {
+  opacity: 0.6;
+}
+
+/* ---------- Marquee continuo ---------- */
+.pmac-marquee {
+  overflow: hidden;
+  display: flex;
+  width: 100%;
+}
+
+.pmac-marquee__track {
+  display: flex;
+  align-items: center;
+  flex: none;
+  min-width: 100%;
+  animation: pmac-marquee-scroll linear infinite;
+  animation-duration: var(--marquee-duration, 30s);
+}
+
+.pmac-marquee:hover .pmac-marquee__track {
+  animation-play-state: paused;
+}
+
+@keyframes pmac-marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ---------- Barre di avanzamento sottili ---------- */
+.pmac-progress {
+  height: 2px;
+  background: rgba(var(--color-foreground), 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.pmac-progress__fill {
+  position: absolute;
+  inset: 0;
+  transform-origin: left center;
+  transform: scaleX(0);
+  background: rgb(var(--color-foreground));
+}
+
+.pmac-progress.is-active .pmac-progress__fill {
+  transition: transform linear;
+}
+
+.pmac-progress.is-complete .pmac-progress__fill {
+  transform: scaleX(1);
+  transition: none;
+}
+
+/* ---------- Scramble text ---------- */
+[data-pmac-scramble] {
+  display: inline-block;
+}
+
+/* ---------- Reveal allo scroll ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .pmac-reveal {
+    opacity: 0;
+    transform: translateY(2.4rem);
+    transition: opacity var(--dur-slow) var(--ease-pmac), transform var(--dur-slow) var(--ease-pmac);
+  }
+
+  .pmac-reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  .pmac-reveal-group > * {
+    transition-delay: calc(var(--reveal-index, 0) * 70ms);
+  }
+}
+
+/* ---------- Cursore personalizzato ---------- */
+#pmac-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 1.8rem;
+  height: 1.8rem;
+  border: 1px solid rgba(var(--color-foreground), 0.9);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate3d(-50%, -50%, 0);
+  mix-blend-mode: difference;
+  transition: width var(--dur-fast) var(--ease-pmac), height var(--dur-fast) var(--ease-pmac),
+    border-color var(--dur-fast) var(--ease-pmac), opacity var(--dur-fast) var(--ease-pmac);
+  opacity: 0;
+}
+
+#pmac-cursor::before,
+#pmac-cursor::after {
+  content: '';
+  position: absolute;
+  background: rgba(var(--color-foreground), 0.9);
+  transition: opacity var(--dur-fast) var(--ease-pmac);
+}
+
+#pmac-cursor::before {
+  left: 50%;
+  top: -0.5rem;
+  width: 1px;
+  height: 0.4rem;
+  transform: translateX(-50%);
+}
+
+#pmac-cursor::after {
+  top: 50%;
+  left: -0.5rem;
+  height: 1px;
+  width: 0.4rem;
+  transform: translateY(-50%);
+}
+
+#pmac-cursor.is-ready {
+  opacity: 1;
+}
+
+#pmac-cursor.is-hover {
+  width: 4.4rem;
+  height: 4.4rem;
+  border-color: rgba(var(--color-foreground), 0.5);
+}
+
+#pmac-cursor.is-hover::before,
+#pmac-cursor.is-hover::after {
+  opacity: 0;
+}
+
+@media (hover: none), (pointer: coarse) {
+  #pmac-cursor {
+    display: none;
+  }
+}
+
+body.pmac-custom-cursor {
+  cursor: none;
+}
+
+@media (hover: none), (pointer: coarse) {
+  body.pmac-custom-cursor {
+    cursor: auto;
+  }
+}
+
+/* ---------- Coniglio PMAC (easter egg) ---------- */
+#pmac-rabbit {
+  position: fixed;
+  z-index: 60;
+  width: clamp(5.6rem, 9vw, 9rem);
+  pointer-events: none;
+  opacity: 0;
+  filter: drop-shadow(0 0 1.4rem rgba(0, 0, 0, 0.6));
+  transition: opacity var(--dur-med) var(--ease-pmac), transform var(--dur-slow) var(--ease-pmac);
+}
+
+#pmac-rabbit.is-visible {
+  opacity: 1;
+}
+
+#pmac-rabbit img,
+#pmac-rabbit svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ---------- Messaggi di errore glitch durante lo scroll ---------- */
+.pmac-scroll-error {
+  position: fixed;
+  z-index: 59;
+  top: 14%;
+  left: 20%;
+  transform: translateY(-6px);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease-pmac), transform var(--dur-fast) var(--ease-pmac);
+}
+
+.pmac-scroll-error.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.pmac-scroll-error__text {
+  display: inline-block;
+  padding: 0.5em 0.9em;
+  background: var(--pmac-black);
+  border: 1px solid var(--pmac-signal);
+  color: var(--pmac-signal);
+  font-family: var(--font-mono-family);
+  font-size: 1.1rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.pmac-scroll-error.is-glitching .pmac-scroll-error__text {
+  animation: pmac-scroll-error-glitch 220ms steps(2, end) 3;
+}
+
+@keyframes pmac-scroll-error-glitch {
+  0% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  25% {
+    transform: translate(-2px, 1px);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translate(2px, -1px);
+    opacity: 1;
+  }
+  75% {
+    transform: translate(-1px, 0);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pmac-scroll-error {
+    transition: opacity var(--dur-fast) linear;
+  }
+}
+
+/* ---------- Transizioni di pagina (View Transitions API) ----------
+   La pagina vecchia si scurisce e arretra, la nuova entra con una "tendina"
+   dall'alto, come un nuovo frame che arriva dal sistema di monitoraggio.
+   Solo CSS: zero JS, non rallenta la navigazione; i browser senza supporto
+   navigano normalmente. */
+@media (prefers-reduced-motion: no-preference) {
+  /* @view-transition { navigation: auto } è in layout/theme.liquid, attivo solo
+     se "Transizioni fluide tra pagine" è acceso nelle impostazioni del tema. */
+  ::view-transition-group(root) {
+    animation-duration: 560ms;
+  }
+
+  ::view-transition-old(root) {
+    animation: pmac-vt-out 420ms cubic-bezier(0.7, 0, 0.84, 0) both;
+  }
+
+  ::view-transition-new(root) {
+    animation: pmac-vt-in 620ms cubic-bezier(0.16, 1, 0.3, 1) 60ms both;
+  }
+}
+
+@keyframes pmac-vt-out {
+  to {
+    opacity: 0.25;
+    transform: scale(0.985);
+    filter: brightness(0.4);
+  }
+}
+
+@keyframes pmac-vt-in {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes pmac-fade-out {
+  to { opacity: 0; }
+}
+
+@keyframes pmac-fade-in {
+  from { opacity: 0; }
+}
+
+/* ---------- Bottoni secondari: bordo di scorta ----------
+   Il calcolo nativo di Dawn per --border-opacity (base.css) può risolversi a 0
+   quando il colore del bottone secondario coincide con lo sfondo dello schema
+   colore attivo (es. schema nero), rendendo il bottone invisibile — vedi
+   "Add to cart" su prodotto/card. Qui forziamo un bordo reale sempre visibile,
+   indipendente da quella catena di variabili. */
+.button--secondary {
+  border: 1px solid rgb(var(--color-button-text)) !important;
+}
+
+/* ---------- Bottoni: taglio industriale + riflesso cromato (globale) ---------- */
+.button,
+button.button,
+a.button {
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.04em;
+}
+
+@supports (clip-path: inset(0)) {
+  .button,
+  button.button,
+  a.button {
+    clip-path: polygon(
+      calc(var(--pmac-cut, 1) * 0.9rem) 0,
+      100% 0,
+      100% calc(100% - var(--pmac-cut, 1) * 0.9rem),
+      calc(100% - var(--pmac-cut, 1) * 0.9rem) 100%,
+      0 100%,
+      0 calc(var(--pmac-cut, 1) * 0.9rem)
+    );
+  }
+}
+
+.button::after,
+button.button::after,
+a.button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.5) 48%,
+    transparent 66%
+  );
+  background-size: 250% 100%;
+  background-position: 150% 0;
+  transition: background-position var(--dur-slow) var(--ease-pmac);
+}
+
+.button:hover::after,
+button.button:hover::after,
+a.button:hover::after {
+  background-position: -50% 0;
+}
+
+/* ---------- Pagina prodotto ---------- */
+.product__title h1,
+.product__title {
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+
+.price,
+.price-item {
+  font-family: var(--font-mono-family);
+  letter-spacing: 0.02em;
+}
+
+/* ---------- Layout utility ---------- */
+.pmac-grain {
+  position: relative;
+}
+
+.pmac-grain::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------- Glitch hover (titoli) ---------- */
+.pmac-glitch {
+  position: relative;
+  display: inline-block;
+}
+
+.pmac-glitch::before,
+.pmac-glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  opacity: 0;
+  color: var(--pmac-signal);
+}
+
+.pmac-glitch:hover::before {
+  opacity: 0.85;
+  transform: translate(-3px, 0);
+  clip-path: inset(0 0 55% 0);
+  animation: pmac-glitch-shift 0.4s infinite;
+}
+
+.pmac-glitch:hover::after {
+  opacity: 0.85;
+  transform: translate(3px, 0);
+  clip-path: inset(50% 0 0 0);
+  animation: pmac-glitch-shift 0.4s infinite reverse;
+}
+
+@keyframes pmac-glitch-shift {
+  0% {
+    transform: translate(-3px, 0);
+  }
+  50% {
+    transform: translate(3px, -2px);
+  }
+  100% {
+    transform: translate(-3px, 1px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pmac-glitch::before,
+  .pmac-glitch::after {
+    display: none;
+  }
+}
+
+/* ---------- Banner cookie (Shopify Customer Privacy) ---------- */
+#shopify-pc__banner.shopify-pc__banner__dialog {
+  left: 50%;
+  bottom: 2rem;
+  transform: translateX(-50%);
+  max-width: 44rem;
+  width: calc(100% - 3.2rem);
+  background: var(--pmac-black);
+  color: var(--pmac-white);
+  border: 1px solid rgba(var(--color-foreground), 0.25);
+  border-radius: 0;
+  box-shadow: 0 1.2rem 3.2rem rgba(0, 0, 0, 0.45);
+  font-family: var(--font-body-family);
+}
+
+#shopify-pc__banner__body-title {
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  font-size: 1.6rem;
+  color: var(--pmac-white);
+  margin: 0 0 0.6rem;
+}
+
+.shopify-pc__banner__body p {
+  color: rgba(var(--color-foreground), 0.78);
+  font-size: 1.3rem;
+  line-height: 1.5;
+}
+
+.shopify-pc__banner__body a {
+  color: var(--pmac-white);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.shopify-pc__banner__btns button {
+  font-family: inherit;
+  letter-spacing: 0.04em;
+  border-radius: 0;
+  transition: opacity var(--dur-fast) var(--ease-pmac);
+}
+
+#shopify-pc__banner__btn-accept {
+  background: var(--pmac-white);
+  color: var(--pmac-black);
+  border: 1px solid var(--pmac-white);
+}
+
+#shopify-pc__banner__btn-accept:hover {
+  opacity: 0.8;
+}
+
+#shopify-pc__banner__btn-decline,
+#shopify-pc__banner__btn-manage-prefs {
+  background: transparent;
+  color: var(--pmac-white);
+  border: 1px solid rgba(var(--color-foreground), 0.4);
+}
+
+#shopify-pc__banner__btn-decline:hover,
+#shopify-pc__banner__btn-manage-prefs:hover {
+  border-color: var(--pmac-white);
+}

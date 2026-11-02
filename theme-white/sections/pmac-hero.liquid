@@ -1,0 +1,250 @@
+{{ 'component-pmac-hero.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign slide_count = section.blocks.size
+-%}
+
+<pmac-hero
+  class="pmac-hero pmac-hero--align-{{ section.settings.content_alignment | default: 'center' }}"
+  data-duration="{{ section.settings.slide_duration }}"
+  style="--pmac-hero-height: {% if section.settings.full_screen %}calc(100svh - var(--pmac-hero-offset, 0px)){% else %}82vh{% endif %};"
+>
+  <div class="pmac-hero__slides">
+    {%- for block in section.blocks -%}
+      <div
+        class="pmac-hero__slide color-{{ block.settings.color_scheme }}{% if forloop.first %} is-active{% endif %}"
+        data-pmac-hero-slide
+        {{ block.shopify_attributes }}
+      >
+        <div class="pmac-hero__media">
+          {%- liquid
+            assign hero_video_src = blank
+            if block.settings.video != blank
+              assign hero_mp4s = block.settings.video.sources | where: 'mime_type', 'video/mp4'
+              assign hero_video_src = hero_mp4s.first.url
+            elsif block.settings.video_url != blank
+              if block.settings.video_url contains '/'
+                assign hero_video_src = block.settings.video_url
+              else
+                assign hero_video_src = block.settings.video_url | asset_url
+              endif
+            endif
+            if block.settings.image != blank
+              assign hero_poster = block.settings.image | image_url: width: 1600
+            else
+              assign hero_poster = 'pmac-hero-' | append: forloop.index | append: '.webp' | asset_url
+            endif
+          -%}
+          {%- if hero_video_src != blank -%}
+            <video
+              class="pmac-hero__video"
+              src="{{ hero_video_src }}"
+              poster="{{ hero_poster }}"
+              muted
+              loop
+              playsinline
+              preload="{% if forloop.first %}auto{% else %}metadata{% endif %}"
+              aria-hidden="true"
+            ></video>
+          {%- elsif block.settings.image != blank -%}
+            {{
+              block.settings.image
+              | image_url: width: 2400
+              | image_tag:
+                loading: forloop.first | default: 'lazy',
+                fetchpriority: forloop.first,
+                sizes: '100vw',
+                widths: '750, 1100, 1500, 2000, 2400'
+            }}
+          {%- else -%}
+            <img
+              src="{{ 'pmac-hero-' | append: forloop.index | append: '.webp' | asset_url }}"
+              alt=""
+              width="1920"
+              height="1080"
+              {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}
+            >
+          {%- endif -%}
+          <span class="pmac-hero__overlay"></span>
+        </div>
+
+        <div class="pmac-hero__content page-width">
+          {%- if block.settings.system_label != blank -%}
+            <p class="pmac-system-label pmac-hero__label" data-pmac-scramble="{{ block.settings.system_label | escape }}">
+              {{ block.settings.system_label }}
+            </p>
+          {%- endif -%}
+
+          {%- if block.settings.heading != blank -%}
+            <h2 class="pmac-hero__heading">{{ block.settings.heading }}</h2>
+          {%- endif -%}
+
+          {%- if block.settings.subheading != blank -%}
+            <p class="pmac-hero__subheading">{{ block.settings.subheading }}</p>
+          {%- endif -%}
+
+          {%- if block.settings.link_1_label != blank or block.settings.link_2_label != blank -%}
+            <div class="pmac-hero__links">
+              {%- if block.settings.link_1_label != blank -%}
+                <a href="{{ block.settings.link_1_url | default: '#' }}" class="pmac-link">
+                  {{ block.settings.link_1_label }}
+                </a>
+              {%- endif -%}
+              {%- if block.settings.link_2_label != blank -%}
+                <a href="{{ block.settings.link_2_url | default: '#' }}" class="pmac-link">
+                  {{ block.settings.link_2_label }}
+                </a>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+
+  {%- if slide_count > 1 -%}
+    <div class="pmac-hero__progress" role="tablist" aria-label="{{ 'sections.slideshow.carousel' | t }}">
+      {%- for block in section.blocks -%}
+        <button
+          type="button"
+          class="pmac-progress{% if forloop.first %} is-active{% endif %}"
+          data-pmac-hero-dot
+          role="tab"
+          aria-label="{{ 'sections.slideshow.load_slide' | t }} {{ forloop.index }} {{ 'general.slider.of' | t }} {{ forloop.length }}"
+        >
+          <span class="pmac-progress__fill"></span>
+        </button>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+  <div class="pmac-hero__scroll-cue" aria-hidden="true">
+    <span class="pmac-mono">SCROLL</span>
+  </div>
+</pmac-hero>
+
+<script src="{{ 'pmac-hero.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "PMAC — Hero full-screen",
+  "tag": "section",
+  "class": "section section--pmac-hero",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_screen",
+      "label": "Altezza piena (100vh)",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "slide_duration",
+      "label": "Durata di ogni slide",
+      "min": 3,
+      "max": 12,
+      "step": 1,
+      "unit": "s",
+      "default": 6
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Allineamento testi e link",
+      "options": [
+        { "value": "center", "label": "Centrato (stile editoriale)" },
+        { "value": "left", "label": "A sinistra" }
+      ],
+      "default": "center"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Immagine / frame video (placeholder a tutto schermo se vuoto)"
+        },
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Video di sfondo (opzionale)",
+          "info": "MP4 corto senza audio, gira in loop al posto dell'immagine. L'immagine resta come anteprima."
+        },
+        {
+          "type": "text",
+          "id": "video_url",
+          "label": "Oppure URL video / file del tema",
+          "info": "Es. pmac-hero-2-loop.mp4 (file negli asset del tema) o un link https a un MP4."
+        },
+        {
+          "type": "text",
+          "id": "system_label",
+          "label": "Testo di sistema (monospazio)",
+          "default": "SIGNAL DETECTED // FASE 01"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Titolo",
+          "default": "PMAC"
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "label": "Sottotitolo"
+        },
+        {
+          "type": "header",
+          "content": "Link"
+        },
+        {
+          "type": "text",
+          "id": "link_1_label",
+          "label": "Testo link 1",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "link_1_url",
+          "label": "URL link 1"
+        },
+        {
+          "type": "text",
+          "id": "link_2_label",
+          "label": "Testo link 2",
+          "default": "PMAC Tracker"
+        },
+        {
+          "type": "url",
+          "id": "link_2_url",
+          "label": "URL link 2"
+        },
+        {
+          "type": "color_scheme",
+          "id": "color_scheme",
+          "label": "t:sections.all.colors.label",
+          "default": "scheme-1"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "PMAC — Hero full-screen",
+      "blocks": [
+        { "type": "slide" },
+        { "type": "slide" },
+        { "type": "slide" }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,299 @@
+/* PMAC — Sightings log (database avvistamenti) */
+.pmac-slog {
+  padding: 6rem 0 4rem;
+}
+
+.pmac-slog__head {
+  max-width: 64rem;
+  margin-bottom: 3.2rem;
+}
+
+.pmac-slog__heading {
+  font-family: var(--font-heading-family);
+  font-weight: var(--font-heading-weight);
+  text-transform: uppercase;
+  font-size: clamp(3.2rem, 6vw, 5.6rem);
+  line-height: 1;
+  margin: 1.2rem 0 1.6rem;
+}
+
+.pmac-slog__text {
+  color: rgba(var(--color-foreground), 0.72);
+}
+
+.pmac-slog__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1.2rem 0;
+  margin-bottom: 2.4rem;
+  border-top: 1px solid rgba(var(--color-foreground), 0.14);
+  border-bottom: 1px solid rgba(var(--color-foreground), 0.14);
+  font-size: 1.1rem;
+  letter-spacing: 0.14em;
+}
+
+.pmac-slog__filter {
+  padding: 0.6rem 1.2rem;
+  border: 1px solid rgba(var(--color-foreground), 0.2);
+  background: none;
+  color: rgba(var(--color-foreground), 0.7);
+  font: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-pmac), color var(--dur-fast) var(--ease-pmac),
+    background-color var(--dur-fast) var(--ease-pmac);
+}
+
+.pmac-slog__filter span {
+  opacity: 0.5;
+  margin-left: 0.4rem;
+}
+
+.pmac-slog__filter:hover {
+  border-color: rgba(var(--color-foreground), 0.6);
+  color: rgb(var(--color-foreground));
+}
+
+.pmac-slog__filter.is-active {
+  background: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+  border-color: rgb(var(--color-foreground));
+}
+
+.pmac-slog__live {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: rgba(var(--color-foreground), 0.6);
+}
+
+.pmac-slog__rec {
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--pmac-signal);
+  animation: pmac-slog-blink 1.2s steps(1) infinite;
+}
+
+.pmac-slog__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.4rem;
+}
+
+@media screen and (min-width: 750px) {
+  .pmac-slog__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .pmac-slog__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.pmac-slog__item {
+  animation: pmac-slog-in 700ms var(--ease-pmac) calc(var(--i, 0) * 70ms) both;
+}
+
+.pmac-slog__item[hidden] {
+  display: none;
+}
+
+.pmac-slog__card {
+  height: 100%;
+  border: 1px solid rgba(var(--color-foreground), 0.14);
+  background: rgba(var(--color-foreground), 0.02);
+  transition: border-color var(--dur-med) var(--ease-pmac);
+}
+
+.pmac-slog__card:hover {
+  border-color: rgba(var(--color-foreground), 0.45);
+}
+
+.pmac-slog__media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #F4F4F2;
+}
+
+.pmac-slog__media img,
+.pmac-slog__media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: contrast(1.08);
+  transition: transform var(--dur-slow) var(--ease-pmac);
+}
+
+.pmac-slog__card:hover .pmac-slog__media img {
+  transform: scale(1.04);
+}
+
+.pmac-slog__media.is-novisual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #F4F4F2;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.35 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  animation: pmac-slog-noise 0.5s steps(3) infinite;
+}
+
+.pmac-slog__novisual {
+  font-size: 1.1rem;
+  letter-spacing: 0.18em;
+  color: rgba(17, 17, 17, 0.75);
+  background: rgba(255, 255, 255, 0.7);
+  padding: 0.6rem 1rem;
+}
+
+.pmac-slog__osd,
+.pmac-slog__stamp {
+  position: absolute;
+  z-index: 2;
+  font-size: 1rem;
+  letter-spacing: 0.14em;
+  color: rgba(17, 17, 17, 0.92);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.pmac-slog__osd {
+  top: 1rem;
+  left: 1.2rem;
+  right: 1.2rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.pmac-slog__osd > span:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pmac-slog__stamp {
+  bottom: 1rem;
+  right: 1.2rem;
+}
+
+.pmac-slog__scan {
+  /* righe di scansione CCTV + passaggio periodico */
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: repeating-linear-gradient(180deg, rgba(0, 0, 0, 0.18) 0 1px, transparent 1px 3px);
+}
+
+.pmac-slog__scan::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 18%;
+  top: -20%;
+  background: linear-gradient(180deg, transparent, rgba(17, 17, 17, 0.08), transparent);
+  animation: pmac-slog-sweep 4.5s linear infinite;
+}
+
+.pmac-slog__body {
+  padding: 1.6rem 1.6rem 2rem;
+}
+
+.pmac-slog__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1rem;
+  letter-spacing: 0.14em;
+  color: rgba(var(--color-foreground), 0.6);
+}
+
+.pmac-slog__status {
+  padding: 0.3rem 0.7rem;
+  border: 1px solid rgba(var(--color-foreground), 0.3);
+  color: rgb(var(--color-foreground));
+}
+
+.pmac-slog__status[data-status='active'],
+.pmac-slog__status[data-status='signal_detected'],
+.pmac-slog__status[data-status='spotted'] {
+  border-color: var(--pmac-signal);
+  color: var(--pmac-signal);
+}
+
+.pmac-slog__status[data-status='signal_lost'],
+.pmac-slog__status[data-status='collected'] {
+  opacity: 0.55;
+}
+
+.pmac-slog__city {
+  font-family: var(--font-heading-family);
+  font-weight: var(--font-heading-weight);
+  text-transform: uppercase;
+  font-size: 2.2rem;
+  letter-spacing: 0.01em;
+  margin: 1.2rem 0 0.4rem;
+}
+
+.pmac-slog__coords {
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  color: rgba(var(--color-foreground), 0.6);
+  margin: 0 0 1.2rem;
+}
+
+.pmac-slog__desc {
+  font-size: 1.4rem;
+  line-height: 1.55;
+  color: rgba(var(--color-foreground), 0.82);
+  margin: 0 0 1.2rem;
+}
+
+@keyframes pmac-slog-blink {
+  50% {
+    opacity: 0.15;
+  }
+}
+
+@keyframes pmac-slog-sweep {
+  to {
+    top: 110%;
+  }
+}
+
+@keyframes pmac-slog-noise {
+  33% {
+    background-position: 30px -20px;
+  }
+  66% {
+    background-position: -40px 10px;
+  }
+}
+
+@keyframes pmac-slog-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 2rem, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pmac-slog__item,
+  .pmac-slog__rec,
+  .pmac-slog__scan::after,
+  .pmac-slog__media.is-novisual {
+    animation: none;
+  }
+}

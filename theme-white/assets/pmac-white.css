@@ -1,0 +1,300 @@
+/* =========================================================================
+   PMAC — TEMA BIANCO (prova). Caricato per ultimo: rifinisce i componenti PMAC
+   per fondo bianco, testi e tocchi neri, tipografia fine in stile Gentle Monster.
+   ========================================================================= */
+
+:root {
+  --pmac-hazard: #f2c230; /* il giallo resta solo sul nastro della box (brief) */
+}
+
+body {
+  letter-spacing: 0.01em;
+}
+
+/* ---------- Tipografia: titoli sottili, maiuscolo spaziato, misure contenute ---------- */
+h1,
+h2,
+h3,
+.h0,
+.h1,
+.h2,
+.h3 {
+  font-weight: 300;
+  letter-spacing: 0.06em;
+}
+
+.pmac-hero__heading,
+.pmac-tracker-teaser__heading,
+.pmac-tracker-map-section__heading,
+.pmac-planet__heading,
+.pmac-showroom__heading,
+.pmac-slog__heading,
+.pmac-archive__heading,
+.pmac-journey__heading,
+.pmac-habitat__heading,
+.pmac-launch__heading,
+.pmac-sighting-submit__heading,
+.collection__title .title,
+.title-wrapper .title,
+.product__title h1,
+.product__title h2 {
+  font-weight: 300 !important;
+  letter-spacing: 0.08em !important;
+  line-height: 1.05 !important;
+}
+
+.pmac-tracker-teaser__heading,
+.pmac-tracker-map-section__heading,
+.pmac-planet__heading,
+.pmac-showroom__heading,
+.pmac-slog__heading,
+.pmac-journey__heading,
+.pmac-habitat__heading,
+.pmac-launch__heading,
+.pmac-sighting-submit__heading {
+  font-size: clamp(2.4rem, 3.4vw, 4rem) !important;
+}
+
+.pmac-archive__heading {
+  font-size: clamp(3.2rem, 5vw, 5.6rem) !important;
+}
+
+.pmac-archive__name,
+.pmac-journey__title,
+.pmac-slog__city,
+.pmac-tracker-tile__city,
+.pmac-campaign__shop {
+  font-weight: 300 !important;
+  letter-spacing: 0.06em;
+}
+
+.pmac-campaign__title {
+  font-weight: 200 !important;
+  letter-spacing: 0.1em !important;
+}
+
+.pmac-system-label,
+.pmac-mono {
+  font-weight: 400;
+}
+
+/* ---------- Hero: testo nero sulle immagini chiare, linee sottili ---------- */
+.pmac-hero__content {
+  color: #111;
+}
+
+.pmac-hero__heading {
+  font-size: clamp(2.4rem, 3.6vw, 4.4rem) !important;
+}
+
+.pmac-hero__links .pmac-link {
+  color: #111;
+}
+
+.pmac-hero__overlay,
+.pmac-hero--align-center .pmac-hero__overlay {
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 38%);
+}
+
+.pmac-hero__progress .pmac-progress {
+  background-color: rgba(17, 17, 17, 0.18);
+}
+
+.pmac-hero__progress .pmac-progress__fill {
+  background: #111;
+}
+
+.pmac-hero__scroll-cue {
+  color: rgba(17, 17, 17, 0.55);
+}
+
+/* ---------- Teaser del Tracker: chiaro ---------- */
+.pmac-tracker-teaser__grid {
+  color: #111;
+}
+
+.pmac-tracker-teaser__overlay {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.35) 55%, rgba(255, 255, 255, 0) 100%);
+}
+
+.pmac-tracker-teaser__text {
+  color: rgba(17, 17, 17, 0.75);
+}
+
+.pmac-tracker-teaser__link {
+  color: #111;
+}
+
+/* ---------- Mappa: pin neri su mappa chiara, griglia capi senza filtri ---------- */
+ul.pmac-tracker-tiles {
+  filter: none;
+}
+
+.pmac-tracker-maptiles {
+  filter: grayscale(1) contrast(1.02);
+}
+
+.pmac-tracker-pin__ring,
+.pmac-tracker-pin[data-status='located'] .pmac-tracker-pin__ring,
+.pmac-tracker-pin[data-status='active'] .pmac-tracker-pin__ring {
+  border-color: #111;
+}
+
+.pmac-tracker-pin__dot,
+.pmac-tracker-pin[data-status='located'] .pmac-tracker-pin__dot,
+.pmac-tracker-pin[data-status='active'] .pmac-tracker-pin__dot {
+  background: #111;
+  background-image: none;
+}
+
+.pmac-tracker-pin__number {
+  color: #fff;
+}
+
+.pmac-tracker-map__zoom-btn {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.pmac-tracker-tile__media {
+  background: #fff;
+  border-color: rgba(17, 17, 17, 0.1);
+}
+
+/* scheda statuetta: pannello chiaro; testi sopra le foto di sorveglianza restano bianchi */
+.pmac-tracker-card__osd,
+.pmac-slog__osd,
+.pmac-slog__stamp {
+  color: #fff;
+}
+
+.pmac-tracker-card__close {
+  color: #111;
+  border-color: rgba(17, 17, 17, 0.25);
+}
+
+/* ---------- QR leggibili (moduli neri su fondo bianco) ---------- */
+.pmac-tracker-file__qr,
+.pmac-tracker-card__qr-code {
+  background: #fff;
+  border: 1px solid rgba(17, 17, 17, 0.15);
+}
+
+.pmac-tracker-file__qr svg path,
+.pmac-tracker-file__qr svg rect[fill='black'],
+.pmac-tracker-card__qr-code svg path {
+  fill: #111;
+}
+
+/* ---------- Traiettoria Terra → Pianeta 121 ---------- */
+@media screen and (min-width: 990px) {
+  .pmac-traj {
+    color: #fff;
+  }
+}
+
+.pmac-journey__num {
+  color: #fff;
+}
+
+/* ---------- Habitat: foto in alto, testo sotto su bianco ---------- */
+.pmac-habitat {
+  display: block;
+  min-height: 0;
+  background: #fff;
+  color: #111;
+}
+
+.pmac-habitat__media {
+  position: relative;
+  inset: auto;
+  aspect-ratio: 21 / 9;
+  overflow: hidden;
+}
+
+.pmac-habitat__shade {
+  background: none;
+}
+
+.pmac-habitat__grid {
+  padding-top: 4.8rem;
+  margin-top: 0;
+}
+
+.pmac-habitat__text {
+  color: rgba(17, 17, 17, 0.75);
+}
+
+@media screen and (max-width: 749px) {
+  .pmac-habitat__media {
+    aspect-ratio: 4 / 5;
+  }
+}
+
+/* ---------- Drop: velo chiaro ---------- */
+.pmac-drop-locked .card__media img {
+  filter: grayscale(1) blur(10px) opacity(0.55);
+}
+
+/* ---------- Carrello: velo leggero ---------- */
+cart-drawer.drawer {
+  background-color: rgba(17, 17, 17, 0.25);
+}
+
+cart-drawer .drawer__inner {
+  box-shadow: -1.2rem 0 4rem rgba(17, 17, 17, 0.08);
+}
+
+/* ---------- Galleria prodotto con foto su fondo bianco ---------- */
+.pmac-alt-gallery {
+  background: #fff;
+}
+
+.pmac-alt-gallery img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ---------- Card: niente riflesso cromato, hover discreto ---------- */
+.card-wrapper .card__media::after {
+  display: none;
+}
+
+.card-wrapper:hover .card__media img {
+  transform: scale(1.02);
+}
+
+.card__media img {
+  transition: transform 900ms var(--ease-pmac);
+}
+
+/* ---------- Pianeta 121 esplorabile: scena chiara ---------- */
+.pmac-planet__stage {
+  border-color: rgba(17, 17, 17, 0.08);
+}
+
+.pmac-planet__hint {
+  color: #111;
+}
+
+.pmac-planet__pad-btn {
+  background: rgba(255, 255, 255, 0.85);
+  color: #111;
+  border-color: rgba(17, 17, 17, 0.2);
+}
+
+/* Campaign: testo dell'intermezzo leggibile sul video chiaro */
+.pmac-campaign__quote {
+  color: #111;
+  mix-blend-mode: normal;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+}
+
+/* Pianeta: comandi a sinistra, così non finiscono sotto la traiettoria fissata a destra */
+@media screen and (min-width: 990px) {
+  .pmac-planet__pad {
+    right: auto;
+    left: 1.6rem;
+  }
+}

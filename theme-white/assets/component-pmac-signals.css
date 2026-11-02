@@ -1,0 +1,173 @@
+/* PMAC — notifiche di sistema (vedi assets/pmac-signals.js) */
+.pmac-signals {
+  position: fixed;
+  left: 2.4rem;
+  bottom: 2.4rem;
+  z-index: 950; /* sotto il drawer carrello (1000) e la card del Tracker (1001) */
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  pointer-events: none;
+}
+
+.pmac-signal {
+  position: relative;
+  pointer-events: auto;
+  width: min(38rem, calc(100vw - 4.8rem));
+  padding: 1.2rem 1.4rem 1.5rem;
+  background: rgba(255, 255, 255, 0.88);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(17, 17, 17, 0.18);
+  color: #111111;
+  font-family: var(--font-mono-family, ui-monospace, monospace);
+  overflow: hidden;
+  clip-path: inset(0 100% 0 0);
+  animation: pmac-signal-in 700ms var(--ease-pmac) forwards;
+}
+
+.pmac-signal::before {
+  /* scanline che attraversa la notifica all'ingresso */
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(17, 17, 17, 0.16) 50%, transparent 100%);
+  transform: translateX(-100%);
+  animation: pmac-signal-scan 900ms var(--ease-pmac) 200ms forwards;
+  pointer-events: none;
+}
+
+.pmac-signal__head {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 0.95rem;
+  letter-spacing: 0.16em;
+  color: rgba(17, 17, 17, 0.55);
+  margin-bottom: 0.6rem;
+  text-transform: uppercase;
+}
+
+.pmac-signal__dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: var(--pmac-signal, #c73b2f);
+  box-shadow: 0 0 0 0 var(--pmac-signal, #c73b2f);
+  animation: pmac-signal-ping 1.4s ease-out infinite;
+}
+
+.pmac-signal__close {
+  margin-left: auto;
+  background: none;
+  border: 0;
+  color: rgba(17, 17, 17, 0.6);
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 0.2rem;
+}
+
+.pmac-signal__close:hover {
+  color: #111111;
+}
+
+div.pmac-signal__text {
+  display: block;
+  font-size: 1.25rem;
+  letter-spacing: 0.08em;
+  line-height: 1.5;
+  text-transform: uppercase;
+  min-height: 1.5em;
+}
+
+.pmac-signal__life {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: #111111;
+  transform-origin: left;
+  animation: pmac-signal-life var(--life, 6s) linear forwards;
+}
+
+.pmac-signal.is-leaving {
+  animation: pmac-signal-out 360ms steps(4) forwards;
+}
+
+@keyframes pmac-signal-in {
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes pmac-signal-scan {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes pmac-signal-life {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes pmac-signal-ping {
+  0% {
+    box-shadow: 0 0 0 0 rgba(199, 59, 47, 0.7);
+  }
+  100% {
+    box-shadow: 0 0 0 0.9rem rgba(199, 59, 47, 0);
+  }
+}
+
+@keyframes pmac-signal-out {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  25% {
+    transform: translateX(-6px);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateX(4px);
+    opacity: 0.8;
+    clip-path: inset(30% 0 20% 0);
+  }
+  100% {
+    transform: translateX(-12px);
+    opacity: 0;
+    clip-path: inset(50% 0 50% 0);
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .pmac-signals {
+    left: 1.2rem;
+    right: 1.2rem;
+    bottom: 1.2rem;
+  }
+
+  .pmac-signal {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pmac-signal,
+  .pmac-signal.is-leaving {
+    animation: none;
+    clip-path: none;
+  }
+
+  .pmac-signal::before,
+  .pmac-signal__dot {
+    animation: none;
+  }
+}

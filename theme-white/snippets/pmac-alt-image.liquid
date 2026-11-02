@@ -1,0 +1,31 @@
+{%- comment -%}
+  Tema bianco: restituisce (con capture) il file del tema da usare al posto della foto
+  prodotto, in base alla lista "handle: file" in Impostazioni tema → PMAC — Sistema.
+  Una riga che finisce con * vale come prefisso (es. statuetta-pmac-*: file.webp).
+  Usage: {%- capture alt -%}{% render 'pmac-alt-image', handle: product.handle %}{%- endcapture -%}
+{%- endcomment -%}
+{%- liquid
+  assign found = ''
+  assign rows = settings.pmac_alt_product_images | newline_to_br | split: '<br />'
+  for row in rows
+    assign parts = row | split: ':'
+    if parts.size < 2
+      continue
+    endif
+    assign key = parts[0] | strip
+    assign file = parts[1] | strip
+    if key == handle
+      assign found = file
+      break
+    endif
+    assign last_char = key | slice: -1
+    if last_char == '*'
+      assign prefix = key | remove_last: '*'
+      assign hp = handle | slice: 0, prefix.size
+      if hp == prefix and found == ''
+        assign found = file
+      endif
+    endif
+  endfor
+-%}
+{{- found -}}

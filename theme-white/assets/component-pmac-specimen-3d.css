@@ -1,0 +1,60 @@
+.pmac-specimen {
+  padding: 8rem 0;
+}
+
+.pmac-specimen__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+@media screen and (min-width: 990px) {
+  .pmac-specimen__grid {
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: 5rem;
+  }
+}
+
+.pmac-specimen__heading {
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
+  text-transform: uppercase;
+  font-size: clamp(3.2rem, 6vw, 5.6rem);
+  line-height: 1;
+  margin: 1.2rem 0 1.6rem;
+}
+
+.pmac-specimen__text {
+  color: rgba(var(--color-foreground), 0.75);
+  max-width: 42ch;
+  margin-bottom: 2rem;
+}
+
+.pmac-specimen__hint {
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  opacity: 0.55;
+}
+
+.pmac-specimen__viewer-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(167, 171, 178, 0.14) 0%, rgba(255, 255, 255, 0) 60%),
+    var(--pmac-black);
+  border: 1px solid rgba(var(--color-foreground), 0.12);
+}
+
+@media screen and (min-width: 990px) {
+  .pmac-specimen__viewer-wrap {
+    aspect-ratio: 4 / 5;
+  }
+}
+
+.pmac-specimen__viewer {
+  width: 100%;
+  height: 100%;
+  --poster-color: transparent;
+}

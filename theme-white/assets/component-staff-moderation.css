@@ -1,0 +1,83 @@
+.pmac-staff {
+  min-height: 100vh;
+  padding: 12rem 0 8rem;
+}
+
+.pmac-staff__inner {
+  max-width: 68rem;
+}
+
+.pmac-staff__heading {
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
+  font-weight: var(--font-heading-weight);
+  text-transform: uppercase;
+  font-size: clamp(2.6rem, 4vw, 3.6rem);
+  margin: 1.2rem 0 3.2rem;
+}
+
+.pmac-staff__hint {
+  color: rgba(var(--color-foreground), 0.7);
+  margin-bottom: 2rem;
+}
+
+.pmac-staff__login-form {
+  display: flex;
+  gap: 1.2rem;
+}
+
+.pmac-staff__login-form input {
+  flex: 1;
+  background: transparent;
+  border: 1px solid rgba(var(--color-foreground), 0.3);
+  color: rgb(var(--color-foreground));
+  padding: 1.2rem 1.4rem;
+  font-size: 1.5rem;
+}
+
+.pmac-staff__status {
+  margin-top: 1.6rem;
+  font-size: 1.2rem;
+  color: rgba(var(--color-foreground), 0.65);
+}
+
+.pmac-staff__panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.4rem;
+  padding-bottom: 1.6rem;
+  border-bottom: 1px solid rgba(var(--color-foreground), 0.15);
+}
+
+.pmac-staff__list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+.pmac-staff__item {
+  display: grid;
+  grid-template-columns: 10rem 1fr;
+  gap: 1.6rem;
+  border: 1px solid rgba(var(--color-foreground), 0.15);
+  padding: 1.6rem;
+}
+
+.pmac-staff__item-photo {
+  width: 10rem;
+  height: 10rem;
+  object-fit: cover;
+  background: var(--pmac-black);
+}
+
+.pmac-staff__item-meta {
+  color: rgba(var(--color-foreground), 0.5);
+  font-size: 1.1rem;
+}
+
+.pmac-staff__item-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}

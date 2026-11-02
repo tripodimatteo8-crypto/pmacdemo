@@ -1,0 +1,697 @@
+.pmac-tracker-map-section {
+  padding: 10rem 0 6rem;
+}
+
+.pmac-tracker-map-section__intro {
+  text-align: center;
+  max-width: 62rem;
+  margin: 0 auto 4rem;
+}
+
+.pmac-tracker-map-section__heading {
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
+  font-weight: var(--font-heading-weight);
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  font-size: clamp(3.2rem, 6vw, 5.6rem);
+  margin: 1.2rem 0;
+}
+
+.pmac-tracker-map-section__text {
+  color: rgba(var(--color-foreground), 0.75);
+}
+
+/* ---------- Mappa: viewport pannabile/zoomabile ---------- */
+.pmac-tracker-map {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.pmac-tracker-map__toolbar {
+  position: absolute;
+  z-index: 3;
+  top: 1.6rem;
+  right: 1.6rem;
+  display: flex;
+  gap: 0.6rem;
+}
+
+.pmac-tracker-map__zoom-btn {
+  min-width: 3.6rem;
+  height: 3.6rem;
+  padding: 0 1rem;
+  border: 1px solid rgba(var(--color-foreground), 0.25);
+  background: rgba(var(--color-background), 0.82);
+  backdrop-filter: blur(10px);
+  color: rgb(var(--color-foreground));
+  font-family: var(--font-mono-family);
+  font-size: 1.2rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-pmac), background-position var(--dur-slow) var(--ease-pmac);
+}
+
+.pmac-tracker-map__zoom-btn:hover {
+  border-color: rgba(var(--color-foreground), 0.6);
+}
+
+.pmac-tracker-map__viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: var(--pmac-black);
+  border: 1px solid rgba(var(--color-foreground), 0.12);
+}
+
+/* ---------- Leaflet: ritocchi per allinearla al brand ---------- */
+.pmac-tracker-map__viewport.leaflet-container {
+  background: var(--pmac-black);
+  font-family: var(--font-body-family);
+}
+
+.leaflet-control-attribution {
+  background: rgba(255, 255, 255, 0.75) !important;
+  color: rgba(17, 17, 17, 0.55) !important;
+  font-size: 1rem !important;
+}
+
+.leaflet-control-attribution a {
+  color: rgba(17, 17, 17, 0.75) !important;
+}
+
+.pmac-tracker-tiles {
+  filter: brightness(0.85) contrast(1.1);
+}
+
+/* ---------- Etichette permanenti: solo le capitali ---------- */
+.pmac-tracker-label {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: var(--pmac-white) !important;
+  font-family: var(--font-mono-family) !important;
+  font-size: 1.1rem !important;
+  letter-spacing: 0.08em;
+  text-shadow: 0 0 4px rgba(255, 255, 255, 0.95), 0 0 8px rgba(255, 255, 255, 0.95), 0 0 2px rgba(255, 255, 255, 1);
+  padding: 0 !important;
+  font-weight: 600;
+}
+
+.pmac-tracker-label::before {
+  display: none !important;
+}
+
+/* ---------- Pin (Leaflet divIcon) ---------- */
+.pmac-tracker-pin-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
+.pmac-tracker-pin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.8rem;
+  height: 2.8rem;
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.3);
+  transition: opacity 0.5s var(--ease-pmac), transform 0.5s var(--ease-pmac);
+  transition-delay: var(--pmac-pin-delay, 0ms);
+}
+
+.pmac-tracker-map.is-in-view .pmac-tracker-pin {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pmac-tracker-pin {
+    opacity: 1;
+    transform: scale(1);
+    transition: none;
+  }
+}
+
+.pmac-tracker-pin__ring,
+.pmac-tracker-pin__dot {
+  position: absolute;
+  border-radius: 50%;
+  transition: transform var(--dur-fast) var(--ease-pmac), filter var(--dur-fast) var(--ease-pmac);
+}
+
+.pmac-tracker-pin:hover .pmac-tracker-pin__dot,
+.pmac-tracker-pin:focus-visible .pmac-tracker-pin__dot {
+  transform: scale(1.4);
+  filter: brightness(1.4);
+}
+
+.pmac-tracker-pin:hover .pmac-tracker-pin__ring,
+.pmac-tracker-pin:focus-visible .pmac-tracker-pin__ring {
+  border-width: 2px;
+}
+
+.pmac-tracker-pin__ring {
+  inset: 0;
+  border: 1px solid var(--pmac-signal);
+  animation: pmac-pulse 1.8s var(--ease-pmac) infinite;
+}
+
+.pmac-tracker-pin__dot {
+  width: 0.9rem;
+  height: 0.9rem;
+  top: 50%;
+  left: 50%;
+  margin: -0.45rem 0 0 -0.45rem;
+  background: var(--pmac-signal);
+}
+
+.pmac-tracker-pin__number {
+  position: relative;
+  z-index: 1;
+  display: none;
+}
+
+.pmac-tracker-pin[data-status='located'] .pmac-tracker-pin__ring,
+.pmac-tracker-pin[data-status='active'] .pmac-tracker-pin__ring {
+  border-color: var(--pmac-chrome-2);
+  animation: none;
+}
+
+.pmac-tracker-pin[data-status='located'] .pmac-tracker-pin__dot,
+.pmac-tracker-pin[data-status='active'] .pmac-tracker-pin__dot {
+  background-image: var(--pmac-chrome-gradient);
+  background-color: var(--pmac-chrome-2);
+}
+
+.pmac-tracker-pin[data-status='signal_lost'] .pmac-tracker-pin__ring {
+  border-color: rgba(var(--color-foreground), 0.3);
+  animation: none;
+}
+
+.pmac-tracker-pin[data-status='signal_lost'] .pmac-tracker-pin__dot {
+  background: rgba(var(--color-foreground), 0.3);
+}
+
+.pmac-tracker-pin.is-taken .pmac-tracker-pin__ring {
+  border-color: rgba(var(--color-foreground), 0.2);
+  animation: none;
+}
+
+.pmac-tracker-pin.is-taken .pmac-tracker-pin__dot {
+  background: transparent;
+  border: 1px solid rgba(var(--color-foreground), 0.5);
+  width: 1.3rem;
+  height: 1.3rem;
+  margin: -0.65rem 0 0 -0.65rem;
+}
+
+.pmac-tracker-pin.is-taken .pmac-tracker-pin__dot::after {
+  content: '×';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  color: rgba(var(--color-foreground), 0.6);
+}
+
+.pmac-tracker-pin--community .pmac-tracker-pin__ring {
+  border-color: rgba(17, 17, 17, 0.55);
+  animation: none;
+}
+
+.pmac-tracker-pin--community .pmac-tracker-pin__dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  margin: -0.3rem 0 0 -0.3rem;
+  background: rgba(17, 17, 17, 0.85);
+}
+
+@keyframes pmac-pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.9;
+  }
+  70% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pmac-tracker-pin__ring {
+    animation: none;
+    opacity: 0.5;
+  }
+}
+
+/* ---------- Card (modal) ---------- */
+.pmac-tracker-card {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.pmac-tracker-card[data-open] {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.pmac-tracker-card__scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  transition: opacity var(--dur-med) var(--ease-pmac);
+}
+
+.pmac-tracker-card[data-open] .pmac-tracker-card__scrim {
+  opacity: 1;
+}
+
+.pmac-tracker-card__panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: min(42rem, 100%);
+  background: var(--pmac-panel);
+  color: var(--pmac-white);
+  transform: translateX(100%);
+  transition: transform var(--dur-slow) var(--ease-pmac);
+  overflow-y: auto;
+}
+
+.pmac-tracker-card[data-open] .pmac-tracker-card__panel {
+  transform: translateX(0);
+}
+
+.pmac-tracker-card__close {
+  position: absolute;
+  top: 1.6rem;
+  right: 1.6rem;
+  z-index: 1;
+  width: 3.6rem;
+  height: 3.6rem;
+  border: 1px solid rgba(17, 17, 17, 0.25);
+  background: transparent;
+  color: var(--pmac-white);
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.pmac-tracker-card__media {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: var(--pmac-black);
+}
+
+.pmac-tracker-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pmac-tracker-card__body {
+  padding: 3rem;
+}
+
+.pmac-tracker-card__status {
+  display: inline-block;
+  margin: 0.8rem 0 1.6rem;
+  padding: 0.4rem 1rem;
+  border: 1px solid rgba(17, 17, 17, 0.3);
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+}
+
+.pmac-tracker-card__status.is-taken {
+  border-color: rgba(17, 17, 17, 0.15);
+  color: rgba(17, 17, 17, 0.5);
+}
+
+.pmac-tracker-card__coords {
+  color: rgba(17, 17, 17, 0.6);
+  font-size: 1.3rem;
+  margin: 0 0 1.6rem;
+}
+
+.pmac-tracker-card__video {
+  margin: 0 0 1.6rem;
+}
+
+.pmac-tracker-card__video video {
+  width: 100%;
+  display: block;
+}
+
+.pmac-tracker-card__sighting {
+  margin: 0 0 1.2rem;
+  color: rgba(17, 17, 17, 0.85);
+  line-height: 1.6;
+}
+
+.pmac-tracker-card__datetime {
+  margin: 0 0 1.6rem;
+  opacity: 0.6;
+  font-size: 1.1rem;
+}
+
+.pmac-tracker-card__clue {
+  margin: 0 0 2.4rem;
+  line-height: 1.6;
+}
+
+.pmac-tracker-card__link {
+  color: var(--pmac-white);
+}
+
+@media screen and (min-width: 750px) {
+  .pmac-tracker-map__viewport {
+    aspect-ratio: 21 / 9;
+  }
+}
+
+/* ---------- Leaflet isolato: i suoi pane (z-index 400–1000) non devono
+   finire sopra la card della statuetta ---------- */
+.pmac-tracker-map {
+  isolation: isolate;
+  z-index: 0;
+}
+
+.pmac-tracker-card {
+  z-index: 1001;
+}
+
+/* Foto prodotto (render su fondo nero) nella card: mai tagliata */
+.pmac-tracker-card__media--product img {
+  object-fit: contain;
+  padding: 6%;
+}
+
+/* ---------- Variante compatta (homepage, sotto il teaser) ---------- */
+.pmac-tracker-map-section--compact {
+  padding-top: 0;
+}
+
+/* ---------- Griglia statuette ---------- */
+.pmac-tracker-tiles-wrap {
+  margin-top: 4.8rem;
+}
+
+.pmac-tracker-tiles__label {
+  margin: 0 0 2rem;
+}
+
+.pmac-tracker-tiles {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.2rem;
+}
+
+@media screen and (min-width: 750px) {
+  .pmac-tracker-tiles {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.6rem;
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .pmac-tracker-tiles {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+.pmac-tracker-tiles__item {
+  margin: 0;
+}
+
+.pmac-tracker-tile {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: rgb(var(--color-foreground));
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.pmac-tracker-tile__media {
+  position: relative;
+  display: block;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 42%, #1c1c1e 0%, #F4F4F2 70%);
+  border: 1px solid rgba(var(--color-foreground), 0.12);
+  transition: border-color var(--dur-med) var(--ease-pmac);
+}
+
+.pmac-tracker-tile__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 8%;
+  transform: scale(1);
+  transition: transform var(--dur-slow) var(--ease-pmac), filter var(--dur-med) var(--ease-pmac),
+    opacity var(--dur-med) var(--ease-pmac);
+}
+
+.pmac-tracker-tile__number {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  color: rgba(var(--color-foreground), 0.7);
+}
+
+.pmac-tracker-tile__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 1.2rem 0 0;
+}
+
+.pmac-tracker-tile__city {
+  font-family: var(--font-heading-family);
+  font-weight: var(--font-heading-weight);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: 1.6rem;
+  line-height: 1.2;
+}
+
+.pmac-tracker-tile__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  color: rgba(var(--color-foreground), 0.6);
+}
+
+.pmac-tracker-tile__dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: rgba(var(--color-foreground), 0.8);
+  flex: none;
+}
+
+.pmac-tracker-tile[data-status='active'] .pmac-tracker-tile__dot,
+.pmac-tracker-tile[data-status='signal_detected'] .pmac-tracker-tile__dot {
+  background: var(--pmac-signal);
+  animation: pmac-tile-blink 1.6s var(--ease-pmac) infinite;
+}
+
+.pmac-tracker-tile[data-status='signal_lost'] .pmac-tracker-tile__dot {
+  background: transparent;
+  border: 1px solid rgba(var(--color-foreground), 0.5);
+}
+
+@keyframes pmac-tile-blink {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.pmac-tracker-tile.is-taken .pmac-tracker-tile__media img {
+  filter: grayscale(1);
+  opacity: 0.4;
+}
+
+.pmac-tracker-tile.is-taken .pmac-tracker-tile__dot {
+  background: rgba(var(--color-foreground), 0.25);
+  animation: none;
+}
+
+@media (hover: hover) {
+  .pmac-tracker-tile:hover .pmac-tracker-tile__media {
+    border-color: rgba(var(--color-foreground), 0.5);
+  }
+
+  .pmac-tracker-tile:hover .pmac-tracker-tile__media img {
+    transform: scale(1.06);
+  }
+}
+
+.pmac-tracker-tile:focus-visible {
+  outline: 1px solid rgb(var(--color-foreground));
+  outline-offset: 0.4rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pmac-tracker-tile__media img {
+    transition: none;
+  }
+
+  .pmac-tracker-tile__dot {
+    animation: none !important;
+  }
+}
+
+/* ---------- Scansione radar sulla mappa (sotto i pin, non cliccabile) ---------- */
+.pmac-tracker-map__viewport::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 160vmax;
+  height: 160vmax;
+  margin: -80vmax 0 0 -80vmax;
+  z-index: 450;
+  pointer-events: none;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent 0deg, transparent 300deg, rgba(17, 17, 17, 0.09) 356deg, rgba(17, 17, 17, 0.18) 360deg);
+  animation: pmac-radar-sweep 7s linear infinite;
+  mix-blend-mode: screen;
+}
+
+@keyframes pmac-radar-sweep {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pmac-tracker-map__viewport::after {
+    display: none;
+  }
+}
+
+/* ---------- Tile prodotto (griglia "The Ten Pieces" con i capi) ---------- */
+a.pmac-tracker-tile {
+  text-decoration: none;
+}
+
+.pmac-tracker-tile--product .pmac-tracker-tile__media {
+  background: var(--pmac-black);
+}
+
+.pmac-tracker-tile--product .pmac-tracker-tile__media img {
+  padding: 0;
+  object-fit: contain;
+}
+
+.pmac-tracker-tile--product .pmac-tracker-tile__city {
+  font-size: 1.4rem;
+}
+
+/* ---------- Card: foto di avvistamento (stile telecamera) ---------- */
+.pmac-tracker-card__media--sighting img {
+  object-fit: cover;
+  filter: contrast(1.08);
+}
+
+.pmac-tracker-card__media--sighting::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(180deg, rgba(0, 0, 0, 0.18) 0 1px, transparent 1px 3px);
+}
+
+.pmac-tracker-card__osd {
+  position: absolute;
+  left: 1.4rem;
+  right: 1.4rem;
+  bottom: 1.2rem;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 1rem;
+  letter-spacing: 0.14em;
+  color: rgba(17, 17, 17, 0.92);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.pmac-tracker-card__osd > span:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pmac-tracker-card__rec {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--pmac-signal);
+  animation: pmac-tile-blink 1.2s steps(1) infinite;
+}
+
+/* ---------- Card: QR "scan to track" ---------- */
+.pmac-tracker-card__qr {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  margin-top: 2.4rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(17, 17, 17, 0.14);
+}
+
+.pmac-tracker-card__qr-code {
+  flex: none;
+  display: block;
+  width: 8.4rem;
+  height: 8.4rem;
+  padding: 0.6rem;
+  background: #111111;
+}
+
+.pmac-tracker-card__qr-code svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.pmac-tracker-card__qr p {
+  margin: 0;
+  font-size: 1rem;
+  letter-spacing: 0.16em;
+  line-height: 1.8;
+  color: rgba(17, 17, 17, 0.65);
+}
+
+.pmac-tracker-card__media.pmac-tracker-card__media--sighting {
+  aspect-ratio: 4 / 3;
+}

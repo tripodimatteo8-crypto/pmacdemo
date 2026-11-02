@@ -1,0 +1,132 @@
+/* PMAC — Habitat (Planet 121) */
+.pmac-habitat {
+  position: relative;
+  overflow: hidden;
+  min-height: min(100svh, 96rem);
+  display: flex;
+  align-items: flex-end;
+  color: #111111;
+}
+
+.pmac-habitat__media {
+  position: absolute;
+  inset: 0;
+}
+
+.pmac-habitat__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.14);
+  will-change: transform;
+}
+
+.pmac-habitat__shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0.92) 100%);
+}
+
+.pmac-habitat__grid {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3.2rem;
+  padding-top: 40vh;
+  padding-bottom: 6.4rem;
+}
+
+@media screen and (min-width: 990px) {
+  .pmac-habitat__grid {
+    grid-template-columns: 1.2fr 1fr;
+    align-items: end;
+  }
+}
+
+.pmac-habitat__heading {
+  font-family: var(--font-heading-family);
+  font-weight: var(--font-heading-weight);
+  text-transform: uppercase;
+  font-size: clamp(3.6rem, 7vw, 7.2rem);
+  line-height: 0.95;
+  margin: 1.2rem 0 1.6rem;
+}
+
+.pmac-habitat__text {
+  max-width: 48ch;
+  color: rgba(17, 17, 17, 0.8);
+}
+
+.pmac-habitat__data {
+  margin: 0;
+  border-top: 1px solid rgba(17, 17, 17, 0.3);
+}
+
+.pmac-habitat__datum {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 1.2rem 0;
+  border-bottom: 1px solid rgba(17, 17, 17, 0.16);
+  font-size: 1.1rem;
+  letter-spacing: 0.14em;
+  opacity: 0;
+  transform: translate3d(0, 1.2rem, 0);
+  transition: opacity 700ms var(--ease-pmac) calc(var(--i, 0) * 110ms),
+    transform 700ms var(--ease-pmac) calc(var(--i, 0) * 110ms);
+}
+
+.pmac-habitat.is-in-view .pmac-habitat__datum {
+  opacity: 1;
+  transform: none;
+}
+
+.pmac-habitat__datum dt {
+  color: rgba(17, 17, 17, 0.55);
+}
+
+.pmac-habitat__datum dd {
+  margin: 0;
+  text-align: right;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pmac-habitat__datum {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Mobile: immagine in alto, testo e dati sotto su fondo nero (sopra la porta
+   luminosa il testo non si leggeva) */
+@media screen and (max-width: 749px) {
+  .pmac-habitat {
+    display: block;
+    min-height: 0;
+    background: #FFFFFF;
+  }
+
+  .pmac-habitat__media {
+    position: relative;
+    inset: auto;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+  }
+
+  .pmac-habitat__media img {
+    object-position: 45% 50%;
+  }
+
+  .pmac-habitat__shade {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 25%, rgba(255, 255, 255, 0) 70%, #FFFFFF 100%);
+  }
+
+  .pmac-habitat__grid {
+    padding-top: 0;
+    margin-top: -6rem;
+    padding-bottom: 4.8rem;
+  }
+}

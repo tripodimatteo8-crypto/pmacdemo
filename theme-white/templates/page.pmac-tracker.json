@@ -1,0 +1,158 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "tracker_map": {
+      "type": "tracker-map",
+      "blocks": {
+        "s1": {
+          "type": "statuetta",
+          "settings": {
+            "number": "01",
+            "city": "Rome",
+            "coordinates": "41.9028° N, 12.4964° E",
+            "clue": "Intercepted near an abandoned radio signal.",
+            "status": "located",
+            "product": "statuetta-pmac-n-01-rome",
+            "image_asset": "pmac-sighting-rome.webp",
+            "sighting_datetime": "2026-10-09 23:44:17"
+          }
+        },
+        "s2": {
+          "type": "statuetta",
+          "settings": {
+            "number": "02",
+            "city": "Paris",
+            "coordinates": "48.8566° N, 2.3522° E",
+            "clue": "Stable transmission from a rooftop in Le Marais.",
+            "status": "active",
+            "product": "statuetta-pmac-n-02-paris",
+            "image_asset": "pmac-sighting-paris.webp",
+            "sighting_datetime": "2026-10-11 02:13:05"
+          }
+        },
+        "s3": {
+          "type": "statuetta",
+          "settings": {
+            "number": "03",
+            "city": "London",
+            "coordinates": "51.5072° N, 0.1276° W",
+            "clue": "Weak signal on the Thames, position unconfirmed.",
+            "status": "signal_detected",
+            "product": "statuetta-pmac-n-03-london",
+            "image_asset": "pmac-sighting-london.webp",
+            "sighting_datetime": "2026-10-14 21:58:40"
+          }
+        },
+        "s4": {
+          "type": "statuetta",
+          "settings": {
+            "number": "04",
+            "city": "Berlin",
+            "coordinates": "52.5200° N, 13.4050° E",
+            "clue": "Last contact recorded near the Spree.",
+            "status": "signal_lost",
+            "product": "statuetta-pmac-n-04-berlin",
+            "image_asset": "pmac-sighting-berlin.webp",
+            "sighting_datetime": "2026-10-17 04:02:51"
+          }
+        },
+        "s5": {
+          "type": "statuetta",
+          "settings": {
+            "number": "05",
+            "city": "Madrid",
+            "coordinates": "40.4168° N, 3.7038° W",
+            "clue": "Found in a vintage market downtown.",
+            "status": "located",
+            "product": "statuetta-pmac-n-05-madrid"
+          }
+        },
+        "s6": {
+          "type": "statuetta",
+          "settings": {
+            "number": "06",
+            "city": "Lisbon",
+            "coordinates": "38.7223° N, 9.1393° W",
+            "clue": "Possible sighting on the waterfront, unconfirmed.",
+            "status": "signal_detected",
+            "product": "statuetta-pmac-n-06-lisbon"
+          }
+        },
+        "s7": {
+          "type": "statuetta",
+          "settings": {
+            "number": "07",
+            "city": "Amsterdam",
+            "coordinates": "52.3676° N, 4.9041° E",
+            "clue": "Steady signal along a downtown canal.",
+            "status": "active",
+            "product": "statuetta-pmac-n-07-amsterdam"
+          }
+        },
+        "s8": {
+          "type": "statuetta",
+          "settings": {
+            "number": "08",
+            "city": "Vienna",
+            "coordinates": "48.2082° N, 16.3738° E",
+            "clue": "New signal, origin unverified.",
+            "status": "signal_detected",
+            "product": "statuetta-pmac-n-08-vienna"
+          }
+        },
+        "s9": {
+          "type": "statuetta",
+          "settings": {
+            "number": "09",
+            "city": "Athens",
+            "coordinates": "37.9838° N, 23.7275° E",
+            "clue": "Contact lost among the ruins.",
+            "status": "signal_lost",
+            "product": "statuetta-pmac-n-09-athens"
+          }
+        },
+        "s10": {
+          "type": "statuetta",
+          "settings": {
+            "number": "10",
+            "city": "Warsaw",
+            "coordinates": "52.2297° N, 21.0122° E",
+            "clue": "Found in the industrial district, north side.",
+            "status": "located",
+            "product": "statuetta-pmac-n-10-warsaw"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "s10"
+      ],
+      "settings": {
+        "tiles_source": "collection",
+        "tiles_collection": "intercettazioni",
+        "tiles_limit": 10,
+        "show_tiles": true,
+        "tiles_heading": "THE TEN PIECES"
+      }
+    }
+  },
+  "order": [
+    "tracker_map"
+  ]
+}
