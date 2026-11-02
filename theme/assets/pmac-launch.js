@@ -19,12 +19,12 @@
   };
   const rocketOnly = root.dataset.box !== 'true';
   // solo razzo: il video parte subito (accensione ~1,5s, decollo ~2,4s dall'inizio)
-  const LIFTOFF = rocketOnly ? 2700 : 4600;
+  const LIFTOFF = rocketOnly ? 2700 : 4500;
 
   const tickClock = () => {
     const t = performance.now() - start;
     if (clock) clock.textContent = fmt(t - LIFTOFF);
-    if (t < 9000) raf = requestAnimationFrame(tickClock);
+    if (t < 10000) raf = requestAnimationFrame(tickClock);
   };
 
   const logAt = (i, ms) =>
@@ -40,7 +40,7 @@
     timers.forEach(clearTimeout);
     timers = [];
     cancelAnimationFrame(raf);
-    root.classList.remove('is-drawing', 'is-sealed', 'is-taped', 'is-loading', 'is-film', 'is-done');
+    root.classList.remove('is-drawing', 'is-sealed', 'is-taped', 'is-rocket', 'is-loading', 'is-ignite', 'is-liftoff', 'is-film', 'is-done');
     items.forEach((li) => li.classList.remove('is-on'));
     if (video) {
       video.pause();
@@ -51,7 +51,7 @@
   const run = () => {
     reset();
     if (reduce) {
-      root.classList.add('is-drawing', 'is-sealed', 'is-taped', 'is-done');
+      root.classList.add('is-drawing', 'is-sealed', 'is-taped', 'is-rocket', 'is-done');
       items.forEach((li) => li.classList.add('is-on'));
       return;
     }
@@ -74,24 +74,30 @@
       at(5000, () => root.classList.add('is-done'));
       return;
     }
+    // box → sigillo → nastro → razzo → carico → accensione → decollo → video → finale
     requestAnimationFrame(() => root.classList.add('is-drawing'));
     logAt(0, 300);
     at(1300, () => root.classList.add('is-sealed'));
     at(1750, () => root.classList.add('is-taped'));
     logAt(1, 1900);
-    at(2800, () => root.classList.add('is-loading'));
-    logAt(2, 3000);
-    at(3300, () => {
-      root.classList.add('is-film');
+    at(2600, () => root.classList.add('is-rocket'));
+    at(3200, () => root.classList.add('is-loading'));
+    logAt(2, 3300);
+    at(3900, () => {
+      root.classList.add('is-ignite');
       document.dispatchEvent(new CustomEvent('pmac:launch'));
+    });
+    at(LIFTOFF, () => root.classList.add('is-liftoff'));
+    logAt(3, LIFTOFF + 150);
+    at(5300, () => {
+      root.classList.add('is-film');
       if (video) {
         const p = video.play();
         if (p && p.catch) p.catch(() => {});
       }
     });
-    logAt(3, LIFTOFF + 200);
-    logAt(4, 7000);
-    at(7800, () => root.classList.add('is-done'));
+    logAt(4, 8400);
+    at(9000, () => root.classList.add('is-done'));
   };
 
   root.querySelector('[data-launch-replay]')?.addEventListener('click', run);
