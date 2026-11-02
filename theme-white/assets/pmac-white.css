@@ -301,3 +301,72 @@ cart-drawer .drawer__inner {
 
 /* scheda del tracker: velo chiaro sulla mappa, come il carrello */
 .pmac-tracker-card__scrim { background: rgba(255, 255, 255, 0.6); }
+
+/* ---------- Menu da smartphone ---------- */
+/* Aprendo un pannello (menu, ricerca) Dawn mette overflow:hidden sul body. Con
+   html/body in overflow-x:clip il body diventa un contenitore di scroll e l'header
+   sticky torna in cima alla pagina: aprendo il menu dopo aver scrollato, header e
+   menu finivano fuori schermo. Il blocco dello scroll passa quindi all'html. */
+html:has(> body.overflow-hidden) { overflow: hidden; }
+body.overflow-hidden { overflow-x: clip; overflow-y: visible; }
+
+@media screen and (max-width: 749px) {
+  html:has(> body.overflow-hidden-mobile) { overflow: hidden; }
+  body.overflow-hidden-mobile { overflow-x: clip; overflow-y: visible; }
+}
+
+@media screen and (max-width: 989px) {
+  html:has(> body.overflow-hidden-tablet) { overflow: hidden; }
+  body.overflow-hidden-tablet { overflow-x: clip; overflow-y: visible; }
+
+  /* header e barra in alto pieni (niente hero che traspare dietro le icone) */
+  html body .section-header.menu-open .header-wrapper,
+  html body.overflow-hidden-tablet .announcement-bar-section:has(+ .section-header.menu-open) .pmac-marquee-bar {
+    background-color: rgb(var(--color-background));
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  /* pannello alto quanto lo schermo visibile, voci in alto, sottili */
+  #menu-drawer.menu-drawer {
+    height: calc(100vh - var(--header-bottom-position, 10.4rem));
+    height: calc(100dvh - var(--header-bottom-position, 10.4rem));
+    align-items: flex-start;
+    overflow-y: auto;
+    border-top: 1px solid rgba(var(--color-foreground), 0.08);
+  }
+
+  .menu-drawer__navigation {
+    padding: 2.4rem 0 4rem;
+  }
+
+  .menu-drawer__navigation .menu-drawer__menu-item {
+    font-weight: 300;
+    font-size: clamp(2.2rem, 7vw, 3rem);
+    letter-spacing: 0.08em;
+    padding-top: 1.6rem !important;
+    padding-bottom: 1.6rem !important;
+    border-bottom: 1px solid rgba(var(--color-foreground), 0.08);
+  }
+
+  .menu-drawer__navigation .menu-drawer__menu-item--active,
+  .menu-drawer__navigation .menu-drawer__menu-item:hover {
+    background-color: transparent;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.3em;
+  }
+
+  /* con il menu aperto spariscono traiettoria e notifiche */
+  body.overflow-hidden-tablet .pmac-traj,
+  body.overflow-hidden-tablet .pmac-signals {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+/* velo chiaro dietro la ricerca, come carrello e tracker */
+details[open] .modal-overlay::after {
+  background-color: rgba(255, 255, 255, 0.7);
+}
